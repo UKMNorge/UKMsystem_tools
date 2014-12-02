@@ -1,0 +1,9 @@
+{% extends "layout.twig.html" %}
+
+{% block content %}
+	<p class="lead">
+		Denne siden inneholder diverse import- og systemverktøy som påvirker sentrale databaser og strukturer
+	</p>
+		
+	{% embed "postnummer.twig.html" %}{% endembed %}
+{% endblock %}

@@ -1,0 +1,45 @@
+{% if show == 'import' %}
+	{% if error %}
+		<div class="alert alert-danger col-xs-12 col-sm-6 col-md-4">
+			<h1>Ingen fil valgt!</h1>
+			<p>Du må velge en fil å laste opp</p>
+			<p>
+				<a href="?page=UKMsystemtools">Tilbake</a>
+			</p>
+		</div>
+	{% else %}
+	<div class="clearfix"></div>
+		<h2>Postnummertabell oppdatert!</h2>
+		<p class="lead">Ingen postnummer blir slettet eller oppdatert i prosessen - kun nye postnummer blir lagt til</p>
+		<div class="col-xs-12 col-sm-6 col-md-4">
+			<h4>Følgende {{ added|length }} postnummer er lagt til</h4>
+			<ol class="list list-unstyled">
+				{% for postdata in added %}
+					<li>{{ postdata }}</li>
+				{% else %}
+					<li class="alert alert-info">Ingen nye postnummer ble funnet!</li>
+				{% endfor %}
+			</ol>
+		</div>
+		<div class="clearfix"></div>
+		<p>
+			<a href="?page=UKMsystemtools">Tilbake</a>
+		</p>
+	{% endif %}
+{% else %}
+	<h2>Importer postnummer</h2>
+	<p>Postnummertabellen baserer seg på data fra Posten/Bring.</p>
+	<ol class="list">
+		<li>Last ned <a href="http://www.bring.no/hele-bring/produkter-og-tjenester/brev-og-postreklame/andre-tjenester/postnummertabeller" target="_blank"><b>alle</b> postnummer</a> som excel-data</li>
+		<li>Last opp excel-fil
+			<div class="row">
+				<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+				<form action="?page=UKMsystemtools&action=postnummer" method="post" enctype="multipart/form-data">
+					<input class="form-control" type="file" name="postnummer" id="postnummer" />
+					<button class="btn btn-primary" type="submit">Last opp</button>
+				</form>
+				</div>
+			</div>
+		</li>
+	</ol>
+{% endif %}
