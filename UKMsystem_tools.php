@@ -13,7 +13,7 @@ if(is_admin()) {
 }
 
 function UKMST_menu() {
-	$page = add_menu_page('UKM Norge Systemverktøy', 'System', 'superadmin', 'UKMsystemtools','UKMsystemtools', 'http://ico.ukm.no/support-16.png',22);
+	$page = add_menu_page('UKM Norge Systemverktøy', 'System', 'superadmin', 'UKMsystemtools','UKMsystemtools', 'http://ico.ukm.no/system-16.png',22);
     add_action( 'admin_print_styles-' . $page, 'UKMsystemtools_scripts_and_styles' );
 }
 
