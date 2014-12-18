@@ -10,6 +10,7 @@ Author URI: http://mariusmandal.no
 
 if(is_admin()) {
 	add_action('network_admin_menu', 'UKMST_menu');
+	add_filter('UKMWPNETWDASH_messages', 'UKMsystemtools_check_postnumber_updates');
 }
 
 function UKMST_menu() {
@@ -34,4 +35,34 @@ function UKMsystemtools_scripts_and_styles() {
 	wp_enqueue_style('UKMwp_dashboard_css');
 	wp_enqueue_script('WPbootstrap3_js');
 	wp_enqueue_style('WPbootstrap3_css');
+}
+
+function UKMsystemtools_check_postnumber_updates($messages) {
+	$last_postnumber_timestamp = get_site_option('ukm_systemtools_last_postnumber_update', false);
+	if ($last_postnumber_timestamp && is_numeric($last_postnumber_timestamp)) {
+		$last_year = intval( date("Y", intval( $last_postnumber_timestamp, 10 ) ) );
+		$current_year = intval( date("Y") );
+
+		if ($last_year < $current_year) {
+			$messages[] = array(
+				'level' 	=> 'alert-warning',
+				'module'	=> __('System', 'UKM'),
+				'header'	=> sprintf( __('Postnummer må oppdateres, sist oppdatert %s','UKM'), date("d.m.Y", $last_postnumber_timestamp) ),
+				'body' 		=> __('Rett problemet under system-verktøy', 'UKM'),
+				'link'		=> '?page=UKMsystemtools'
+			);
+		}
+
+	} else if ( $last_postnumber_timestamp == false ) {
+		var_dump( array( "UKMsystemtools debug", $last_postnumber_timestamp ) );
+		$messages[] = array(
+			'level' 	=> 'alert-error',
+			'module'	=> __('System', 'UKM'),
+			'header'	=> __('Postnummer må oppdateres','UKM'),
+			'body' 		=> __('Rett problemet under system-verktøy', 'UKM'),
+			'link'		=> '?page=UKMsystemtools'
+		);
+	}
+
+	return $messages;
 }

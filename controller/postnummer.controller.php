@@ -32,7 +32,8 @@ if( strtoupper($_SERVER['REQUEST_METHOD']) == 'POST' ) {
 			$TWIGdata['added'][] = $postnummer .' '. $poststed;
 		}
 	}
-	
+
+	update_site_option('ukm_systemtools_last_postnumber_update', time());
 	
 } else {
 	$TWIGdata['show'] = 'form';
