@@ -63,8 +63,8 @@ if( $res ) {
 		$card->title 		= $contact->title;
 		$card->email1		= $contact->email;
 		$card->url			= $contact->facebook;
-		$card->company		= $contact->monstring;
-		$card->department	= $contact->fylke;
+		$card->company		= 'UKM '. $contact->monstring;
+		$card->department	= '('. $contact->fylke .')';
 		
 		$card = new vcard( (array) $card );
 		$card->build();
