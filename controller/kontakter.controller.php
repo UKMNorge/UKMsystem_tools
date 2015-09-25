@@ -35,15 +35,15 @@ $res = $SQL->run();
 ///// 
 
 $exRow = 1;
-	exCell('A'.$exRow, 'First name', 'bold');
-	exCell('B'.$exRow, 'Last name', 'bold');
-	exCell('C'.$exRow, 'E-mail', 'bold');
-	exCell('D'.$exRow, 'Title', 'bold');
-	exCell('E'.$exRow, 'Company', 'bold');
-	exCell('F'.$exRow, 'Address', 'bold');
+	exCell('A'.$exRow, 'Fornavn', 'bold');
+	exCell('B'.$exRow, 'Etternavn', 'bold');
+	exCell('C'.$exRow, 'E-postadresse', 'bold');
+	exCell('D'.$exRow, 'Tittel', 'bold');
+	exCell('E'.$exRow, 'Firma', 'bold');
+	exCell('F'.$exRow, 'Gate/vei', 'bold');
 	exCell('G'.$exRow, 'Telefon', 'bold');
-	exCell('H'.$exRow, 'Fax, private', 'bold');
-	exCell('I'.$exRow, 'Fax, work', 'bold');
+	exCell('H'.$exRow, 'Faks (privat)', 'bold');
+	exCell('I'.$exRow, 'Faks (arbeid)', 'bold');
 
 if( $res ) {
 	while( $row = mysql_fetch_assoc( $res ) ) {
@@ -79,9 +79,9 @@ if( $res ) {
 		exCell('D'.$exRow, $contact->title);
 		exCell('E'.$exRow, $contact->monstring);
 		exCell('F'.$exRow, $contact->fylke);
-		exCell('G'.$exRow, $contact->phone);
-		exCell('H'.$exRow, $contact->phone.'#600');
-		exCell('I'.$exRow, $contact->phone.'#500');
+		exCell('G'.$exRow, '+47'.$contact->phone);
+		exCell('H'.$exRow, '+47'.$contact->phone.'#600');
+		exCell('I'.$exRow, '+47'.$contact->phone.'#500');
 		//// EOEXCEL
 
 
