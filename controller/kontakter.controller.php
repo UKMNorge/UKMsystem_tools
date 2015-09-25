@@ -20,16 +20,7 @@ $res = $SQL->run();
 	global $objPHPExcel;
 	require_once('UKM/inc/excel.inc.php');
 	$objPHPExcel = new PHPExcel();
-	
-	// Endret parameter 22.11.12, navn fungerer nå som direction mens navn hentes fra klassen
-	if($navn == 'portrait' || $navn == 'landscape') {
-		$orientation = $navn;
-		$navn = $this->name;
-	} else {
-		$orientation = 'portrait';
-	}
-	
-	exorientation($orientation);
+	exorientation('landscape');
 	
 	$objPHPExcel->getProperties()->setCreator('UKM Norges arrangørsystem');
 	$objPHPExcel->getProperties()->setLastModifiedBy('UKM Norges arrangørsystem');
@@ -43,16 +34,16 @@ $res = $SQL->run();
 	$objPHPExcel->setActiveSheetIndex(0)->getTabColor()->setRGB('A0CF67');
 ///// 
 
-$row = 1;
-	exCell('A'.$row, 'First name', 'bold');
-	exCell('B'.$row, 'Last name', 'bold');
-	exCell('C'.$row, 'E-mail', 'bold');
-	exCell('D'.$row, 'Title', 'bold');
-	exCell('E'.$row, 'Company', 'bold');
-	exCell('F'.$row, 'Address', 'bold');
-	exCell('G'.$row, 'Telefon', 'bold');
-	exCell('H'.$row, 'Fax, private', 'bold');
-	exCell('I'.$row, 'Fax, work', 'bold');
+$exRow = 1;
+	exCell('A'.$exRow, 'First name', 'bold');
+	exCell('B'.$exRow, 'Last name', 'bold');
+	exCell('C'.$exRow, 'E-mail', 'bold');
+	exCell('D'.$exRow, 'Title', 'bold');
+	exCell('E'.$exRow, 'Company', 'bold');
+	exCell('F'.$exRow, 'Address', 'bold');
+	exCell('G'.$exRow, 'Telefon', 'bold');
+	exCell('H'.$exRow, 'Fax, private', 'bold');
+	exCell('I'.$exRow, 'Fax, work', 'bold');
 
 if( $res ) {
 	while( $row = mysql_fetch_assoc( $res ) ) {
@@ -81,16 +72,16 @@ if( $res ) {
 		$contact->fylke = utf8_encode( $row['fylke_name'] );
 
 		//// EXCEL
-		$row++;
-		exCell('A'.$row, $contact->first_name);
-		exCell('B'.$row, $contact->last_name);
-		exCell('C'.$row, $contact->email);
-		exCell('D'.$row, $contact->title);
-		exCell('E'.$row, $contact->monstring);
-		exCell('F'.$row, $contact->fylke);
-		exCell('G'.$row, $contact->phone);
-		exCell('H'.$row, $contact->phone.'#600');
-		exCell('I'.$row, $contact->phone.'#500');
+		$exRow++;
+		exCell('A'.$exRow, $contact->first_name);
+		exCell('B'.$exRow, $contact->last_name);
+		exCell('C'.$exRow, $contact->email);
+		exCell('D'.$exRow, $contact->title);
+		exCell('E'.$exRow, $contact->monstring);
+		exCell('F'.$exRow, $contact->fylke);
+		exCell('G'.$exRow, $contact->phone);
+		exCell('H'.$exRow, $contact->phone.'#600');
+		exCell('I'.$exRow, $contact->phone.'#500');
 		//// EOEXCEL
 
 
