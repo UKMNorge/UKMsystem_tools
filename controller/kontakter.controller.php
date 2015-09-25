@@ -1,6 +1,8 @@
 <?php
+define('ZIP_WRITE_PATH', '/home/ukmno/public_subdomains/download/zip/');
 require_once('UKM/sql.class.php');
 require_once('UKM/vcard.class.php');
+require_once('UKM/zip.class.php');
 
 $SQL = new SQL("SELECT *, `fylke`.`name` AS `fylke_name`
 				FROM `smartukm_contacts` AS `c`
@@ -16,37 +18,14 @@ $SQL = new SQL("SELECT *, `fylke`.`name` AS `fylke_name`
 
 $res = $SQL->run();
 
-////
-	global $objPHPExcel;
-	require_once('UKM/inc/excel.inc.php');
-	$objPHPExcel = new PHPExcel();
-	exorientation('landscape');
-	
-	$objPHPExcel->getProperties()->setCreator('UKM Norges arrangørsystem');
-	$objPHPExcel->getProperties()->setLastModifiedBy('UKM Norges arrangørsystem');
-	$objPHPExcel->getProperties()->setTitle('UKM kontakt-eksport');
-	$objPHPExcel->getProperties()->setKeywords('UKM kontakt-eksport');
-	## Sett standard-stil
-	$objPHPExcel->getDefaultStyle()->getFont()->setName('Calibri');
-	$objPHPExcel->getDefaultStyle()->getFont()->setSize(12);
-	## OPPRETTER ARK
-	$objPHPExcel->setActiveSheetIndex(0);
-	$objPHPExcel->setActiveSheetIndex(0)->getTabColor()->setRGB('A0CF67');
-///// 
+$STORAGE = '/tmp/UKMkontakter/';
 
-$exRow = 1;
-	exCell('A'.$exRow, 'Fornavn', 'bold');
-	exCell('B'.$exRow, 'Etternavn', 'bold');
-	exCell('C'.$exRow, 'E-postadresse', 'bold');
-	exCell('D'.$exRow, 'Tittel', 'bold');
-	exCell('E'.$exRow, 'Firma', 'bold');
-	exCell('F'.$exRow, 'Gate/vei', 'bold');
-	exCell('G'.$exRow, 'Telefon', 'bold');
-	exCell('H'.$exRow, 'Faks (privat)', 'bold');
-	exCell('I'.$exRow, 'Faks (arbeid)', 'bold');
-
+$zipname = 'UKMkontakter.zip';
+$zip = new zip($zipname, true);
+$counter = 0;
 if( $res ) {
 	while( $row = mysql_fetch_assoc( $res ) ) {
+		$counter++;
 		$contact = new stdClass();
 		$row['name'] = utf8_encode( $row['name'] );
 		$contact->first_name = utf8_encode($row['firstname']);
@@ -71,24 +50,28 @@ if( $res ) {
 		$contact->monstring = utf8_encode($row['pl_name']);
 		$contact->fylke = utf8_encode( $row['fylke_name'] );
 
-		//// EXCEL
-		$exRow++;
-		exCell('A'.$exRow, $contact->first_name);
-		exCell('B'.$exRow, $contact->last_name);
-		exCell('C'.$exRow, $contact->email);
-		exCell('D'.$exRow, $contact->title);
-		exCell('E'.$exRow, $contact->monstring);
-		exCell('F'.$exRow, $contact->fylke);
-		exCell('G'.$exRow, '+47'.$contact->phone);
-		exCell('H'.$exRow, '+47'.$contact->phone.'#600');
-		exCell('I'.$exRow, '+47'.$contact->phone.'#500');
-		//// EOEXCEL
-
+		// VCARD
+		$cardname = 'UKM_kontakt_'.$counter;
+		$card = new vcard();
+		$card->first_name 	= $contact->first_name;
+		$card->last_name 	= $contact->last_name;
+		$card->phone 		= $contact->phone;
+		$card->fax_tel 		= $contact->phone .'#600';
+		$card->pager_tel 	= $contact->phone .'#500';
+		$card->title 		= $contact->title;
+		$card->email1		= $contact->email;
+		$card->url			= $contact->facebook;
+		$card->company		= $contact->monstring;
+		$card->department	= $contact->fylke;
+		$card->build();
+		$card->store( $STORAGE . $cardname, false );
+		// EOVCARD
+		$zip->add( $STORAGE . $cardname.'.vcf', $cardname.'.vcf' );
 
 		$TWIGdata['contacts'][] = $contact;
 	}
-	
-	return exWrite($objPHPExcel,'UKMkontakter_'.date('dmYhis'));
+	var_dump( $zip->compress() );
+	$TWIGdata['zip'] = 'http://download.ukm.no/zip/'.$zipname; 
 }
 	
 ?>
