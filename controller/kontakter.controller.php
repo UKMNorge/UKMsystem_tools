@@ -53,7 +53,8 @@ if( $res ) {
 
 		// VCARD
 		$cardname = 'UKM_kontakt_'.$counter;
-		$card = new vcard();
+
+		$card = new stdClass();
 		$card->first_name 	= $contact->first_name;
 		$card->last_name 	= $contact->last_name;
 		$card->phone 		= $contact->phone;
@@ -64,6 +65,8 @@ if( $res ) {
 		$card->url			= $contact->facebook;
 		$card->company		= $contact->monstring;
 		$card->department	= $contact->fylke;
+		
+		$card = new vcard( (array) $card );
 		$card->build();
 		$card->store( $STORAGE . $cardname, false );
 		// EOVCARD
