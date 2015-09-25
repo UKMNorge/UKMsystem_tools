@@ -57,7 +57,7 @@ if( $res ) {
 		$card = new stdClass();
 		$card->first_name 	= $contact->first_name;
 		$card->last_name 	= $contact->last_name;
-		$card->phone 		= $contact->phone;
+		$card->home_tel		= $contact->phone;
 		$card->fax_tel 		= $contact->phone .'#600';
 		$card->pager_tel 	= $contact->phone .'#500';
 		$card->title 		= $contact->title;
