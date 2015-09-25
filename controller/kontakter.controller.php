@@ -33,8 +33,8 @@ $res = $SQL->run();
 	
 	$objPHPExcel->getProperties()->setCreator('UKM Norges arrangørsystem');
 	$objPHPExcel->getProperties()->setLastModifiedBy('UKM Norges arrangørsystem');
-	$objPHPExcel->getProperties()->setTitle('UKM-rapport '.ucfirst(str_replace('_',' ',$this->name)));
-	$objPHPExcel->getProperties()->setKeywords('UKM-rapporter');
+	$objPHPExcel->getProperties()->setTitle('UKM kontakt-eksport');
+	$objPHPExcel->getProperties()->setKeywords('UKM kontakt-eksport');
 	## Sett standard-stil
 	$objPHPExcel->getDefaultStyle()->getFont()->setName('Calibri');
 	$objPHPExcel->getDefaultStyle()->getFont()->setSize(12);
