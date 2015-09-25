@@ -20,8 +20,9 @@ $res = $SQL->run();
 
 $STORAGE = '/tmp/UKMkontakter/';
 
-$zipname = 'UKMkontakter.zip';
+$zipname = 'UKMkontakter';
 $zip = new zip($zipname, true);
+$zip->debugMode();
 $counter = 0;
 if( $res ) {
 	while( $row = mysql_fetch_assoc( $res ) ) {
@@ -70,8 +71,8 @@ if( $res ) {
 
 		$TWIGdata['contacts'][] = $contact;
 	}
-	var_dump( $zip->compress() );
-	$TWIGdata['zip'] = 'http://download.ukm.no/zip/'.$zipname; 
+	;
+	$TWIGdata['zip'] = $zip->compress(); //'http://download.ukm.no/zip/'.$zipname; 
 }
 	
 ?>
