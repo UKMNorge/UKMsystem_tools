@@ -1,0 +1,26 @@
+<h1>Kontakt-eksport</h1>
+<p class="lead">Last ned kontakter herfra, og importer de til ukmhd1@gmail.com for å dele kontaktlister</p>
+
+
+<table class="table table-striped">
+	<tr>
+		<td>Fornavn</td>
+		<td>Etternavn</td>
+		<td>Telefon</td>
+		<td>E-post</td>
+		<td>Tittel</td>
+		<td>Mønstring</td>
+		<td>Fylke</td>
+	</tr>
+{% for contact in contacts %}
+	<tr>
+		<td>{{ contact.first_name }}</td>
+		<td>{{ contact.last_name }}</td>
+		<td>{{ contact.phone }}<br />{{ contact.phone }}#500<br />{{ contact.phone }}#600</td>
+		<td>{{ contact.email }}</td>
+		<td>{{ contact.title }}</td>
+		<td>UKM {{ contact.monstring }}</td>
+		<td>{{ contact.fylke }}</td>
+	</tr>
+{% endfor %}
+</table>

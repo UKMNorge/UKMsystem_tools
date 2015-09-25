@@ -15,7 +15,11 @@ if(is_admin()) {
 
 function UKMST_menu() {
 	$page = add_menu_page('UKM Norge Systemverktøy', 'System', 'superadmin', 'UKMsystemtools','UKMsystemtools', 'http://ico.ukm.no/system-16.png',22);
+
+	$subpage1 = add_submenu_page( 'UKMsystemtools', 'Kontakteksport', 'Kontakteksport', 'superadministrator', 'UKMkontakteksport', 'UKMkontakteksport' );
+
     add_action( 'admin_print_styles-' . $page, 'UKMsystemtools_scripts_and_styles' );
+    add_action( 'admin_print_styles-' . $subpage1, 'UKMsystemtools_scripts_and_styles' );
 }
 
 function UKMsystemtools() {
@@ -65,4 +69,12 @@ function UKMsystemtools_check_postnumber_updates($messages) {
 	}
 
 	return $messages;
+}
+
+function UKMkontakteksport() {
+	$TWIGdata = array();
+	$VIEW = 'kontakter';
+	require_once('controller/kontakter.controller.php');
+	echo TWIG( $VIEW.'.twig.html', $TWIGdata, dirname(__FILE__), true);
+	
 }
