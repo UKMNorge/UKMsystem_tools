@@ -3,6 +3,7 @@ define('ZIP_WRITE_PATH', '/home/ukmno/public_subdomains/download/zip/');
 require_once('UKM/sql.class.php');
 require_once('UKM/vcard.class.php');
 require_once('UKM/zip.class.php');
+require_once('UKM/inc/excel.inc.php');
 
 $SQL = new SQL("SELECT *, `fylke`.`name` AS `fylke_name`
 				FROM `smartukm_contacts` AS `c`
@@ -24,6 +25,21 @@ $zipname = 'UKMkontakter';
 $zip = new zip($zipname, true);
 $zip->debugMode();
 $counter = 0;
+
+// Init excel document
+exInit();
+$excel_row = 1;
+// Header row
+excell( i2a(1).'1', 'First name' );
+excell( i2a(2).'1', 'Last name' );
+excell( i2a(3).'1', 'E-mail' );
+excell( i2a(4).'1', 'Title' );
+excell( i2a(5).'1', 'Mønstring' );
+excell( i2a(6).'1', 'Fylke' );
+excell( i2a(7).'1', 'Phone' );
+excell( i2a(8).'1', 'Phone UKM' );
+excell( i2a(9).'1', 'Phone UKM support' );
+
 if( $res ) {
 	while( $row = mysql_fetch_assoc( $res ) ) {
 		$counter++;
@@ -71,11 +87,23 @@ if( $res ) {
 		$card->store( $STORAGE . $cardname, false );
 		// EOVCARD
 		$zip->add( $STORAGE . $cardname.'.vcf', $cardname.'.vcf' );
+		
+		$excel_row ++;
+		excell( i2a(1).$excel_row, $card->first_name );
+		excell( i2a(2).$excel_row, $card->last_name );
+		excell( i2a(3).$excel_row, $card->email1 );
+		excell( i2a(4).$excel_row, $card->title );
+		excell( i2a(5).$excel_row, $card->company );
+		excell( i2a(6).$excel_row, $card->department );
+		excell( i2a(7).$excel_row, $card->home_tel );
+		excell( i2a(8).$excel_row, $card->fax_tel );
+		excell( i2a(9).$excel_row, $card->pager_tel );
 
 		$TWIGdata['contacts'][] = $contact;
 	}
 	;
 	$TWIGdata['zip'] = $zip->compress(); //'http://download.ukm.no/zip/'.$zipname; 
+	$TWIGdata['excel'] = exWrite($objPHPExcel, 'kontakteksport');
 }
 	
 ?>
