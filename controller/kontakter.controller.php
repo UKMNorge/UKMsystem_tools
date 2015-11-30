@@ -31,15 +31,15 @@ $counter = 0;
 exInit();
 $excel_row = 1;
 // Header row
-excell( i2a(1).'1', 'First name' );
-excell( i2a(2).'1', 'Last name' );
-excell( i2a(3).'1', 'E-mail' );
-excell( i2a(4).'1', 'Title' );
-excell( i2a(5).'1', 'Mønstring' );
-excell( i2a(6).'1', 'Fylke' );
-excell( i2a(7).'1', 'Phone' );
-excell( i2a(8).'1', 'Phone UKM' );
-excell( i2a(9).'1', 'Phone UKM support' );
+excell( i2a(1).'1', 'First name', 'bold' );
+excell( i2a(2).'1', 'Last name', 'bold' );
+excell( i2a(3).'1', 'E-mail', 'bold' );
+excell( i2a(4).'1', 'Title', 'bold' );
+excell( i2a(5).'1', 'Mønstring', 'bold' );
+excell( i2a(6).'1', 'Fylke', 'bold' );
+excell( i2a(7).'1', 'Phone', 'bold' );
+excell( i2a(8).'1', 'Phone UKM', 'bold' );
+excell( i2a(9).'1', 'Phone UKM support', 'bold' );
 
 if( $res ) {
 	while( $row = mysql_fetch_assoc( $res ) ) {
@@ -89,7 +89,7 @@ if( $res ) {
 		// EOVCARD
 		$zip->add( $STORAGE . $cardname.'.vcf', $cardname.'.vcf' );
 		
-		$excel_row ++;
+		$excel_row++;
 		excell( i2a(1).$excel_row, $card->first_name );
 		excell( i2a(2).$excel_row, $card->last_name );
 		excell( i2a(3).$excel_row, $card->email1 );
