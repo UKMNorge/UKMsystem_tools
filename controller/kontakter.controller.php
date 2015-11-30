@@ -83,9 +83,9 @@ if( $res ) {
 		$card->company		= 'UKM '. $contact->monstring;
 		$card->department	= '('. $contact->fylke .')';
 		
-		$card = new vcard( (array) $card );
-		$card->build();
-		$card->store( $STORAGE . $cardname, false );
+		$vcard = new vcard( (array) $card );
+		$vcard->build();
+		$vcard->store( $STORAGE . $cardname, false );
 		// EOVCARD
 		$zip->add( $STORAGE . $cardname.'.vcf', $cardname.'.vcf' );
 		
