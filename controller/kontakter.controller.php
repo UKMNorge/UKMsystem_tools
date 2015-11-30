@@ -3,6 +3,7 @@ define('ZIP_WRITE_PATH', '/home/ukmno/public_subdomains/download/zip/');
 require_once('UKM/sql.class.php');
 require_once('UKM/vcard.class.php');
 require_once('UKM/zip.class.php');
+global $objPHPExcel;
 require_once('UKM/inc/excel.inc.php');
 
 $SQL = new SQL("SELECT *, `fylke`.`name` AS `fylke_name`
