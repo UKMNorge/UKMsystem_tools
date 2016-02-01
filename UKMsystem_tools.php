@@ -58,7 +58,6 @@ function UKMsystemtools_check_postnumber_updates($messages) {
 		}
 
 	} else if ( $last_postnumber_timestamp == false ) {
-		var_dump( array( "UKMsystemtools debug", $last_postnumber_timestamp ) );
 		$messages[] = array(
 			'level' 	=> 'alert-error',
 			'module'	=> __('System', 'UKM'),
