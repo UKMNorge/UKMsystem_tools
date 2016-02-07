@@ -1,40 +1,41 @@
 <?php
-	require_once('UKM/monstringer.class.php');
-	require_once('UKM/monstring.class.php');
-	require_once('UKM/innslag.class.php');
+require_once('UKM/monstringer.class.php');
+require_once('UKM/monstring.class.php');
+require_once('UKM/innslag.class.php');
+ob_start();
+$SEASON = 2014;
+$monstringer = new monstringer( $SEASON );
+$monstringer = $monstringer->etter_sesong();
+$counter_monstring = 0;
+while( $r = mysql_fetch_assoc( $monstringer ) ) {
+	$monstring = new monstring( $r['pl_id'] );
+	$counter_monstring++;
+	echo '<hr />'. $monstring->get('pl_name') .' ('. $counter_monstring .' av '. mysql_num_rows( $monstringer ) .')<br />';
+	ob_flush();
+	flush();
+	$innslagene = $monstring->innslag();
 	
-	$SEASON = 2014;
-	$monstringer = new monstringer( $SEASON );
-	$monstringer = $monstringer->etter_sesong();
-	
-	while( $r = mysql_fetch_assoc( $monstringer ) ) {
-		$monstring = new monstring( $r['pl_id'] );
-		
-		#echo '<hr />'. $monstring->get('pl_name') .'<br />';
-		
-		$innslagene = $monstring->innslag();
-		
-		foreach( $innslagene as $inn ) {
-			$innslag = new innslag( $inn['b_id'] );
-			$bt_id = $innslag->get('bt_id');
-			if( $bt_id != 1 ) {
-				continue;
-			}
+	foreach( $innslagene as $inn ) {
+		$innslag = new innslag( $inn['b_id'] );
+		$bt_id = $innslag->get('bt_id');
+		if( $bt_id != 1 ) {
+			continue;
+		}
 
-			#echo ' &nbsp; '. $innslag->get('b_name') .'<br />';
+		#echo ' &nbsp; '. $innslag->get('b_name') .'<br />';
+		
+		$titler = $innslag->titler( $monstring->get('pl_id') );
+		foreach( $titler as $tittel ) {
+			$tonoInfo = new tonoInfo( $tittel->get('t_id'), $tittel->get('form') );
+			$tonoInfo->load_from_tittel( $tittel );
+			$tonoInfo->load_UKMTV( $innslag );
+			$TWIGdata['titler'][] = $tonoInfo;
 			
-			$titler = $innslag->titler( $monstring->get('pl_id') );
-			foreach( $titler as $tittel ) {
-				$tonoInfo = new tonoInfo( $tittel->get('t_id'), $tittel->get('form') );
-				$tonoInfo->load_from_tittel( $tittel );
-				$tonoInfo->load_UKMTV( $innslag );
-				$TWIGdata['titler'][] = $tonoInfo;
-				
-				#echo ' &nbsp; &nbsp; '. $tittel->get('tittel') .' - '. $tittel->get('tekst_av') .' - '. $tittel->get('melodi_av') . ' - '. $tittel->get('varighet') .'<br />';
-			}
+			#echo ' &nbsp; &nbsp; '. $tittel->get('tittel') .' - '. $tittel->get('tekst_av') .' - '. $tittel->get('melodi_av') . ' - '. $tittel->get('varighet') .'<br />';
 		}
 	}
-	
+}
+ob_end_flush();
 	
 class tonoInfo {
 	private $t_id;
