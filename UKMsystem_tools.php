@@ -16,10 +16,19 @@ if(is_admin()) {
 function UKMST_menu() {
 	$page = add_menu_page('UKM Norge Systemverktøy', 'System', 'superadmin', 'UKMsystemtools','UKMsystemtools', 'http://ico.ukm.no/system-16.png',22);
 
-	$subpage1 = add_submenu_page( 'UKMsystemtools', 'Kontakteksport', 'Kontakteksport', 'superadministrator', 'UKMkontakteksport', 'UKMkontakteksport' );
+	$subpage1 = add_submenu_page( 'UKMsystemtools', 'TONO-rapport', 'TONO-rapport', 'superadministrator', 'UKMsystemtools_TONO', 'UKMsystemtools_TONO' );
+	$subpage2 = add_submenu_page( 'UKMsystemtools', 'Kontakteksport', 'Kontakteksport', 'superadministrator', 'UKMkontakteksport', 'UKMkontakteksport' );
 
     add_action( 'admin_print_styles-' . $page, 'UKMsystemtools_scripts_and_styles' );
     add_action( 'admin_print_styles-' . $subpage1, 'UKMsystemtools_scripts_and_styles' );
+    add_action( 'admin_print_styles-' . $subpage2, 'UKMsystemtools_scripts_and_styles' );
+}
+
+function UKMsystemtools_TONO() {
+	$TWIGdata = [];
+	require_once('controller/tono.controller.php');
+
+	echo TWIG('tono.twig.html', $TWIGdata, dirname(__FILE__), true);
 }
 
 function UKMsystemtools() {
