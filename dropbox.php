@@ -16,5 +16,7 @@ if( isset( $_GET['state'] ) && isset( $_GET['code'] ) ) {
 	header("Location: ". $authUrl);
 	exit();
 } else {
-	die('Lukk denne fanen');
+	echo '<h1>Access token stored!</h1>'
+		.'<p>Close this tab.</p>';
+	die();
 }
