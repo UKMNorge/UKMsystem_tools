@@ -2,7 +2,7 @@
 
 require_once('UKM/inc/dropbox.inc.php');
 
-$client = new Dropbox\Client( DROPBOX_AUTH_ACCESS_TOKEN, $appName, 'UTF-8' );
+$client = new Dropbox\Client( DROPBOX_AUTH_ACCESS_TOKEN, DROPBOX_APP_NAME, 'UTF-8' );
 
 try {
 	$test = $client->getAccountInfo();
