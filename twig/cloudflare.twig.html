@@ -1,0 +1,32 @@
+{% if message is defined %}
+	<br /><br /><div class="col-xs-11 alert alert-{{ message|first }}">{{ message|last|raw }}</div>
+{% endif %}
+
+<h1>Cloudflare-kontroll</h1>
+<p class="lead">Her kan du cleare cloudflares cache for enkeltfiler eller hele nettsiden.<br />
+Fint å gjøre etter oppdatering av stiler, bilder etc, eller ved ukjente problemer.</p>
+<div class="col-xs-12 col-sm-8">
+	<p class="lead">OBS: IKKE OPPDATER DENNE SIDEN! Trykk <a href="admin.php?page=UKMcloudflare_cache">her</a> i stedet.</p>
+</div>
+<div class="clearfix"></div>
+<div class="col-xs-12 col-sm-4">
+	<h4>Fjern alt</h4>
+		<a href="admin.php?page=UKMcloudflare_cache&deleteAll=true" class="btn btn-danger">Clear Cloudflare-Cache</a>
+	</form>
+</div>
+
+<div class="col-xs-12 col-sm-7">
+	<h4>Fjern enkeltfiler</h4>
+	<p>Fyll inn lenken til filen du vil oppdatere her. Èn lenke per boks. Trykk på den blå knappen for å legge til bokser.</p>
+	<span style="font-style: italic;">OBS: Benytt hele lenken, f.eks http://grafikk.ukm.no/ambassador/banner-heart.png</span>
+	<form method="GET" action="admin.php?page=UKMcloudflare_cache&delete=true">
+		<input type="hidden" name="page" value="UKMcloudflare_cache">
+		<input type="hidden" name="delete" value="true">
+		<input type="hidden" name="num" id="count" value="1">
+		<input type="text" required class="form-control" name="file1" id="field1" />
+		<br>
+		<button class="btn btn-primary add-more">+</button><span>  </span>
+		<input type="submit" class="btn btn-danger" value="Fjern filer">
+	</form>
+
+</div>

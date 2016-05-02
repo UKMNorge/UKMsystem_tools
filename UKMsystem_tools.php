@@ -18,12 +18,14 @@ function UKMST_menu() {
 
 	$subpage1 = add_submenu_page( 'UKMsystemtools', 'TONO-rapport', 'TONO-rapport', 'superadministrator', 'UKMsystemtools_TONO', 'UKMsystemtools_TONO' );
 	$subpage2 = add_submenu_page( 'UKMsystemtools', 'Kontakteksport', 'Kontakteksport', 'superadministrator', 'UKMkontakteksport', 'UKMkontakteksport' );
-	$subpage3 = add_submenu_page( 'UKMsystemtools', 'Dropbox', 'Dropbox', 'superadministrator', 'UKMdropbox', 'UKMdropbox' );
+	$subpage3 = add_submenu_page( 'UKMsystemtools', 'Cloudflare-cache', 'Cloudflare-cache', 'superadministrator', 'UKMcloudflare_cache', 'UKMcloudflare_cache');
+	$subpage4 = add_submenu_page( 'UKMsystemtools', 'Dropbox', 'Dropbox', 'superadministrator', 'UKMdropbox', 'UKMdropbox' );
 
     add_action( 'admin_print_styles-' . $page, 'UKMsystemtools_scripts_and_styles' );
     add_action( 'admin_print_styles-' . $subpage1, 'UKMsystemtools_scripts_and_styles' );
     add_action( 'admin_print_styles-' . $subpage2, 'UKMsystemtools_scripts_and_styles' );
     add_action( 'admin_print_styles-' . $subpage3, 'UKMsystemtools_scripts_and_styles' );
+    add_action( 'admin_print_styles-' . $subpage4, 'UKMsystemtools_scripts_and_styles' );
 }
 
 function UKMsystemtools_TONO() {
@@ -31,6 +33,14 @@ function UKMsystemtools_TONO() {
 	require_once('controller/tono.controller.php');
 
 	echo TWIG('tono.twig.html', $TWIGdata, dirname(__FILE__), true);
+}
+
+function UKMcloudflare_cache() {
+	$view_data = [];
+	wp_enqueue_script('UKMsupport_addMore_js', plugin_dir_url(__FILE__).'js/addMore.js');
+	require_once('controller/cloudflare.controller.php');
+
+	echo TWIG('cloudflare.twig.html', $view_data, dirname(__FILE__), true);
 }
 
 function UKMsystemtools() {
