@@ -18,10 +18,12 @@ function UKMST_menu() {
 
 	$subpage1 = add_submenu_page( 'UKMsystemtools', 'TONO-rapport', 'TONO-rapport', 'superadministrator', 'UKMsystemtools_TONO', 'UKMsystemtools_TONO' );
 	$subpage2 = add_submenu_page( 'UKMsystemtools', 'Kontakteksport', 'Kontakteksport', 'superadministrator', 'UKMkontakteksport', 'UKMkontakteksport' );
+	$subpage3 = add_submenu_page( 'UKMsystemtools', 'Dropbox', 'Dropbox', 'superadministrator', 'UKMdropbox', 'UKMdropbox' );
 
     add_action( 'admin_print_styles-' . $page, 'UKMsystemtools_scripts_and_styles' );
     add_action( 'admin_print_styles-' . $subpage1, 'UKMsystemtools_scripts_and_styles' );
     add_action( 'admin_print_styles-' . $subpage2, 'UKMsystemtools_scripts_and_styles' );
+    add_action( 'admin_print_styles-' . $subpage3, 'UKMsystemtools_scripts_and_styles' );
 }
 
 function UKMsystemtools_TONO() {
@@ -40,6 +42,15 @@ function UKMsystemtools() {
 
 	echo TWIG( $VIEW.'.twig.html', $TWIGdata, dirname(__FILE__), true);
 }
+
+function UKMdropbox() {
+	$TWIGdata = [];
+	require_once('controller/dropbox.controller.php');
+	$VIEW = 'dropbox';
+
+	echo TWIG( $VIEW.'.html.twig', $TWIGdata, dirname(__FILE__), true);
+}
+
 
 function UKMsystemtools_scripts_and_styles() {
 	wp_enqueue_style( 'UKMsupport_css', plugin_dir_url( __FILE__ ) . 'UKMsupport.css');

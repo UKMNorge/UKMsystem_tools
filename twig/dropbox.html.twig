@@ -1,0 +1,15 @@
+<div class="col-xs-12 col-sm-8 col-md-6">
+	<img src="//ico.ukm.no/dropbox-128.png" class="pull-right" />
+	<h1>UKM DigArk @ Dropbox</h1>
+	<p class="lead">For arkivering av bilder bruker UKM.no dropbox.</p>
+	
+	{% if authenticated %}
+		<p>Dropbox er koblet til {{ client.name }} sin dropbox</p>
+		{{ dump( client )|raw }}
+	{% else %}
+		<p>
+			Ingen tilkobling etablert.
+			<a href="{{ authURL }}" target="_blank">Logg inn med dropbox</a>
+		</p>
+	{% endif %}
+</div>
