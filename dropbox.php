@@ -1,6 +1,8 @@
 <?php
 require_once('UKMconfig.inc.php');
 
+@session_start();
+
 require_once('UKM/inc/dropbox.inc.php');
 
 if( isset( $_GET['state'] ) && isset( $_GET['code'] ) ) {
