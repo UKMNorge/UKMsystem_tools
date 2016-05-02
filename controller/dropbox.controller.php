@@ -11,5 +11,5 @@ try {
 } catch( Dropbox\Exception_InvalidAccessToken $e ) {
 	$authUrl = $webAuth->start();
 	$TWIGdata['authenticated'] = false;
-	$TWIGdata['authURL'] = $authUrl;
+	$TWIGdata['authURL'] = '/wp-content/plugins/UKMsystem_tools/dropbox.php';
 }
