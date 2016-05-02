@@ -4,8 +4,7 @@
 	<p class="lead">For arkivering av bilder bruker UKM.no dropbox.</p>
 	
 	{% if authenticated %}
-		<p>Dropbox er koblet til {{ client.name }} sin dropbox</p>
-		{{ dump( client )|raw }}
+		<p>Dropbox er koblet til {{ client.display_name }} sin dropbox, og filene vil arkiveres i Apps/UKMdigark</p>
 	{% else %}
 		<p>
 			Ingen tilkobling etablert.
