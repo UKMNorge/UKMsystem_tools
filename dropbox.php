@@ -7,7 +7,10 @@ require_once('UKM/inc/dropbox.inc.php');
 
 if( isset( $_GET['state'] ) && isset( $_GET['code'] ) ) {
 	list( $accessToken ) = $webAuth->finish( $_GET );
-	die('Save this accesstoken as "DROPBOX_AUTH_ACCESS_TOKEN" in UKMconfig.inc.php: <pre>'. $accessToken .'</pre>');
+	echo '<h1>Access granted!</h1>'
+		.'<p>Save this accesstoken as "DROPBOX_AUTH_ACCESS_TOKEN" in UKMconfig.inc.php: <pre>'. $accessToken .'</pre></p>'
+		.'<p><a href="?success">Then go to this page</a>';
+	die();
 } elseif( !defined('DROPBOX_AUTH_ACCESS_TOKEN') || empty('DROPBOX_AUTH_ACCESS_TOKEN') ) {
 	$authUrl = $webAuth->start();
 	header("Location: ". $authUrl);
