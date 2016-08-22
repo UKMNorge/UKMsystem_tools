@@ -82,7 +82,6 @@ while($monstring = mysql_fetch_assoc($monstringer)) {
 	echo '<fieldset><legend>Mønstring '. ($teller-$START) .' av '. ($STOP-$START) .' (nr '. $START .' til '. $STOP .') </legend>';
 	# det er en lokalmønstring
 	if($m['type'] == 'kommune') {
-		continue;
 		echo ' '. (empty($m['pl_name']) ? '<span class="alert-danger">Mønstring uten navn</span>' : $m['pl_name'] ) .' <span class="badge">Lokalmønstring</span> <br />';
 		
 		echo ' <label>KOMMUNER:</label><br />';
