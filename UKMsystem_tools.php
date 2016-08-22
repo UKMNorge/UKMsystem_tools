@@ -95,6 +95,20 @@ function UKMsystemtools_newSeason( $messages ) {
 			'link'		=> 'admin.php?page=UKMsystemtools_deltaTest'
 		);		
 	}
+	
+	// I sesong, sjekk antall uregistrerte mønstringer
+	if( in_array( (int)date('m'), array(11,12,1,2) ) ) {
+		require_once('UKM/monstringer.class.php');
+		$monstringer = new monstringer( get_site_option('season') );
+		if( 15 < $monstringer->antall_uregistrerte() ) {
+			$messages[] = array(
+				'level' 	=> 'alert-warning',
+				'module'	=> 'System',
+				'header'	=> 'Det er '.$monstringer->antall_uregistrerte() .' uregistrerte mønstringer ',
+#				'link'		=> 'admin.php?page=UKMsystemtools'
+			);
+		}
+	}
 	return $messages;
 }
 function UKMsystemtools_check_postnumber_updates($messages) {
