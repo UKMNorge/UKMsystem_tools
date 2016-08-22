@@ -37,6 +37,7 @@ require_once('ny_monstring_funksjoner.php');
 $season = (int)date("Y")+1;
 
 ## LOOP ALLE MØNSTRINGER
+require_once('UKM/monstringer.class.php');
 $monstringer = new monstringer();
 $monstringer = $monstringer->etter_sesong($season);
 
@@ -59,6 +60,8 @@ if( $START > 0 ) {
 if( mysql_num_rows( $monstringer ) == 0 ) {
 	die('<div class="alert alert-danger">Beklager, fant ingen mønstringer!</div>');
 }
+require_once('UKM/fylker.class.php');
+
 while($monstring = mysql_fetch_assoc($monstringer)) {
 	$teller++;
 	if($teller <= $START) {
@@ -78,6 +81,7 @@ while($monstring = mysql_fetch_assoc($monstringer)) {
 	echo '<fieldset><legend>Mønstring '. ($teller-$START) .' av '. ($STOP-$START) .' (nr '. $START .' til '. $STOP .') </legend>';
 	# det er en lokalmønstring
 	if($m['type'] == 'kommune') {
+		continue;
 		echo ' '. (empty($m['pl_name']) ? '<span class="alert-danger">Mønstring uten navn</span>' : $m['pl_name'] ) .' <span class="badge">Lokalmønstring</span> <br />';
 		
 		echo ' <label>KOMMUNER:</label><br />';
@@ -123,7 +127,11 @@ while($monstring = mysql_fetch_assoc($monstringer)) {
 	
 		echo '<label>LEGGER TIL REWRITES</label><br />';
 		## LEGG TIL RE-WRITES
-		UKMA_SEASON_rewrites($m['fylke_name'], $rewrites, $m['pl_id']);
+		try {
+			UKMA_SEASON_rewrites( fylker::getById( $m['fylke_id'] )->getLink(), $rewrites, $m['pl_id']);
+		} catch( Exception $e ) {
+			echo 'La ikke til rewrites! '. $e->getMessage();
+		}
 		
 	###################
 	## VI SNAKKER FYLKE
@@ -143,7 +151,11 @@ while($monstring = mysql_fetch_assoc($monstringer)) {
 		update_user_meta( $fylkesbruker, 'primary_blog', $blogg);
 		
 		echo ' <label>URL REWRITES:</label><br />';
-		echo UKMA_SEASON_urlsafe($m['pl_name']);
+		try {
+			echo '/'. fylker::getById( $m['pl_fylke'] )->getLink() .'/';
+		} catch( Exception $e ) {
+			echo '<span class="alert-danger">/fylke_'. $m['pl_fylke'] .'/</span>';
+		}
 
 	}
 	echo '</fieldset>';

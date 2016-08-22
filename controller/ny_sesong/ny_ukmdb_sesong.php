@@ -68,7 +68,7 @@ $ny_sesong_data = array('activeSeason' => $activeSeason,
 						'newFylkeDeadline' => $newFylkeDeadline,
 						'sql' => $activePlaces_debug,
 						'numRows' => $activePlaces_numRows);
-echo TWIG('ny_sesong/steg1_top.twig.html', $ny_sesong_data, dirname( dirname( __FILE__ ) ) );
+echo TWIG('ny_sesong/steg1_top.twig.html', $ny_sesong_data, dirname( dirname( dirname( __FILE__ ) ) ) );
 
 # LOOP ALL PLACES AND CREATE DUPLICATES FOR THE NEW SEASON
 #for($i=0; $i<$activePlaces[1]; $i++) {
@@ -205,7 +205,7 @@ function createPlace($att, $contactPs, $kommunerel,$old_pl_id) {
 									)
 						);
 	
-	echo TWIG('ny_sesong/steg1_monstring.twig.html', $pldata, dirname( dirname( __FILE__ ) ) );
+	echo TWIG('ny_sesong/steg1_monstring.twig.html', $pldata,dirname( dirname( dirname( __FILE__ ) ) ) );
 	
 	return $id;
 } 

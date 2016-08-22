@@ -1,4 +1,6 @@
 <?php
+require_once('UKM/fylker.class.php');
+
 ################################################
 ## LAGER BRUKERNE
 ################################################
@@ -26,20 +28,18 @@ function UKMA_SEASON_brukere($blogg, $brukere, $fylke, $fylkebrukere) {
 }
 function UKMA_SEASON_fylkesbrukere( $echo ) {
 	global $wpdb;
-	$fylker = new SQL("SELECT * FROM `smartukm_fylke`");
-	$fylker = $fylker->run();
+	$fylker = fylker::getAll();
 	## LOOPER ALLE FYLKER OG OPPRETTER BRUKER OM DEN IKKE FINNES
-	while($f = mysql_fetch_assoc($fylker)) {
+	foreach( $fylker as $fylke ) {
 		$twigdata = [];
 		
-		$name = UKMA_SEASON_urlsafe_non_charset($f['name']);
+		$name = $fylke->getLink();
 		$password = UKM_ordpass();
-		$bruker = $wpdb->get_row("SELECT * FROM `ukm_brukere`
-									  WHERE `b_fylke` = '".$f['id']."'");
+		$bruker = $wpdb->get_row("SELECT * FROM `ukm_brukere` WHERE `b_fylke` = '".$fylke->getId()."'");
 		if(is_object($bruker)) {
 			$email = $bruker->b_email;
 		} else {
-			$email = UKMA_SEASON_urlsafe_non_charset($f['name']) .'@fylkefake.'.UKM_HOSTNAME;
+			$email = $fylke->getLink() .'@fylkefake.'.UKM_HOSTNAME;
 		}
 		
 		$twigdata['name'] = $name;
@@ -47,21 +47,18 @@ function UKMA_SEASON_fylkesbrukere( $echo ) {
 		$twigdata['email'] = $email;
 		$twigdata['existing'] = username_exists( $name );
 		
+		$brukerinfo = array('b_name'=>$name,
+							'b_password'=>$password,
+							'b_email'=>$email,
+							'b_kommune'=>0,
+							'b_fylke' => $fylke->getId());
+
 		## Om brukeren finnes, legg til ID i array og gå pent videre
 		if(username_exists( $name )) {
-			$userIDnow = username_exists($name);
-			$users[$f['id']] = $userIDnow;
-			remove_user_from_blog($userIDnow, 1);
-			$twigdata['id'] = $userIDnow;
-			
-			wp_set_password( $password, $userIDnow );
-			$wpdb->update('ukm_brukere', array('b_password' => $password ), array('wp_bid' => $userIDnow ));
+			$user_id = username_exists($name);
+			wp_set_password( $password, $user_id );
+			$wpdb->update('ukm_brukere', array('b_password' => $password ), array('wp_bid' => $user_id ));
 		} else {
-			$brukerinfo = array('b_name'=>$name,
-								'b_password'=>$password,#wp_generate_password(6,false,false),
-								'b_email'=>$email,
-								'b_kommune'=>0,
-								'b_fylke' => $f['id']);
 			$user_id = wp_create_user( $brukerinfo['b_name'], $brukerinfo['b_password'], $brukerinfo['b_email'] );
 
 			if(!is_string($user_id)&&!is_numeric($user_id)) {
@@ -70,25 +67,34 @@ function UKMA_SEASON_fylkesbrukere( $echo ) {
 				$twigdata['error'] = false;
 			}
 			## Oppdater klartekstarray
-			$brukerinfo['wp_bid'] = $user_id;
-			
-			## LAGRE I KLARTEKSTTABELL
-			if(is_object($bruker)) {
-				$twigdata['insert'] = false;
-				$wpdb->update('ukm_brukere',
-						  $brukerinfo,
-						  array('b_id'=>$bruker->b_id));
-			} else {
-				$twigdata['insert'] = true;
-				$wpdb->insert('ukm_brukere',$brukerinfo);
-			}
-			## OPPRETTHOLD LISTE OVER FYLKESBRUKERE
-			$users[$f['id']] = $user_id;
-			remove_user_from_blog($user_id, 1);
-			$twigdata['id'] = $user_id;
 		}
+				
+		// OPPRETTHOLD LISTE OVER FYLKESBRUKERE
+		$users[ $fylke->getId() ] = $user_id;
+		// Fjern brukeren fra blog 1 (UKM for ungdom)
+		remove_user_from_blog($user_id, 1);
+
+		$twigdata['id'] = $user_id;
+		$brukerinfo['wp_bid'] = $user_id;
+
+		## LAGRE I KLARTEKSTTABELL
+		if(is_object($bruker)) {
+			$twigdata['insert'] = false;
+			$wpdb->update('ukm_brukere',
+					  $brukerinfo,
+					  array('b_id'=>$bruker->b_id));
+			$brukerinfo['b_id'] = $bruker->b_id;
+		} else {
+			$twigdata['insert'] = true;
+			$wpdb->insert('ukm_brukere',$brukerinfo);
+			$bruker_id = $wpdb->insert_id;
+			$brukerinfo['b_id'] = $bruker_id;
+		}
+		$twigdata['u_id'] = $brukerinfo['b_id'];
+
+
 		if( $echo ) {
-			echo TWIG('ny_sesong/fylkesbrukere.twig.html', $twigdata, dirname( dirname( __FILE__ ) ) );
+			echo TWIG('ny_sesong/fylkesbrukere.twig.html', $twigdata, dirname( dirname( dirname( __FILE__ ) ) ) );
 		}
 	}
 	return $users;
@@ -128,8 +134,13 @@ function UKMA_SEASON_opprett_blogg($navn, $pl_id, $type, $fylkeid, $kommuneider=
 	## KALKULER PATH
 	if($type == 'kommune')
 		$path = '/pl'.$pl_id.'/';
-	else
-		$path = '/'.strtolower(UKMA_SEASON_urlsafe(utf8_encode($navn))).'/';
+	else {
+		try {
+			$path = '/'. fylker::getById( $fylkeid )->getLink() .'/';
+		} catch( Exception $e ) {
+			$path = '/fylke_'. $fylkeid .'/';
+		}
+	}
 	
 	echo ' &nbsp; '. $path .'<br />';
 	
@@ -153,9 +164,9 @@ function UKMA_SEASON_opprett_blogg($navn, $pl_id, $type, $fylkeid, $kommuneider=
 					  'season' =>$season,
 					  'show_on_front'=>'page',
 					  'page_on_front'=>'2',
-					  'template'=>'manifesto',
-					  'stylesheet'=>'manifesto',
-					  'current_theme'=>'UKM Norge - Manifesto'
+					  'template'=>'UKMresponsive',
+					  'stylesheet'=>'UKMresponsive',
+					  'current_theme'=>'UKM Responsive'
 					 );
 		## LEGGER TIL ALLE META-INNSTILLINGER
 		foreach($meta as $key => $value) {
@@ -350,9 +361,7 @@ function UKMA_SEASON_urlsafe_non_charset($text) {
 }
 
 function UKMA_SEASON_rewrites($fylke, $froms, $pl_id) {
-	global $wpdb;
-	$fylke = strtolower(UKMA_SEASON_urlsafe_non_charset($fylke));
-		
+	global $wpdb;		
 	if(!is_array($froms)) {
 		echo ' &nbsp; <span class="alert-danger">M&oslash;nstringen har ingen kommuner</span>';
 	} else {

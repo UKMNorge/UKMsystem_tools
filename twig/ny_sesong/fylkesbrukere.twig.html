@@ -1,5 +1,9 @@
 <fieldset>
-	<legend>{{ name }} <span class="badge">{{ id }}</span></legend>
+	<legend>
+		{{ name }} 
+		<span class="badge">WPID: {{ id }}</span> - 
+		<span class="badge">U_ID: {{ u_id }}</span>
+	</legend>
 	<ul class="list-unstyled">
 		{% if twigdata.error != false %}
 		<li class="alert alert-danger">
