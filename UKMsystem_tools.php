@@ -20,7 +20,9 @@ function UKMST_menu() {
 	$subpage2 = add_submenu_page( 'UKMsystemtools', 'Kontakteksport', 'Kontakteksport', 'superadministrator', 'UKMkontakteksport', 'UKMkontakteksport' );
 	$subpage3 = add_submenu_page( 'UKMsystemtools', 'Cloudflare-cache', 'Cloudflare-cache', 'superadministrator', 'UKMcloudflare_cache', 'UKMcloudflare_cache');
 	$subpage4 = add_submenu_page( 'UKMsystemtools', 'Dropbox', 'Dropbox', 'superadministrator', 'UKMdropbox', 'UKMdropbox' );
-	$subpage4 = add_submenu_page( 'UKMsystemtools', 'Synkroniser passord', 'Synkroniser passord', 'superadministrator', 'UKMsystemtools_passwordsync', 'UKMsystemtools_passwordsync' );
+	$subpage5 = add_submenu_page( 'UKMsystemtools', 'Synkroniser passord', 'Synkroniser passord', 'superadministrator', 'UKMsystemtools_passwordsync', 'UKMsystemtools_passwordsync' );
+	$subpage6 = add_submenu_page( 'UKMsystemtools', 'Oppdater kortadresser', 'Oppdater kortadresser', 'superadministrator', 'UKMsystemtools_modrewrite', 'UKMsystemtools_modrewrite' );
+
 
     add_action( 'admin_print_styles-' . $page, 'UKMsystemtools_scripts_and_styles' );
     add_action( 'admin_print_styles-' . $subpage1, 'UKMsystemtools_scripts_and_styles' );
@@ -28,6 +30,7 @@ function UKMST_menu() {
     add_action( 'admin_print_styles-' . $subpage3, 'UKMsystemtools_scripts_and_styles' );
     add_action( 'admin_print_styles-' . $subpage4, 'UKMsystemtools_scripts_and_styles' );
     add_action( 'admin_print_styles-' . $subpage5, 'UKMsystemtools_scripts_and_styles' );
+    add_action( 'admin_print_styles-' . $subpage6, 'UKMsystemtools_scripts_and_styles' );
 }
 
 function UKMsystemtools_TONO() {
@@ -112,4 +115,7 @@ function UKMkontakteksport() {
 function UKMsystemtools_passwordsync() {
 	$TWIGdata = [];
 	require_once('controller/passwordsync.controller.php');
+}
+function UKMsystemtools_modrewrite() {
+	require_once('controller/modrewrite.controller.php');
 }
