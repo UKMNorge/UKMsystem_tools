@@ -43,7 +43,8 @@ $monstringer = $monstringer->etter_sesong($season);
 
 ## OPPRETT FYLKESBRUKERE
 echo '<h2>Oppretter fylkesbrukere</h2>';
-$fylkebrukere = UKMA_SEASON_fylkesbrukere( $_GET['start'] == 0 );
+$fylkebrukere = UKMA_SEASON_fylkesbrukere( true, $_GET['start'] == 0 );
+$urgbrukere = UKMA_SEASON_fylkesbrukere( false, $_GET['start'] == 0 );
 
 $teller = 0;
 $START = (int)$_GET['start'];
@@ -144,6 +145,9 @@ while($monstring = mysql_fetch_assoc($monstringer)) {
 		echo '<label>LEGGER TIL BRUKERE</label><br />';
 		## LEGG TIL BRUKERNE TIL SIDEN
 		UKMA_SEASON_brukere($blogg, array(), $m['fylke_id'], $fylkebrukere);
+		## LEGG TIL URG-BRUKERE
+		echo ' &nbsp; Legger til &quot;editor&quot; i blogg '.$blogg.' <span class="badge">WP_UID: '. $urgbrukere[ $m['fylke_id'] ] .'</span><br />';
+		add_user_to_blog($blogg, $urgbrukere[ $m['fylke_id'] ], 'editor');
 
 		echo '<label>SETTER STANDARDSIDE FOR BRUKERE</label><br />';
 		$fylkesbruker = $fylkebrukere[ $m['pl_fylke'] ];

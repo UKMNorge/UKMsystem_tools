@@ -26,21 +26,27 @@ function UKMA_SEASON_brukere($blogg, $brukere, $fylke, $fylkebrukere) {
 	add_user_to_blog($blogg, 1, 'administrator');
     echo ' &nbsp; Legger til &quot;administrator&quot; i blogg '.$blogg.' <span class="badge">UKM Norge</span><br />';
 }
-function UKMA_SEASON_fylkesbrukere( $echo ) {
+function UKMA_SEASON_fylkesbrukere( $fylkeskontakter=true, $echo ) {
 	global $wpdb;
 	$fylker = fylker::getAll();
+	
+	if( $fylkeskontakter ) {
+		$emaildomain = '@'. UKM_HOSTNAME;
+		$nameprefix = '';
+	} else {
+		$emaildomain = '@urg.'. UKM_HOSTNAME;
+		$nameprefix = 'urg-';
+	}
+	
 	## LOOPER ALLE FYLKER OG OPPRETTER BRUKER OM DEN IKKE FINNES
 	foreach( $fylker as $fylke ) {
 		$twigdata = [];
 		
-		$name = $fylke->getLink();
+		$name = $nameprefix . $fylke->getLink();
 		$password = UKM_ordpass();
-		$bruker = $wpdb->get_row("SELECT * FROM `ukm_brukere` WHERE `b_fylke` = '".$fylke->getId()."'");
-		if(is_object($bruker)) {
-			$email = $bruker->b_email;
-		} else {
-			$email = $fylke->getLink() .'@fylkefake.'.UKM_HOSTNAME;
-		}
+		
+		$email = $fylke->getLink() . $emaildomain;
+		$bruker = $wpdb->get_row("SELECT * FROM `ukm_brukere` WHERE `b_email` = '". $email ."'");
 		
 		$twigdata['name'] = $name;
 		$twigdata['password'] = $password;
