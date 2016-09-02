@@ -8,7 +8,7 @@ function pd($var) {
 	var_dump($var);
 	echo '</pre>';
 }
-error_reporting(E_ALL);
+error_reporting(E_ALL ^ E_DEPRECATED);
 global $activePlaces_numRows, $activePlaces_numRowCounter, $newDeadline, $newFylkeDeadline;
 ### UKM SEASON-CREATE ###
 # ACTIVE SEASON IS THE ONE YOU'RE LEAVING
@@ -23,10 +23,9 @@ global $activePlaces_numRows, $activePlaces_numRowCounter, $newDeadline, $newFyl
 #$pathcorrection = '';
 #define('MEG', 'core/newSeason.php');
 #require_once("../admin/loadSS3v4.php");
-error_reporting(E_ALL);
 
 # DATES OF THE SEASON
-$activeSeason 			= (int)date("Y");#$ss3->getConf('smartukm_season');			# INT OF THIS SEASON
+$activeSeason 			= (int)date("Y");#$ss3->getConf('smartukm_season');		# INT OF THIS SEASON
 $activeStart 			= mktime(0,0,0,11,1,($activeSeason-1));					# THE FIRST NOVEMBER THE ACTIVE SEASON
 $daysInActiveOctober 	= cal_days_in_month(CAL_GREGORIAN, 10, $activeSeason);	# THE LAST DAY OF THE ACTIVE SEASON
 $activeStop 			= mktime(0,0,0,10, $daysInActiveOctober, $activeSeason);# THE DATE OF THE LAST DAY OF THE ACTIVE SEASON
@@ -91,6 +90,16 @@ while($r = mysql_fetch_assoc($activePlaces)){
 	# IF NEITHER FYLKE OR LANDSMØNSTRING : KOMMUNE
 	if(!$land && !$fylke) {
 		$kommune = $apdet['kommune_rel'];
+	}
+	
+	// IKKE OPPRETT LOKALMØNSTRINGER UTEN KOMMUNE
+	if( !$land && !$fylke && (is_array( $kommune ) && 0 == sizeof( $kommune ) ) ){
+		echo '<div class="clearfix"></div>'
+			.'<div class="alert alert-danger">'
+			.'<h3>Hopper over PL'. $r['pl_id'] .' da den ikke har kommunerelasjoner</h3>'
+			.'<div class="clearfix"></div>'
+			.'</div>';
+		continue;
 	}
 	
 	# DO CREATE THE NEW PLACE
