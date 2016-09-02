@@ -95,7 +95,7 @@ while($r = mysql_fetch_assoc($activePlaces)){
 	// IKKE OPPRETT LOKALMØNSTRINGER UTEN KOMMUNE
 	if( !$land && !$fylke && (is_array( $kommune ) && 0 == sizeof( $kommune ) ) ){
 		echo '<div class="clearfix"></div>'
-			.'<div class="alert alert-danger">'
+			.'<div class="alert alert-info">'
 			.'<h3>Hopper over PL'. $r['pl_id'] .' da den ikke har kommunerelasjoner</h3>'
 			.'<div class="clearfix"></div>'
 			.'</div>';
