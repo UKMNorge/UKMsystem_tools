@@ -71,14 +71,7 @@ echo TWIG('ny_sesong/steg1_top.twig.html', $ny_sesong_data, dirname( dirname( di
 
 # LOOP ALL PLACES AND CREATE DUPLICATES FOR THE NEW SEASON
 #for($i=0; $i<$activePlaces[1]; $i++) {
-$i = 0;
 while($r = mysql_fetch_assoc($activePlaces)){
-	$i++;
-	if( $i < 382 ) {
-		echo 'skip '. $i;
-		continue;
-	}
-	die('FORTSETT HER');
 	$land = false;
 	$fylke = false;
 	$kommune = false;
@@ -106,6 +99,7 @@ while($r = mysql_fetch_assoc($activePlaces)){
 			.'<h3>Hopper over PL'. $r['pl_id'] .' da den ikke har kommunerelasjoner</h3>'
 			.'<div class="clearfix"></div>'
 			.'</div>';
+		$activePlaces_numRowCounter++;
 		continue;
 	}
 	
@@ -116,6 +110,7 @@ while($r = mysql_fetch_assoc($activePlaces)){
 	# UPDATE USERS TO LOGON TO THE NEW PLACE
 	updateUsers($newID, $r['pl_id']);
 }
+echo '<h1>END OF SCRIPT</h1>';
 
 
 		
