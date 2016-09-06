@@ -345,9 +345,9 @@ function UKMA_SEASON_urlsafe($text) {
 	$text = SMAS_encoding($text);
 
 	$text = htmlentities($text);
-	
-	$ut = array('&Aring;','&aring;','&Aelig;','&aelig;','&Oslash;','&oslash;','&Atilde;','&atilde','Ocedil','ocedil');
-	$inn= array('A','a','A','a','O','o','O','o','O','o');
+	# 06.09.2016: added &uuml; (ü) for u 
+	$ut = array('&Aring;','&aring;','&Aelig;','&aelig;','&Oslash;','&oslash;','&Atilde;','&atilde','Ocedil','ocedil', '&uuml;');
+	$inn= array('A','a','A','a','O','o','O','o','O','o', 'u');
 	$text = str_replace($ut, $inn, $text);
 	
 	$text = preg_replace("/[^A-Za-z0-9-]/","",$text);
@@ -372,7 +372,9 @@ function UKMA_SEASON_rewrites($fylke, $froms, $pl_id) {
 		echo ' &nbsp; <span class="alert-danger">M&oslash;nstringen har ingen kommuner</span>';
 	} else {
 		foreach($froms as $trash => $kommune) {
-			$from = '/'.$fylke.'/'.$kommune.'/';
+			#$from = '/'.$fylke.'/'.$kommune.'/';
+			# Oppdatert 06.09.2016 for å unngå fylkenavn i parentes bak kommunenavnet.
+			$from = '/'.$fylke.'/'.str_replace($fylke, '', $kommune).'/';
 			$to = '/pl'.$pl_id.'/';
 			
 			echo ' &nbsp; Fra '. $from . ' til ' . $to . '';
