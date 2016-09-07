@@ -26,6 +26,7 @@ function UKMST_menu() {
 	$subpage6 = add_submenu_page( 'UKMsystemtools', 'Oppdater kortadresser', 'Oppdater kortadresser', 'superadministrator', 'UKMsystemtools_modrewrite', 'UKMsystemtools_modrewrite' );
 	$subpage7 = add_submenu_page( 'UKMsystemtools', 'Opprett sesong', 'Opprett sesong', 'superadministrator', 'UKMsystemtools_ny_sesong', 'UKMsystemtools_ny_sesong' );
 	$subpage8 = add_submenu_page( 'UKMsystemtools', 'Test påmelding', 'Test påmelding', 'superadministrator', 'UKMsystemtools_deltaTest', 'UKMsystemtools_deltaTest' );
+	$subpage9 = add_submenu_page( 'UKMsystemtools', 'Importer SSB-data', 'Importer SSB-data', 'superadministrator', 'UKMsystemtools_ssb_import', 'UKMsystemtools_ssb_import' );
 
 
     add_action( 'admin_print_styles-' . $page, 'UKMsystemtools_scripts_and_styles' );
@@ -158,4 +159,10 @@ function UKMsystemtools_deltaTest() {
 	$TWIGdata = array();
 	require_once('controller/testdelta.controller.php');
 	echo TWIG( 'testdelta.html.twig', $TWIGdata, dirname(__FILE__), true);
+}
+
+function UKMsystemtools_ssb_import() {
+	$TWIGdata = array();
+	require_once('controller/ssb_import.controller.php');
+	echo TWIG('ssb_import.html.twig', $TWIGdata, dirname(__FILE__), true);
 }

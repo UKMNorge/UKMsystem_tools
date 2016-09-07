@@ -1,0 +1,40 @@
+{% extends 'layout.twig.html' %}
+
+{% block content %}
+	<h3>Oppdater SSB-data</h3>
+	<div class="col-xs-12 col-sm-6 col-md-4">
+		<h4>Levendefødte - til målgruppeinformasjon</h4>
+
+		<p>Data om levendefødte ble sist importert for år <strong>{{ levendefodte.last_updated }}</strong>.</p>
+		{% if levendefodte.missing_years|length > 0 %}
+			<div class="alert alert-warning">
+				<strong>OBS! Data mangler for årene {% for year in levendefodte.missing_years %}{{ year }}{{ loop.last ? '' : ', ' }}{% endfor %}</strong>
+			</div>
+		{% endif %}
+		<form class="form" method="POST">
+			<div class="form-group">
+				<label for="year">Importer data for år</label>
+				<input type="hidden" name="postform" value="levendefodte_update">
+				<select name="year" id="year" class="form-control">
+					{% for year in now|date("Y")..2000 %}
+						<option value="{{ year }}">{{ year }}</option>
+					{% endfor %}
+				</select>
+			</div>
+			<div class="form-group">
+				<button type="submit" class="form-control btn btn-success">Importer data fra SSB</button><br>
+				<span class="" style="font-style: italic;">OBS: Dette kan ta noe tid!</span>
+			</div>
+		</form>
+		{% if log is defined %}
+			<div>
+				{% for entry in log %}
+					<span class="alert-{{ entry.success ? 'success' : 'danger' }}">
+						Kommune {{ entry.id }}, antall {{ entry.antall }}. {{ entry.message }}
+					</span><br>
+				{% endfor %}
+			</div>
+		{% endif %}
+	</div>
+
+{% endblock %}
