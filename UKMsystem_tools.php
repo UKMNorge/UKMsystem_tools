@@ -28,6 +28,7 @@ function UKMST_menu() {
 	$subpage8 = add_submenu_page( 'UKMsystemtools', 'Test påmelding', 'Test påmelding', 'superadministrator', 'UKMsystemtools_deltaTest', 'UKMsystemtools_deltaTest' );
 	$subpage9 = add_submenu_page( 'UKMsystemtools', 'Importer SSB-data', 'Importer SSB-data', 'superadministrator', 'UKMsystemtools_ssb_import', 'UKMsystemtools_ssb_import' );
 
+	add_filter('UKMWPNETWDASH_messages', 'UKMsystemtools_ssb_warning');
 
     add_action( 'admin_print_styles-' . $page, 'UKMsystemtools_scripts_and_styles' );
 	for( $i=1; $i<9; $i++ ) {
@@ -165,4 +166,24 @@ function UKMsystemtools_ssb_import() {
 	$TWIGdata = array();
 	require_once('controller/ssb_import.controller.php');
 	echo TWIG('ssb_import.html.twig', $TWIGdata, dirname(__FILE__), true);
+}
+
+function UKMsystemtools_ssb_warning($MESSAGES) {
+	// Kun gjør beregningen og vis advarselen i september
+	// Prøver å gjøre minst mulig i disse funksjonene fordi de inkluderes hver page load.
+	$m = date("m");
+	if($m == 9) {
+	#if(true) {
+		require_once('controller/ssb_import.controller.php');
+		$last = get_latest_year_updated();
+		if ($last < date("Y")-1) {
+		#if (true) {
+			$MESSAGES[] = array( 'level' 	=> 'alert-warning',
+								'module'	=> __('System', 'UKM'),
+								'header' 	=> 'SSB-statistikk må importeres. Nyeste data er for '.$last,
+								'body' 		=> 'Dette er ikke krise, da det går noen år fra barn er født til de deltar på UKM :)',
+								'link'		=> 'admin.php?page=UKMsystemtools_ssb_import');
+		}
+	}
+	return $MESSAGES;
 }
