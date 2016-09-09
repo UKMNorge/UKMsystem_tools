@@ -1,30 +1,33 @@
 <?php
 
+$TWIGdata = checkUpdate($TWIGdata);
+
 $levendefodte = new stdClass();
 $levendefodte->last_updated = get_latest_year_updated();
 $levendefodte->missing_years = get_missing_years();
 
 $TWIGdata['levendefodte'] = $levendefodte;
 
-get_latest_year_updated();
-
-if(isset($_POST['postform']) AND $_POST['postform'] == 'levendefodte_update') {
-	// Hent, behandle og lagre data
-	$log = get_data($_POST['year']);
-	
-	if(is_string($log)) {
-		$message = new stdClass();
-		$message->level = "danger";
-		$message->header = $log;
-		$TWIGdata['message'] = $message;
+function checkUpdate($TWIGdata) {
+	if(isset($_POST['postform']) AND $_POST['postform'] == 'levendefodte_update') {
+		// Hent, behandle og lagre data
+		$log = get_data($_POST['year']);
+		
+		if(is_string($log)) {
+			$message = new stdClass();
+			$message->level = "danger";
+			$message->header = $log;
+			$TWIGdata['message'] = $message;
+		}
+		else {
+			$message = new stdClass();
+			$message->level = "success";
+			$message->header = 'Importerer levendefødte-data for år '.$_POST['year'].'.';
+			$TWIGdata['message'] = $message;
+			$TWIGdata['log'] = $log;
+		}
 	}
-	else {
-		$message = new stdClass();
-		$message->level = "success";
-		$message->header = 'Importerer levendefødte-data for år '.$_POST['year'].'.';
-		$TWIGdata['message'] = $message;
-		$TWIGdata['log'] = $log;
-	}
+	return $TWIGdata;
 }
 
 function get_data($year) {
@@ -61,7 +64,7 @@ function update_db($kommunedata, $year) {
 		return "Kunne ikke hente data for år ".$year.".";
 	}
 	foreach ($kommunedata as $k_id => $antall) {
-		if(null == $k_id || null === $antall) {
+		if(null == $k_id || null === $antall) {
 			var_dump($k_id);
 			var_dump($antall);
 			return "Kan ikke oppdatere uten k_id eller antall!";
