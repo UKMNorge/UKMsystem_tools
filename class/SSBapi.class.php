@@ -37,15 +37,8 @@ class SSBapi implements SSBapi_interface {
 		$url = self::API_URL . $this->resource;
 
 		$curl = new UKMCURL();
-		#$curl->json($this->query());
 		$curl->post($this->query());
-		/*echo '<pre>';
-		var_dump($curl);
-		echo '</pre>';*/
 		$result = $curl->process($url);
-	/*	echo '<pre>';
-		var_dump($curl);
-		echo '</pre>';*/
 		return $result;
 	}
 
@@ -58,7 +51,6 @@ class SSBapi implements SSBapi_interface {
 		return $k_id;
 	}
 
-	## MUST BE OVERRIDDEN IN CHILD
 	public function query() {
 		return json_encode($this->query);
 	}
@@ -88,13 +80,11 @@ class Levendefodte_data extends SSBapi {
 		$this->setResource('table/'.$this->table);
 
 		$this->addQueryParameter("Region", "item", $this->_getAllKommuner());
-		#$this->addQueryParameter("Kjonn", "item", array("10", "11")); 
 		$this->addQueryParameter("Kjonn", "all", array()); # La SSB summere summene for kjønn for oss :D
 		$this->addQueryParameter("ContentsCode", "item", array("Levendefodte"));
 		$this->addQueryParameter("Tid", "item", array($this->year));
 		$this->addResponseFormat("json-stat");
 
-		#echo $this->query();	
 	}
 
 	# Returnerer et array av kommuneIDer
