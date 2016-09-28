@@ -1,0 +1,33 @@
+<h4>Hent kommuneareal</h4>
+<p>Kommuneareal er innhentet på en årsbasis, og benytter seg av kommunene i smartukm_kommune-tabellen.</p>
+<p>Data om areal ble sist importert for år <strong>{{ kommuneareal.last_updated }}</strong>.</p>
+<form class="form" method="POST">
+	<div class="form-group">
+		<label for="year">Importer data for år</label>
+		<input type="hidden" name="postform" value="kommuneareal_update">
+		<select name="year" id="year" class="form-control">
+			{% for year in now|date("Y")..2000 %}
+				<option value="{{ year }}">{{ year }}</option>
+			{% endfor %}
+		</select>
+	</div>
+	<div class="form-group">
+		<button type="submit" class="form-control btn btn-success">Importer data fra SSB</button><br>
+		<span class="" style="font-style: italic;">OBS: Dette kan ta noe tid!</span>
+	</div>
+</form>
+{% if kommuneareal.log is defined %}
+	<div>
+		{% for entry in kommuneareal.log %}
+			{% if entry is iterable %}
+				{% for logentry in entry %}
+					<span class="alert alert-{{ logentry.success }}">
+						ID {{ logentry.id }} - {{ logentry.message }}
+					</span><br>
+				{% endfor %}	
+			{% else %}
+				<span>{{ entry|raw }}</span><br>
+			{% endif %}
+		{% endfor %}
+	</div>
+{% endif %}

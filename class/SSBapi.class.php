@@ -42,7 +42,7 @@ class SSBapi implements SSBapi_interface {
 		return $result;
 	}
 
-	# SSB krever at kommune-ID er et firesifret tall med fylkes_id og et kommunetall, med 0 for hvert ènsifrede tall (i.e. 0104 = Moss). 
+	# SSB krever at kommune-ID er et firesifret tall med fylkes_id og et kommunetall, med 0-padding for hvert ènsifrede tall (i.e. 0104 = Moss). 
 	# Vår kommune-ID paddes med 0 i front til ett firesifret tall, da det allerede er fylke_id.kommunetall med 0 der nødvendig internt.
 	public function getSSBifiedKommuneID($k_id) {
 		$k_id = (string)$k_id;
@@ -85,6 +85,34 @@ class Levendefodte_data extends SSBapi {
 		$this->addQueryParameter("Tid", "item", array($this->year));
 		$this->addResponseFormat("json-stat");
 
+	}
+
+	# Returnerer et array av kommuneIDer
+	private function _getAllKommuner() {
+		$qry = new SQL("SELECT id FROM smartukm_kommune");
+		$res = $qry->run();
+		$kommuner = array();
+		while ($row = mysql_fetch_assoc($res)) {
+			$kommuner[] = $this->getSSBifiedKommuneId($row['id']);
+		}
+		return $kommuner;
+		# Test:
+		#return array($this->getSSBifiedKommuneId(104),$this->getSSBifiedKommuneId(105));
+	}
+}
+
+class KommuneArealImport extends SSBapi {
+	public $year;
+	public $table = '09280';
+
+	public function buildQuery() {
+		$this->setResource('table/'.$this->table);
+
+		$this->addQueryParameter("Region", "item", $this->_getAllKommuner());
+		$this->addQueryParameter("Arealtype", "all", array());
+		$this->addQueryParameter("ContentsCode", "item", array("Areal1"));
+		$this->addQueryParameter("Tid", "item", array($this->year));
+		$this->addResponseFormat("json-stat");
 	}
 
 	# Returnerer et array av kommuneIDer
