@@ -31,7 +31,7 @@ function UKMST_menu() {
 	add_filter('UKMWPNETWDASH_messages', 'UKMsystemtools_ssb_warning');
 
     add_action( 'admin_print_styles-' . $page, 'UKMsystemtools_scripts_and_styles' );
-	for( $i=1; $i<9; $i++ ) {
+	for( $i=1; $i<=9; $i++ ) {
 		$var = 'subpage'.$i;
 		add_action( 'admin_print_styles-' . $$var, 'UKMsystemtools_scripts_and_styles' );
 	}
@@ -174,7 +174,7 @@ function UKMsystemtools_ssb_warning($MESSAGES) {
 	$m = date("m");
 	if($m == 9) {
 	#if(true) {
-		require_once('controller/ssb_import.controller.php');
+		require_once('controller/SSB/levendefodte.controller.php');
 		$last = get_latest_year_updated();
 		if ($last < date("Y")-1) {
 		#if (true) {
