@@ -23,12 +23,15 @@
 		<a href="#" id="kommunerViHarSomIkkeFinnesLengerTrigger">Vis listen over kommuner vi har som ikke finnes lengre</a>
 		<div style="display:none;" id="kommunerViHarSomIkkeFinnesLengerListe">
 			<table class="table table-striped">
-			{% for kommune in kommunerViHarSomIkkeFinnesLenger %}
+			{% set counter = 0 %}
+			{% for kommune in kommunerViHarSomIkkeFinnesLenger if kommune.idfylke < 21 %}
 				{{ fylker.setLogMethod('quiet') }}
 				{% set fylkenavn = fylker.getById(kommune.idfylke).getNavn() %}
 				<tr><td>{{ kommune.name }}</td><td align="right"><small>{{ fylkenavn }}</small></td></tr>
+				{% set counter = counter + 1 %}
 			{% endfor %}
 			</table>
+			<small>OBS: Listen viser kun kommuner hvor fylke_id er mindre enn 21, selv om disse er tatt med i det totale antallet. Reelt antall er {{ counter }}.</small>
 		</div>
 	</div>
 
