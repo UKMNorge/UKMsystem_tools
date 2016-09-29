@@ -1,6 +1,7 @@
 <?php
 
 require_once('UKM/curl.class.php');
+require_once('UKM/fylker.class.php');
 $difi = new DIFI();
 $difi->setResource('regioner/kommuner');
 $kommuner = parseKommuneData($difi->getAllPages());
@@ -12,6 +13,7 @@ while ($row = mysql_fetch_assoc($res)) {
 	$kommunerViHar[$row['id']] = array('name' => utf8_encode($row['name']), 'idfylke' => $row['idfylke']);
 }
 
+$TWIGdata['fylker'] = new fylker();
 $TWIGdata['kommunerViIkkeHar'] = array_diff_key($kommuner, $kommunerViHar);
 $TWIGdata['kommunerViHarSomIkkeFinnesLenger'] = array_diff_key($kommunerViHar, $kommuner);
 

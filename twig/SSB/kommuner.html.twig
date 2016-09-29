@@ -7,9 +7,9 @@
 		<div style="display:none;" id="kommunerViIkkeHarListe">
 			<table class="table table-striped">
 			{% for kommune in kommunerViIkkeHar %}
-				<tr><td>{{ kommune.tittel }}</td><td>{{ kommune.kode }}</td></tr>
+				<tr><td>{{ kommune.tittel }}</td><td align="right">{{ kommune.kode }}</td></tr>
 				{% if not kommune.note is empty %}
-					<tr><td colspan="2">{{ kommune.note }}</td></tr>
+					<tr><td colspan="2"><small>{{ kommune.note }}</small></td></tr>
 				{% endif %}
 			{% endfor %}
 			</table>
@@ -24,7 +24,9 @@
 		<div style="display:none;" id="kommunerViHarSomIkkeFinnesLengerListe">
 			<table class="table table-striped">
 			{% for kommune in kommunerViHarSomIkkeFinnesLenger %}
-				<tr><td>{{ kommune.name }}</td><td>{{ kommune.idfylke }}</td></tr>
+				{{ fylker.setLogMethod('quiet') }}
+				{% set fylkenavn = fylker.getById(kommune.idfylke).getNavn() %}
+				<tr><td>{{ kommune.name }}</td><td align="right"><small>{{ fylkenavn }}</small></td></tr>
 			{% endfor %}
 			</table>
 		</div>
