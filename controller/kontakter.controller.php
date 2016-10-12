@@ -125,7 +125,10 @@ $qry = 'SELECT `b_name`, `b_email`
 $res = mysql_query( $qry, $db );
 if( $res ) {
 	while( $r = mysql_fetch_assoc( $res ) ) {
-		if( !in_array( $r['b_email'], $emails ) ) {
+		if( !in_array( $r['b_email'], $emails ) 
+		 && ( strpos( $r['b_email'], 'fake.ukm') === false ) 
+		 && ( strpos( $r['b_email'], 'falsk.ukm') === false )
+		) {	
 			$row++;
 			exCell('A'. $row, $r['b_name']);
 			exCell('B'. $row, $r['b_email']);
