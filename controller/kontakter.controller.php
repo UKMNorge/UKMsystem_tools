@@ -41,6 +41,7 @@ excell( i2a(7).'1', 'Phone', 'bold' );
 excell( i2a(8).'1', 'Phone UKM', 'bold' );
 excell( i2a(9).'1', 'Phone UKM support', 'bold' );
 
+$emails = [];
 if( $res ) {
 	while( $row = mysql_fetch_assoc( $res ) ) {
 		$counter++;
@@ -101,10 +102,35 @@ if( $res ) {
 		excell( i2a(9).$excel_row, $card->pager_tel );
 
 		$TWIGdata['contacts'][] = $contact;
+		$emails[] = $card->email1;
 	}
 	;
 	$TWIGdata['zip'] = $zip->compress(); //'http://download.ukm.no/zip/'.$zipname; 
 	$TWIGdata['excel'] = exWrite($objPHPExcel, 'kontakteksport');
 }
-	
+
+
+// FRA PASSORDLISTEN
+exInit();
+excell( 'A1', 'Brukernavn', 'bold');
+excell( 'B1', 'E-post', 'bold');
+$row = 1;
+
+$db = mysql_connect(UKM_WP_DB_HOST, UKM_WP_DB_USER, UKM_WP_DB_PASSWORD) or die(mysql_error());
+mysql_select_db(UKM_WP_DB_NAME, $db);
+
+$qry = 'SELECT `b_name`, `b_email`
+		FROM `ukm_brukere` 
+		ORDER BY `b_name` ASC';
+$res = mysql_query( $qry, $db );
+if( $res ) {
+	while( $r = mysql_fetch_assoc( $res ) ) {
+		if( !in_array( $r['b_email'], $emails ) ) {
+			$row++;
+			exCell('A'. $row, $r['b_name']);
+			exCell('B'. $row, $r['b_email']);
+		}
+	}
+}
+$TWIGdata['excel_passord'] = exWrite( $objPHPExcel, 'passordliste');
 ?>
