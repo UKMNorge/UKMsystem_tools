@@ -107,7 +107,7 @@ function UKMsystemtools_newSeason( $messages ) {
 				'level' 	=> 'alert-warning',
 				'module'	=> 'System',
 				'header'	=> 'Det er '.$monstringer->antall_uregistrerte() .' uregistrerte mønstringer ',
-#				'link'		=> 'admin.php?page=UKMsystemtools'
+				'link'		=> 'admin.php?page=UKMrapport_admin&network=monstringer_uregistrert'
 			);
 		}
 	}
