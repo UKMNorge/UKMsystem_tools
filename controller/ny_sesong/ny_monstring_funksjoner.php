@@ -138,9 +138,11 @@ function UKMA_SEASON_monstringsinfo_kommuner($kommuner) {
 ################################################
 function UKMA_SEASON_opprett_blogg($navn, $pl_id, $type, $fylkeid, $kommuneider='', $season){
 	## KALKULER PATH
-	if($type == 'kommune')
-		$path = '/pl'.$pl_id.'/';
-	else {
+	if($type == 'kommune') {
+		$sql = new SQL("SELECT `pl_link` FROM `smartukm_place` WHERE `pl_id` = '#pl_id'", array('pl_id'=>$pl_id));
+		$pl_link = $sql->run('field','pl_link');
+		$path = '/'. $pl_link .'/';
+	} else {
 		try {
 			$path = '/'. fylker::getById( $fylkeid )->getLink() .'/';
 		} catch( Exception $e ) {
@@ -402,49 +404,48 @@ function UKMA_SEASON_rewrites($fylke, $froms, $pl_id) {
 ## SETTER INN STANDARDINNHOLD I NYOPPRETTET BLOGG
 #################################################
 function UKMA_ny_sesong_standard_posts($site_id,$type){
-	$pages = UKMA_ny_sesong_master_posts($type);
-	switch_to_blog($site_id);
+	switch_to_blog( $site_id );
+	
+	// Kategorier
 	$cat_defaults = array(
-					  'cat_name' => 'Nyheter',
-					  'category_description' => 'nyheter' ,
-					  'category_nicename' => 'Nyheter',
-					  'category_parent' => 0,
-					  'taxonomy' => 'category');
+						'cat_name' => 'Nyheter',
+						'category_description' => 'nyheter' ,
+						'category_nicename' => 'Nyheter',
+						'category_parent' => 0,
+						'taxonomy' => 'category'
+					);
 	wp_insert_category($cat_defaults);
-	foreach($pages as $page){
-		wp_insert_post($page); # GET POSTS
+	
+	// Sider
+	$sider = array(
+#				['id' => 'info', 'name' => 'Info', 'viseng' => ''], // OPPRETTES VED BEHOV 
+				['id' => 'bilder', 'name' => 'Bilder', 'viseng' => 'bilder' ],
+				['id' => 'pameldte', 'name' => 'Påmeldte', 'viseng' => 'pameldte'],
+				['id' => 'program', 'name' => 'Program', 'viseng' => 'program'],
+				['id' => 'kontaktpersoner', 'name' => 'Kontaktpersoner', 'viseng' => 'kontaktpersoner'],
+				['id' => 'lokalmonstringer', 'name' => 'UKM lokalt', 'viseng' => 'lokalmonstringer']
+			);
+	
+	foreach( $sider as $side ){
+		$page = array(
+					'post_type' => 'page',
+					'post_title' => $side['name'],
+					'post_status' => 'publish',
+					'post_author' => 1,
+					'post_slug' => $side['id'],
+				);
+		$page_id = wp_insert_post($page); # GET POSTS
+		if( isset( $side['viseng'] ) && !empty( $side['viseng'] ) ) {
+			add_post_meta($page_id, 'UKMviseng', $side['viseng']);
+		}
 	}
-	## LEGGER TIL VISENG-FUNKSJONALITET PÅ SIDEN SOM ER VALGT SOM FORSIDE
-	if($type == 'fylke') {
-		add_post_meta(2, 'UKMviseng', 'fylkesside');
-		add_post_meta(4, 'UKMviseng', 'program');
-		add_post_meta(5, 'UKMviseng', 'pameldte');
-	} else {
-		add_post_meta(2, 'UKMviseng', 'lokalside');
-		add_post_meta(5, 'UKMviseng', 'program');
-		add_post_meta(6, 'UKMviseng', 'pameldte');
+	
+	// Slett "hei verden"
+	$hello_world = get_page_by_path('hei-verden', OBJECT, 'post');
+	if( is_object( $hello_world ) ) {
+		wp_delete_post( $hello_world->ID );
 	}
-	## GJØR FORSIDEN OM TIL FULLBREDDE
-//		add_post_meta(2, '_wp_page_template','template-full-width.php');
+	
 	restore_current_blog();
 }
-
-################################################
-## HENTER STANDARD-INNHOLD FRA RIKTIG MASTER
-################################################
-function UKMA_ny_sesong_master_posts($type){
-	global $wpdb;
-	if($type == 'kommune'){
-		switch_to_blog(get_id_from_blogname('masterkommune'));
-	}
-	else{
-		switch_to_blog(get_id_from_blogname('masterfylke'));
-	}
-	$return = '';
-	$pages = $wpdb->get_results('SELECT post_title,post_name,post_content,post_type,post_status FROM '.$wpdb->posts,'ARRAY_A');
-	## LEGGER TIL SPESIALFUNKSJONALITET PÅ SIDENE SOM FLYTTES OVER
-	restore_current_blog();
-	return $pages;
-}
-
 ?>

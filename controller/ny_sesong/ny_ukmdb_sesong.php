@@ -1,4 +1,5 @@
 <?php
+require_once('ny_monstring_funksjoner.php');
 if(!isset($_GET['init'])) 
 	die('Sorry mac');
 	
@@ -96,7 +97,7 @@ while($r = mysql_fetch_assoc($activePlaces)){
 	if( !$land && !$fylke && (is_array( $kommune ) && 0 == sizeof( $kommune ) ) ){
 		echo '<div class="clearfix"></div>'
 			.'<div class="alert alert-info">'
-			.'<h3>Hopper over PL'. $r['pl_id'] .' da den ikke har kommunerelasjoner</h3>'
+			.'<b>Hopper over PL'. $r['pl_id'] .' ('. utf8_encode($apdet['placeAtt']['pl_name']).') da den ikke har kommunerelasjoner</b>'
 			.'<div class="clearfix"></div>'
 			.'</div>';
 		$activePlaces_numRowCounter++;
@@ -189,16 +190,50 @@ function createPlace($att, $contactPs, $kommunerel,$old_pl_id) {
 	#echo "<br />Inserted $i contact p relations";
 	## INSERT ALL KOMMUNE RELATIONS
 	$j = false;#'Dette er en fylkesm&oslash;nstring';
+	// LOKALMØNSTRING (KOMMUNE)
 	if(is_array($kommunerel)) {
-		for($j=0; $j < sizeof($kommunerel); $j++) {
+		$kommune_link = '';
+		foreach( $kommunerel as $k_id => $k_name ) {
+			$kommune_link .= UKMA_SEASON_urlsafe_non_charset( $k_name ) .'-';
 			$sql3 = new SQLins('smartukm_rel_pl_k');
 			$sql3->add('pl_id', $id);
-			$sql3->add('k_id', $kommunerel[$j]);
+			$sql3->add('k_id', $k_id);
 			$sql3->add('season', $_GET['season']);
 #			echo $sql3->debug();
 			$sql3->run();
 		}
+		// Oppdater feltet "pl_link"
+		$kommune_link = strtolower( rtrim( $kommune_link, '-' ) );
+	
+		// Sjekk om linken eksisterer i år
+		$sql5 = new SQL("SELECT `pl_id`
+						 FROM `smartukm_place`
+						 WHERE `pl_link` = '#link'
+						 AND `season` = '#season'",
+						array('link'=> $kommune_link, 'season'=>$_GET['season']));
+		$existing_link = $sql5->run('field','pl_id');
+		if( false !== $existing_link && is_numeric( $existing_link ) ) {
+			$sql6 = new SQL("SELECT `smartukm_fylke`.`name` AS `fylke`
+							FROM `smartukm_kommune`
+							JOIN `smartukm_fylke` ON (`smartukm_fylke`.`id` = `smartukm_kommune`.`idfylke`)
+							WHERE `smartukm_kommune`.`id` = '#kommune'",
+						array('kommune'=>$k_id)); // Bruker siste K-ID i loopen for å finne et fylke
+			$fylkenavn = $sql6->run('field','fylke');
+			$kommune_link = UKMA_SEASON_urlsafe_non_charset( $fylkenavn ) .'-'. $kommune_link;
+		}
+		
+		$sql4 = new SQLins('smartukm_place', array('pl_id'=>$id));
+		$sql4->add('pl_link', strtolower( $kommune_link) );
+		$sql4->run();
 	}
+	// FYLKESMØNSTRING
+	else {
+		// Oppdater feltet "pl_link"
+		$sql4 = new SQLins('smartukm_place', array('pl_id'=>$id));
+		$sql4->add('pl_link', strtolower( UKMA_SEASON_urlsafe_non_charset( $att['pl_name'] )) );
+		$sql4->run();
+	}
+	
 #	echo "<br />Inserted $j kommune relations";
 	global $activePlaces_numRows, $activePlaces_numRowCounter;
 	$activePlaces_numRowCounter++;
@@ -257,13 +292,22 @@ function getContactPs($ap_id) {
 
 ### GET ALL THE KOMMUNE-RELATIONS OF THE PLACE
 function getKommuner($ap_id) {
-	$kommuner = new SQL("SELECT `k_id` FROM `smartukm_rel_pl_k` WHERE `pl_id` = '#pl_id'",
+	$kommuner = new SQL("SELECT `smartukm_kommune`.`id`,
+								`smartukm_kommune`.`name` AS `kommune`, 
+								`smartukm_fylke`.`name` AS `fylke` 
+						FROM `smartukm_rel_pl_k`
+						LEFT JOIN `smartukm_kommune` ON (`smartukm_kommune`.`id` = `smartukm_rel_pl_k`.`k_id`)
+						LEFT JOIN `smartukm_fylke` ON (`smartukm_kommune`.`idfylke` = `smartukm_fylke`.`id`)
+						WHERE `pl_id` = '#pl_id'
+						ORDER BY `smartukm_kommune`.`name` ASC",
 							array('pl_id'=>$ap_id));
 	$kommuner = $kommuner->run();
 	$rels = array();
-	while($k = mysql_fetch_assoc($kommuner))
-		$rels[] = $k['k_id'];
-	
+	if( $kommuner !== false ) {
+		while($k = mysql_fetch_assoc($kommuner)) {
+			$rels[ $k['id'] ] = str_replace( $k['fylke'], '', $k['kommune'] );
+		}
+	}
 	
 	return $rels;
 }
