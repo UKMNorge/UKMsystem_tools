@@ -189,12 +189,15 @@ function createPlace($att, $contactPs, $kommunerel,$old_pl_id) {
 	}
 	#echo "<br />Inserted $i contact p relations";
 	## INSERT ALL KOMMUNE RELATIONS
-	$j = false;#'Dette er en fylkesm&oslash;nstring';
+	$type_monstring = 'fylke';
 	// LOKALMØNSTRING (KOMMUNE)
 	if(is_array($kommunerel)) {
+		$type_monstring = 'kommune';
 		$kommune_link = '';
+		$ant_kommuner = 0;
 		foreach( $kommunerel as $k_id => $k_name ) {
-			$kommune_link .= UKMA_SEASON_urlsafe_non_charset( $k_name ) .'-';
+			$ant_kommuner++;
+			$ant_kommuner .= UKMA_SEASON_urlsafe_non_charset( $k_name ) .'-';
 			$sql3 = new SQLins('smartukm_rel_pl_k');
 			$sql3->add('pl_id', $id);
 			$sql3->add('k_id', $k_id);
@@ -237,10 +240,10 @@ function createPlace($att, $contactPs, $kommunerel,$old_pl_id) {
 #	echo "<br />Inserted $j kommune relations";
 	global $activePlaces_numRows, $activePlaces_numRowCounter;
 	$activePlaces_numRowCounter++;
-	$pldata = array_merge($att, array(	'type' => ($j === false ? 'fylke' : 'kommune'),
+	$pldata = array_merge($att, array(	'type' => $type_monstring,
 										'pl_id_old' => $old_pl_id,
 										'num_contact_p_relations' => $i,
-										'num_kommune_relations' => $j,
+										'num_kommune_relations' => $ant_kommuner,
 										'numRows' => $activePlaces_numRows,
 										'numRowCounter' => $activePlaces_numRowCounter,
 

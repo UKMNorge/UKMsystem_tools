@@ -423,8 +423,10 @@ function UKMA_ny_sesong_standard_posts($site_id,$type){
 				['id' => 'pameldte', 'name' => 'Påmeldte', 'viseng' => 'pameldte'],
 				['id' => 'program', 'name' => 'Program', 'viseng' => 'program'],
 				['id' => 'kontaktpersoner', 'name' => 'Kontaktpersoner', 'viseng' => 'kontaktpersoner'],
-				['id' => 'lokalmonstringer', 'name' => 'UKM lokalt', 'viseng' => 'lokalmonstringer']
 			);
+	if( $type !== 'kommune' ) {
+		$sider[] = ['id' => 'lokalmonstringer', 'name' => 'UKM lokalt', 'viseng' => 'lokalmonstringer'];
+	}
 	
 	foreach( $sider as $side ){
 		$page = array(
