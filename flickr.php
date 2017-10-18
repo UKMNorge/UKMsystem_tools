@@ -6,7 +6,7 @@ require_once('Flickr/autoloader.php');
 require_once('UKMconfig.inc.php');
 session_start();
 
-define('FLICKR_REDIR_URL', 'http://ukm.no/wp-content/plugins/UKMsystem_tools/flickr.php');
+define('FLICKR_REDIR_URL', 'https://ukm.no/wp-content/plugins/UKMsystem_tools/flickr.php');
 
 // SET LOG LEVEL (throw, default:log)
 Exception::setLogMethod('throw');

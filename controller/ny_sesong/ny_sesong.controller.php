@@ -3,8 +3,8 @@
 # STEG 1: Kopier DB ukmno_ss3 
 # STEG 2: Kopier DB ukmno_wp2012
 # STEG 3: Rydd unna gamle nettsider fra WP
-# STEG 4: http://ukm.no/wp-admin/network/admin.php?page=UKMA_ny_sesong&do=true&init=true
-# STEG 5: http://ukm.no/wp-admin/network/admin.php?page=UKMA_ny_sesong&start=0&stop=10&do=true
+# STEG 4: https://ukm.no/wp-admin/network/admin.php?page=UKMA_ny_sesong&do=true&init=true
+# STEG 5: https://ukm.no/wp-admin/network/admin.php?page=UKMA_ny_sesong&start=0&stop=10&do=true
 
 if(!isset($_GET['do']) && !isset($_GET['init'] )) {
 	echo TWIG('ny_sesong/dash.twig.html', array() , dirname(dirname(dirname(__FILE__))) );

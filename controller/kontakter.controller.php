@@ -105,7 +105,7 @@ if( $res ) {
 		$emails[] = $card->email1;
 	}
 	;
-	$TWIGdata['zip'] = $zip->compress(); //'http://download.ukm.no/zip/'.$zipname; 
+	$TWIGdata['zip'] = $zip->compress(); //'https://download.ukm.no/zip/'.$zipname; 
 	$TWIGdata['excel'] = exWrite($objPHPExcel, 'kontakteksport');
 }
 
