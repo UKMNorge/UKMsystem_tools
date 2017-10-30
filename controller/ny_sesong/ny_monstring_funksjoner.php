@@ -425,7 +425,7 @@ function UKMA_ny_sesong_standard_posts($site_id,$type){
 				['id' => 'kontaktpersoner', 'name' => 'Kontaktpersoner', 'viseng' => 'kontaktpersoner'],
 			);
 	if( $type !== 'kommune' ) {
-		$sider[] = ['id' => 'lokalmonstringer', 'name' => 'UKM lokalt', 'viseng' => 'lokalmonstringer'];
+		$sider[] = ['id' => 'lokalmonstringer', 'name' => 'Lokalmønstringer', 'viseng' => 'lokalmonstringer'];
 	}
 	
 	foreach( $sider as $side ){
