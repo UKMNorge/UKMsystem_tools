@@ -12,7 +12,7 @@ if(is_admin()) {
 	add_action('network_admin_menu', 'UKMST_menu');
 	add_filter('UKMWPNETWDASH_messages', 'UKMsystemtools_check_postnumber_updates');
 	add_filter('UKMWPNETWDASH_messages', 'UKMsystemtools_newSeason');
-
+	add_filter('UKMWPNETWDASH_messages', 'UKMsystemtools_ssb_warning');
 }
 
 function UKMST_menu() {
@@ -24,20 +24,15 @@ function UKMST_menu() {
 	$subpage4 = add_submenu_page( 'UKMsystemtools', 'Dropbox', 'Dropbox', 'superadministrator', 'UKMdropbox', 'UKMdropbox' );
 	$subpage5 = add_submenu_page( 'UKMsystemtools', 'Synkroniser passord', 'Synkroniser passord', 'superadministrator', 'UKMsystemtools_passwordsync', 'UKMsystemtools_passwordsync' );
 	$subpage6 = add_submenu_page( 'UKMsystemtools', 'Oppdater kortadresser', 'Oppdater kortadresser', 'superadministrator', 'UKMsystemtools_modrewrite', 'UKMsystemtools_modrewrite' );
-	$subpage7 = add_submenu_page( 'UKMsystemtools', 'Opprett sesong', 'Opprett sesong', 'superadministrator', 'UKMsystemtools_ny_sesong', 'UKMsystemtools_ny_sesong' );
-	$subpage8 = add_submenu_page( 'UKMsystemtools', 'Test påmelding', 'Test påmelding', 'superadministrator', 'UKMsystemtools_deltaTest', 'UKMsystemtools_deltaTest' );
-	$subpage9 = add_submenu_page( 'UKMsystemtools', 'Importer SSB-data', 'Importer SSB-data', 'superadministrator', 'UKMsystemtools_ssb_import', 'UKMsystemtools_ssb_import' );
+	$subpage7 = add_submenu_page( 'UKMsystemtools', 'Test påmelding', 'Test påmelding', 'superadministrator', 'UKMsystemtools_deltaTest', 'UKMsystemtools_deltaTest' );
+	$subpage8 = add_submenu_page( 'UKMsystemtools', 'Importer SSB-data', 'Importer SSB-data', 'superadministrator', 'UKMsystemtools_ssb_import', 'UKMsystemtools_ssb_import' );
 
-	add_filter('UKMWPNETWDASH_messages', 'UKMsystemtools_ssb_warning');
 
-    add_action( 'admin_print_styles-' . $page, 'UKMsystemtools_scripts_and_styles' );
-	for( $i=1; $i<=9; $i++ ) {
+	add_action( 'admin_print_styles-' . $page, 'UKMsystemtools_scripts_and_styles' );
+	for( $i=1; $i<=8; $i++ ) {
 		$var = 'subpage'.$i;
 		add_action( 'admin_print_styles-' . $$var, 'UKMsystemtools_scripts_and_styles' );
 	}
-}
-function UKMsystemtools_ny_sesong() {
-	require_once('controller/ny_sesong/ny_sesong.controller.php');
 }
 function UKMsystemtools_TONO() {
 	$TWIGdata = [];
@@ -79,15 +74,6 @@ function UKMsystemtools_scripts_and_styles() {
 	wp_enqueue_style('WPbootstrap3_css');
 }
 function UKMsystemtools_newSeason( $messages ) {
-	// Etter juli må ny sesong settes opp
-	if( 7 < (int)date('m') && get_site_option('season') == date('Y') ) {
-		$messages[] = array(
-			'level' 	=> 'alert-danger',
-			'module'	=> 'System',
-			'header'	=> 'NY SESONG MÅ SETTES OPP!',
-			'link'		=> 'admin.php?page=UKMsystemtools_ny_sesong'
-		);
-	}
 	// Påmeldingssystemet må testes hver sesong!
 	if( get_site_option('delta_is_tested') != get_site_option('season') ) {
 		$messages[] = array(
@@ -95,21 +81,7 @@ function UKMsystemtools_newSeason( $messages ) {
 			'module'	=> 'System',
 			'header'	=> 'Påmeldingssystemet må testes!',
 			'link'		=> 'admin.php?page=UKMsystemtools_deltaTest'
-		);		
-	}
-	
-	// I sesong, sjekk antall uregistrerte mønstringer
-	if( in_array( (int)date('m'), array(11,12,1,2) ) ) {
-		require_once('UKM/monstringer.class.php');
-		$monstringer = new monstringer( get_site_option('season') );
-		if( 15 < $monstringer->antall_uregistrerte() ) {
-			$messages[] = array(
-				'level' 	=> 'alert-warning',
-				'module'	=> 'System',
-				'header'	=> 'Det er '.$monstringer->antall_uregistrerte() .' uregistrerte mønstringer ',
-				'link'		=> 'admin.php?page=UKMrapport_admin&network=monstringer_uregistrert'
-			);
-		}
+		);
 	}
 	return $messages;
 }
