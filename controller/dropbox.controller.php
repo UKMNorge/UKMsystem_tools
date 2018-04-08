@@ -1,15 +1,14 @@
 <?php
+use GuzzleHttp\Exception\ClientException;
 
+@session_start();
 require_once('UKM/inc/dropbox.inc.php');
 
-$client = new Dropbox\Client( DROPBOX_AUTH_ACCESS_TOKEN, DROPBOX_APP_NAME, 'UTF-8' );
-
 try {
-	$test = $client->getAccountInfo();
-	$TWIGdata['client'] = $test;
+	$account = $DROPBOX->getCurrentAccount();
+	$TWIGdata['client'] = $account;
 	$TWIGdata['authenticated'] = true;
-} catch( Dropbox\Exception_InvalidAccessToken $e ) {
-	$authUrl = $webAuth->start();
+} catch( Exception $e ) {
 	$TWIGdata['authenticated'] = false;
-	$TWIGdata['authURL'] = '/wp-content/plugins/UKMsystem_tools/dropbox.php';
+	$TWIGdata['authURL'] = $DROPBOX->getAuthHelper()->getAuthUrl( DROPBOX_ENDPOINT );
 }
