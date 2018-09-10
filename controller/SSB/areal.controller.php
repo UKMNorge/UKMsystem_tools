@@ -90,7 +90,7 @@ class kommuneAreal {
 		$res = $qry->run();
 		$kommuneListe = [];
 		$fylkeListe = [];
-		while($row = mysql_fetch_assoc($res)) {
+		while($row = SQL::fetch($res)) {
 			$id = $this->kommuneareal->getSSBifiedKommuneID($row['id']);
 			$kommuneListe[$id] = $row['name'];
 			$fylkeListe[$id] = $row['idfylke'];
@@ -199,7 +199,7 @@ class kommuneAreal {
 
 		$res = $sql->run();
 		$years = array();
-		while($row = mysql_fetch_assoc($res)) {
+		while($row = SQL::fetch($res)) {
 			if(is_numeric($row['Field'])) {
 				$years[] = $row['Field'];
 			}

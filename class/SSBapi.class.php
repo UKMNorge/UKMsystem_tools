@@ -92,7 +92,7 @@ class Levendefodte_data extends SSBapi {
 		$qry = new SQL("SELECT id FROM smartukm_kommune");
 		$res = $qry->run();
 		$kommuner = array();
-		while ($row = mysql_fetch_assoc($res)) {
+		while ($row = SQL::fetch($res)) {
 			$kommuner[] = $this->getSSBifiedKommuneId($row['id']);
 		}
 		return $kommuner;
@@ -120,7 +120,7 @@ class KommuneArealImport extends SSBapi {
 		$qry = new SQL("SELECT id FROM smartukm_kommune");
 		$res = $qry->run();
 		$kommuner = array();
-		while ($row = mysql_fetch_assoc($res)) {
+		while ($row = SQL::fetch($res)) {
 			$kommuner[] = $this->getSSBifiedKommuneId($row['id']);
 		}
 		return $kommuner;

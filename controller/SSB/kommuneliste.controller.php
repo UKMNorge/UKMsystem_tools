@@ -9,7 +9,7 @@ $kommuner = parseKommuneData($difi->getAllPages());
 $kommunerViHar = array();
 $sql = new SQL("SELECT * FROM smartukm_kommune");
 $res = $sql->run();
-while ($row = mysql_fetch_assoc($res)) {
+while ($row = SQL::fetch($res)) {
 	$kommunerViHar[$row['id']] = array('name' => utf8_encode($row['name']), 'idfylke' => $row['idfylke']);
 }
 

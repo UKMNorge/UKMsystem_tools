@@ -7,10 +7,10 @@ $SEASON = 2014;
 $monstringer = new monstringer( $SEASON );
 $monstringer = $monstringer->etter_sesong();
 $counter_monstring = 0;
-while( $r = mysql_fetch_assoc( $monstringer ) ) {
+while( $r = SQL::fetch( $monstringer ) ) {
 	$monstring = new monstring( $r['pl_id'] );
 	$counter_monstring++;
-	echo '<hr />'. $monstring->get('pl_name') .' ('. $counter_monstring .' av '. mysql_num_rows( $monstringer ) .')<br />';
+	echo '<hr />'. $monstring->get('pl_name') .' ('. $counter_monstring .' av '. SQL::numRows( $monstringer ) .')<br />';
 	ob_flush();
 	flush();
 	$innslagene = $monstring->innslag();

@@ -43,7 +43,7 @@ excell( i2a(9).'1', 'Phone UKM support', 'bold' );
 
 $emails = [];
 if( $res ) {
-	while( $row = mysql_fetch_assoc( $res ) ) {
+	while( $row = SQL::fetch( $res ) ) {
 		$counter++;
 		$contact = new stdClass();
 		$row['name'] = utf8_encode( $row['name'] );
@@ -124,7 +124,7 @@ $qry = 'SELECT `b_name`, `b_email`
 		ORDER BY `b_name` ASC';
 $res = mysql_query( $qry, $db );
 if( $res ) {
-	while( $r = mysql_fetch_assoc( $res ) ) {
+	while( $r = SQL::fetch( $res ) ) {
 		if( !in_array( $r['b_email'], $emails ) 
 		 && ( strpos( $r['b_email'], 'fake.ukm') === false ) 
 		 && ( strpos( $r['b_email'], 'falsk.ukm') === false )

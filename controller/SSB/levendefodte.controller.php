@@ -150,7 +150,7 @@ function get_all_years() {
 
 	$res = $sql->run();
 	$years = array();
-	while($row = mysql_fetch_assoc($res)) {
+	while($row = SQL::fetch($res)) {
 		if(is_numeric($row['Field'])) {
 			$years[] = $row['Field'];
 		}
