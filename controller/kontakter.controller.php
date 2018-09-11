@@ -46,9 +46,9 @@ if( $res ) {
 	while( $row = SQL::fetch( $res ) ) {
 		$counter++;
 		$contact = new stdClass();
-		$row['name'] = utf8_encode( $row['name'] );
-		$contact->first_name = utf8_encode($row['firstname']);
-		$contact->last_name = utf8_encode($row['lastname']);
+		$row['name'] = $row['name'];
+		$contact->first_name = $row['firstname'];
+		$contact->last_name = $row['lastname'];
 		if( empty( $contact->first_name ) || empty( $contact->last_name ) ) {
 			$name = explode(' ', $row['name']);
 			$ant_names = sizeof($name);
@@ -63,11 +63,11 @@ if( $res ) {
 		}
 		$contact->phone = $row['tlf'];
 		$contact->email = $row['email'];
-		$contact->title = utf8_encode($row['title']);
+		$contact->title = $row['title'];
 		$contact->facebook = $row['facebook'];
 
-		$contact->monstring = utf8_encode($row['pl_name']);
-		$contact->fylke = utf8_encode( $row['fylke_name'] );
+		$contact->monstring = $row['pl_name'];
+		$contact->fylke =  $row['fylke_name'];
 
 		// VCARD
 		$cardname = 'UKM_kontakt_'.$counter;

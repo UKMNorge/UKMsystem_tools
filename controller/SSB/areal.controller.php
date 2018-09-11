@@ -110,7 +110,7 @@ class kommuneAreal {
 			if(isset($fylkeListe[$k_id]))
 				$sql->add("fylke_id", $fylkeListe[$k_id]);
 			if(isset($kommuneListe[$k_id])) 
-				$sql->add("kommune_navn", utf8_encode($kommuneListe[$k_id]));
+				$sql->add("kommune_navn", $kommuneListe[$k_id]);
 			$sql->run();
 		}
 

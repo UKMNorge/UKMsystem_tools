@@ -10,7 +10,7 @@ $kommunerViHar = array();
 $sql = new SQL("SELECT * FROM smartukm_kommune");
 $res = $sql->run();
 while ($row = SQL::fetch($res)) {
-	$kommunerViHar[$row['id']] = array('name' => utf8_encode($row['name']), 'idfylke' => $row['idfylke']);
+	$kommunerViHar[$row['id']] = array('name' => $row['name'], 'idfylke' => $row['idfylke']);
 }
 
 $TWIGdata['fylker'] = new fylker();
