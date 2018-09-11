@@ -1,6 +1,6 @@
 <?php
 
-require_once(__DIR__.'/../../class/SSBapi.class.php');
+require_once('UKM/API/SSB.class.php');
 
 ### KREVER tabellen ssb_kommune_areal
 # Tabellen krever feltene kommune_id og kommune_navn.

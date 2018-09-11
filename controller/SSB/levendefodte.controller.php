@@ -24,7 +24,7 @@ function checkUpdate($TWIGdata) {
 }
 
 function get_data($year) {
-	require_once(__DIR__.'/../class/SSBapi.class.php');
+	require_once('UKM/API/SSB.class.php');
 	$levendefodte = new Levendefodte_data();
 	$levendefodte->year = $year;
 	$levendefodte->buildQuery();
@@ -92,18 +92,20 @@ function update_db($kommunedata, $year) {
 
 # Adds a year-column for the selected year.
 function add_year_column($year) {
-	require_once('UKMconfig.inc.php');
+	require_once('UKM/sql.class.php');
 
-	$year = mysql_real_escape_string($year);
-	$year = (int)$year;
-	$qry = "ALTER TABLE ukm_befolkning_ssb ADD `".$year."` INTEGER NOT NULL";
-
-	$con = mysql_connect(UKM_DB_HOST, UKM_DB_WRITE_USER, UKM_DB_PASSWORD);
-	mysql_select_db(UKM_DB_NAME, $con);
-	$res = mysql_query($qry);
-	if(false == $res) 
-		echo mysql_error($con);
-	return $res;
+	$sql = new SQLwrite(
+		'ALTER TABLE ukm_befolkning_ssb ADD `#year` INTEGER NOT NULL',
+		[
+			'year' => (int)$year
+		]
+	);
+	
+	$res = $sql->run();
+	if( !$res ) {
+		return $sql->getError();
+	}
+	return true;
 }
 
 # Returnerer et array med kommune-ID som nøkkel og antall levendefødte som verdi.
