@@ -3,8 +3,9 @@
 require_once('UKM/curl.class.php');
 require_once('UKM/fylker.class.php');
 $difi = new DIFI();
-$difi->setResource('regioner/kommuner');
+$difi->setResource('geo/kommune');
 $kommuner = parseKommuneData($difi->getAllPages());
+
 
 $kommunerViHar = array();
 $sql = new SQL("SELECT * FROM smartukm_kommune");
@@ -20,13 +21,13 @@ $TWIGdata['kommunerViHarSomIkkeFinnesLenger'] = array_diff_key($kommunerViHar, $
 function parseKommuneData($kommuner) {
 	$kommuneListe = array();
 	foreach($kommuner as $kommune) {
-		$kommuneListe[(int)$kommune->kode] = $kommune;
+		$kommuneListe[(int)$kommune->kommune] = $kommune;
 	}
 	return $kommuneListe;
 }
 
 class DIFI {
-	const API_URL = 'http://hotell.difi.no/api/json/ssb/';
+	const API_URL = 'http://hotell.difi.no/api/json/difi/';
 	private $resource;
 
 	public function __construct() {
