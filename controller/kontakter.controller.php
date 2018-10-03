@@ -1,5 +1,4 @@
 <?php
-define('ZIP_WRITE_PATH', '/home/ukmno/public_subdomains/download/zip/');
 require_once('UKM/sql.class.php');
 require_once('UKM/vcard.class.php');
 require_once('UKM/zip.class.php');
@@ -20,7 +19,7 @@ $SQL = new SQL("SELECT *, `fylke`.`name` AS `fylke_name`
 
 $res = $SQL->run();
 
-$STORAGE = '/tmp/UKMkontakter/';
+$STORAGE = '/temp/kontakter/';
 
 $zipname = 'UKMkontakter';
 $zip = new zip($zipname, true);
@@ -105,7 +104,7 @@ if( $res ) {
 		$emails[] = $card->email1;
 	}
 	;
-	$TWIGdata['zip'] = $zip->compress(); //'https://download.ukm.no/zip/'.$zipname; 
+	$TWIGdata['zip'] = $zip->compress();
 	$TWIGdata['excel'] = exWrite($objPHPExcel, 'kontakteksport');
 }
 
@@ -115,14 +114,14 @@ exInit();
 excell( 'A1', 'Brukernavn', 'bold');
 excell( 'B1', 'E-post', 'bold');
 $row = 1;
-
-$db = mysql_connect(UKM_WP_DB_HOST, UKM_WP_DB_USER, UKM_WP_DB_PASSWORD) or die(mysql_error());
-mysql_select_db(UKM_WP_DB_NAME, $db);
-
-$qry = 'SELECT `b_name`, `b_email`
-		FROM `ukm_brukere` 
-		ORDER BY `b_name` ASC';
-$res = mysql_query( $qry, $db );
+$sql = new SQL("
+	SELECT `b_name`, `b_email`
+	FROM `ukm_brukere` 
+	ORDER BY `b_name` ASC",
+	[],
+	'wordpress'
+);
+$res = $sql->run();
 if( $res ) {
 	while( $r = SQL::fetch( $res ) ) {
 		if( !in_array( $r['b_email'], $emails ) 
