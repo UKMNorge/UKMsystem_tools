@@ -1,8 +1,8 @@
 <h4>Levendefødte - til målgruppeinformasjon</h4>
-<p>Data om levendefødte ble sist importert for år <strong>{{ levendefodte.last_updated }}</strong>.</p>
-{% if levendefodte.missing_years|length > 0 %}
+<p>Data om levendefødte ble sist importert for år <strong>{{ levendefodte.getLatestYearUpdated() }}</strong>.</p>
+{% if levendefodte.getMissingYears()|length > 0 %}
 	<div class="alert alert-warning">
-		<strong>OBS! Data mangler for årene {% for year in levendefodte.missing_years %}{{ year }}{{ loop.last ? '' : ', ' }}{% endfor %}</strong>
+		<strong>OBS! Data mangler for årene {% for year in levendefodte.getMissingYears() %}{{ year }}{{ loop.last ? '' : ', ' }}{% endfor %}</strong>
 	</div>
 {% endif %}
 <form class="form" method="POST">
@@ -21,11 +21,11 @@
 	</div>
 </form>
 {% if log is defined %}
-	<div>
+	<ol class="list-group">
 		{% for entry in log %}
-			<span class="alert-{{ entry.success ? 'success' : 'danger' }}">
+			<li class="list-group-item text-{{ entry.success ? 'success' : 'danger' }}">
 				Kommune {{ entry.id }}, antall {{ entry.antall }}. {{ entry.message }}
-			</span><br>
+			</li>
 		{% endfor %}
-	</div>
+	</ol>
 {% endif %}
