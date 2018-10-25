@@ -19,7 +19,7 @@ $SQL = new SQL("SELECT *, `fylke`.`name` AS `fylke_name`
 
 $res = $SQL->run();
 
-$STORAGE = '/temp/kontakter/';
+$STORAGE = $_ENV['HOME'].'/tmp/kontakter/';
 
 $zipname = 'UKMkontakter';
 $zip = new zip($zipname, true);
