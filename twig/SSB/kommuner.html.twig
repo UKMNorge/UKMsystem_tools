@@ -7,7 +7,7 @@
 		<div style="display:none;" id="kommunerViIkkeHarListe">
 			<table class="table table-striped">
 			{% for kommune in kommunerViIkkeHar %}
-				<tr><td>{{ kommune.tittel }}</td><td align="right">{{ kommune.kode }}</td></tr>
+				<tr><td>{{ kommune.navn }}</td><td align="right">{{ kommune.kommune }}</td></tr>
 				{% if not kommune.note is empty %}
 					<tr><td colspan="2"><small>{{ kommune.note }}</small></td></tr>
 				{% endif %}

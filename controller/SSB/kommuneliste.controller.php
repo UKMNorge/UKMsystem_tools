@@ -7,6 +7,7 @@ $difi = new DIFI();
 $difi->setResource('regioner/kommuner');
 $kommuner = $difi::parseKommuneData($difi->getAllPages());
 
+
 $kommunerViHar = array();
 $sql = new SQL("SELECT * FROM smartukm_kommune");
 $res = $sql->run();
