@@ -30,7 +30,7 @@ if( strtoupper($_SERVER['REQUEST_METHOD']) == 'POST' ) {
 		$insert->add('k_id', $kommune);
 		
 		$res = $insert->run();
-		if( $res == 1 ) {
+		if( $res ) {
 			$TWIGdata['added'][] = $postnummer .' '. $poststed;
 		} else {
 			$update = new SQLins('smartukm_postalplace', array('postalcode' => $postnummer ) );
