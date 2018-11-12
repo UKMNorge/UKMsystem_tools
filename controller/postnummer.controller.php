@@ -29,13 +29,18 @@ if( strtoupper($_SERVER['REQUEST_METHOD']) == 'POST' ) {
 		$insert->add('postalplace', $poststed);
 		$insert->add('k_id', $kommune);
 		
-		$res = $insert->run();
-		if( $res ) {
-			$TWIGdata['added'][] = $postnummer .' '. $poststed;
-		} else {
-			$update = new SQLins('smartukm_postalplace', array('postalcode' => $postnummer ) );
-			$update->add('k_id', $kommune);
-			$update->run();
+		try {
+			$res = $insert->run();
+			if( $res ) {
+				$TWIGdata['added'][] = $postnummer .' '. $poststed;
+			}
+		} catch( Exception $e ) {
+			if( $e->getCode() == 901001 ) {
+				$update = new SQLins('smartukm_postalplace', array('postalcode' => $postnummer ) );
+				$update->add('k_id', $kommune);
+				$update->run();
+			}
+			throw $e;
 		}
 	}
 
