@@ -39,8 +39,9 @@ if( strtoupper($_SERVER['REQUEST_METHOD']) == 'POST' ) {
 				$update = new SQLins('smartukm_postalplace', array('postalcode' => $postnummer ) );
 				$update->add('k_id', $kommune);
 				$update->run();
+			} else {
+				throw $e;
 			}
-			throw $e;
 		}
 	}
 
