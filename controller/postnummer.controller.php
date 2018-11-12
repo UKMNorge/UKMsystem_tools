@@ -6,8 +6,7 @@ if( strtoupper($_SERVER['REQUEST_METHOD']) == 'POST' ) {
 
 	define('PHPEXCEL_ROOT','');	
 	/** PHPExcel_IOFactory */
-	require_once('PHPExcel/PHPExcel.php');
-	require_once('PHPExcel/IOFactory.php');
+	require_once('UKM/inc/excel.inc.php');
 
 	$inputFileName = $_FILES['postnummer']['tmp_name'];
 	$objPHPExcel = PHPExcel_IOFactory::load($inputFileName);
