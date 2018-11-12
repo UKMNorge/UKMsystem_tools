@@ -1,6 +1,6 @@
 <h4>Hent kommuneareal</h4>
 <p>Kommuneareal er innhentet på en årsbasis, og benytter seg av kommunene i smartukm_kommune-tabellen.</p>
-<p>Data om areal ble sist importert for år <strong>{{ kommuneareal.last_updated }}</strong>.</p>
+<p>Data om areal ble sist importert for år <strong>{{ kommuneareal.getLatestYearUpdated() }}</strong>.</p>
 <form class="form" method="POST">
 	<div class="form-group">
 		<label for="year">Importer data for år</label>
@@ -17,17 +17,17 @@
 	</div>
 </form>
 {% if kommuneareal.log is defined %}
-	<div>
+	<ol class="list-group">
 		{% for entry in kommuneareal.log %}
 			{% if entry is iterable %}
 				{% for logentry in entry %}
-					<span class="alert alert-{{ logentry.success }}">
+					<li class="list-group-item text-{{ logentry.success ? 'success' : 'danger' }}">
 						ID {{ logentry.id }} - {{ logentry.message }}
-					</span><br>
+					</li>
 				{% endfor %}	
 			{% else %}
-				<span>{{ entry|raw }}</span><br>
+				<li class="list-group-item">{{ entry|raw }}</li>
 			{% endif %}
 		{% endfor %}
-	</div>
+	</ol>
 {% endif %}
