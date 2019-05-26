@@ -8,6 +8,7 @@ require_once('UKMconfig.inc.php');
 
 define('FLICKR_REDIR_URL', 'https://ukm.no/wp-content/plugins/UKMsystem_tools/controller/flickr.controller.php');
 
+echo '<h1>Flickr-setup</h1>';
 // SET LOG LEVEL (throw, default:log)
 Exception::setLogMethod('throw');
 
@@ -44,7 +45,9 @@ if( !$flickr->hasAuthentication() ) {
 	}
 }
 
+echo '<h2>Utfører login-test</h2>';
 $test = new Request\Test\Login();
 $res = $test->execute();
-
+echo '<pre>';
 var_dump( $res->getDataRaw() );
+echo '</pre>';
