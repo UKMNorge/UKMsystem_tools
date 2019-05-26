@@ -6,7 +6,7 @@ require_once('Flickr/autoloader.php');
 require_once('UKMconfig.inc.php');
 session_start();
 
-define('FLICKR_REDIR_URL', 'https://ukm.no/wp-content/plugins/UKMsystem_tools/flickr.php');
+define('FLICKR_REDIR_URL', 'https://ukm.no/wp-content/plugins/UKMsystem_tools/controller/flickr.controller.php');
 
 // SET LOG LEVEL (throw, default:log)
 Exception::setLogMethod('throw');
@@ -39,7 +39,7 @@ if( !$flickr->hasAuthentication() ) {
 	}
 	// Send user to flickr for authentication
 	 else {
-		out( '<a href="'. $flickr->getAuthenticationUrl( FLICKR_REDIR_URL ) .'">Authorize app</a>' );
+		out( '<a href="'. $flickr->getAuthenticationUrl( FLICKR_REDIR_URL ) .'" target="_blank">Authorize app</a>' );
 		die();
 	}
 }

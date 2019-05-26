@@ -22,6 +22,7 @@ function UKMST_menu() {
 	$subpage2 = add_submenu_page( 'UKMsystemtools', 'Kontakteksport', 'Kontakteksport', 'superadministrator', 'UKMkontakteksport', 'UKMkontakteksport' );
 	$subpage3 = add_submenu_page( 'UKMsystemtools', 'Cloudflare-cache', 'Cloudflare-cache', 'superadministrator', 'UKMcloudflare_cache', 'UKMcloudflare_cache');
 	$subpage4 = add_submenu_page( 'UKMsystemtools', 'Dropbox', 'Dropbox', 'superadministrator', 'UKMdropbox', 'UKMdropbox' );
+	$subpage4 = add_submenu_page( 'UKMsystemtools', 'Flickr', 'Flickr', 'superadministrator', 'UKMflickr', 'UKMflickr' );
 	$subpage5 = add_submenu_page( 'UKMsystemtools', 'Synkroniser passord', 'Synkroniser passord', 'superadministrator', 'UKMsystemtools_passwordsync', 'UKMsystemtools_passwordsync' );
 	$subpage6 = add_submenu_page( 'UKMsystemtools', 'Oppdater kortadresser', 'Oppdater kortadresser', 'superadministrator', 'UKMsystemtools_modrewrite', 'UKMsystemtools_modrewrite' );
 	$subpage7 = add_submenu_page( 'UKMsystemtools', 'Test påmelding', 'Test påmelding', 'superadministrator', 'UKMsystemtools_deltaTest', 'UKMsystemtools_deltaTest' );
@@ -63,6 +64,13 @@ function UKMdropbox() {
 	$TWIGdata = [];
 	require_once('controller/dropbox.controller.php');
 	$VIEW = 'dropbox';
+
+	echo TWIG( $VIEW.'.html.twig', $TWIGdata, dirname(__FILE__), true);
+}
+function UKMflickr() {
+	$TWIGdata = [];
+	require_once('controller/flickr.controller.php');
+	$VIEW = 'flickr';
 
 	echo TWIG( $VIEW.'.html.twig', $TWIGdata, dirname(__FILE__), true);
 }
