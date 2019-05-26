@@ -68,11 +68,7 @@ function UKMdropbox() {
 	echo TWIG( $VIEW.'.html.twig', $TWIGdata, dirname(__FILE__), true);
 }
 function UKMflickr() {
-	$TWIGdata = [];
 	require_once('controller/flickr.controller.php');
-	$VIEW = 'flickr';
-
-	echo TWIG( $VIEW.'.html.twig', $TWIGdata, dirname(__FILE__), true);
 }
 
 

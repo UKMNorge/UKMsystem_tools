@@ -4,7 +4,7 @@ namespace MariusMandal\Flickr;
 
 require_once('Flickr/autoloader.php');
 require_once('UKMconfig.inc.php');
-session_start();
+@session_start();
 
 define('FLICKR_REDIR_URL', 'https://ukm.no/wp-content/plugins/UKMsystem_tools/controller/flickr.controller.php');
 
