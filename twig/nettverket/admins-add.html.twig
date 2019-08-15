@@ -1,0 +1,57 @@
+<h2>Legg til administrator for
+    {{ fylke.getNavn() }}</h2>
+
+<div style="width: 98%">
+	<form action="?page={{ GET('page') }}&action=add&fylke={{ GET('fylke') }}" method="POST">
+		
+		{% if doAdd is defined %}
+
+			{% if user.ID == 'new' %}
+				<div class="alert alert-info">
+					Fant ingen registrerte brukere med e-postadressen, 
+					men fyll ut skjemaet, så fikser vi det!
+				</div>
+			{% endif %}
+
+			<input type="hidden" name="user_id" value="{{ user.ID }}" />
+			<div class="form-group">
+				<label for="first_name">Fornavn</label>
+				<input class="form-control" id="first_name" type="text" name="first_name" required value="{{ user.first_name }}" />
+			</div>
+
+			<div class="form-group">
+				<label for="last_name">Etternavn</label>
+				<input class="form-control" id="last_name" type="text" name="last_name" required value="{{ user.last_name }}" />
+			</div>
+
+
+			<div class="form-group">
+				<label for="phone">Mobil</label>
+				<input class="form-control" id="phone" type="tel" name="phone" required value="{{ user.phone }}" />
+			</div>
+
+			<div class="form-group">
+				<label for="username">Brukernavn</label>
+				<input class="form-control" id="username" type="text" name="username" value="{{ user.username }}" {{ not username_taken ? 'readonly' }} />
+			</div>
+
+			<div class="form-group">
+				<label for="email">E-postadresse</label>
+				<input class="form-control" id="email" type="email" name="email" value="{{ user.email }}" readonly />
+			</div>
+
+			<div class="form-group">
+				<button class="btn btn-sm btn-success" type="submit">Legg til bruker som administrator</button>
+			</div>
+		{% else %}
+			<div class="form-group">
+				<label for="email">E-postadresse</label>
+				<input class="form-control" id="email" placeholder="E-postadresse" type="email" name="email" required />
+			</div>
+
+			<div class="form-group">
+				<button class="btn btn-sm btn-primary" id="doSearchForUser" type="submit">Søk etter bruker</button>
+			</div>
+		{% endif %}
+	</form>
+</div>

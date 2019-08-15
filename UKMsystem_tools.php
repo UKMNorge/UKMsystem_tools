@@ -42,7 +42,44 @@ function UKMST_menu() {
 		$var = 'subpage'.$i;
 		add_action( 'admin_print_styles-' . $$var, 'UKMsystemtools_scripts_and_styles' );
 	}
+
+
+	$admins = add_submenu_page(
+		'index.php',
+		'Administratorer',
+		'Administratorer',
+		'superadmin',
+		'UKMsystem_tools_admins',
+		'UKMsystem_tools_admins'
+	);
+
+	add_action(
+		'admin_print_styles-' . $admins,
+		'UKMsystemtools_scripts_and_styles'
+	);
 }
+
+function UKMsystem_tools_admins() {
+	
+	if( isset( $_GET['action'] ) ) {
+		$_GET['action'] = basename( $_GET['action'] );
+	} else {
+		$_GET['action'] = 'list';
+	}
+	
+	switch( $_GET['action'] ) {
+		case 'add':
+			$VIEW = 'admins-add';
+		break;
+	
+		default:
+			$VIEW = 'admins';
+		break;
+	}
+	require_once('controller/nettverket/'.$VIEW.'.controller.php');
+	echo TWIG('nettverket/'. $VIEW .'.html.twig', $TWIGdata, __DIR__);
+}
+
 function UKMsystemtools_TONO() {
 	$TWIGdata = [];
 	require_once('controller/tono.controller.php');

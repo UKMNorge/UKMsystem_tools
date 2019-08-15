@@ -1,0 +1,33 @@
+<style>
+.mt-1 {
+	margin-top: 0.25em;
+}
+.mb-0 {
+	margin-bottom: 0;
+}
+</style>
+<h2>Administratorer</h2>
+
+<div class="container-fluid">
+    {% for fylke in fylker %}
+        <div class="row">
+            <h4 class="mb-0" style="text-transform: uppercase">
+                {{ fylke.getNavn() }}
+            </h4>
+            <ol class="list-group">
+                {% for bruker in administratorer[ fylke.getId() ] %}
+                    {% else %}
+                        <li class="list-group-item">
+                            Ingen administratorer er lagt til enda.
+                        </li>
+                {% endfor %}
+				<p class="mt-1">
+					<a href="?page={{ GET('page') }}&action=add&fylke={{ fylke.getId() }}">
+                    	Legg til administrator
+					</a>
+                </p>
+            </ol>
+
+        </div>
+    {% endfor %}
+</div>
