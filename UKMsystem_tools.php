@@ -55,14 +55,6 @@ class UKMsystem_tools extends UKMWPmodul
 
         $scripts[] = add_submenu_page(
             'UKMsystem_tools',
-            'Cloudflare-cache',
-            'Cloudflare-cache',
-            'superadministrator',
-            'UKMcloudflare_cache',
-            'UKMcloudflare_cache'
-        );
-        $scripts[] = add_submenu_page(
-            'UKMsystem_tools',
             'Oppdater kortadresser',
             'Oppdater kortadresser',
             'superadministrator',

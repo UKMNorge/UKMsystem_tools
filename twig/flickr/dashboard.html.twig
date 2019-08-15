@@ -1,0 +1,16 @@
+{% if FlickrAuth %}
+    Flickr er koblet til {{ FlickrResult.user.username._content is not empty ? FlickrResult.user.username._content : 'ukjent' }} sin flickr, og bilder fra den nasjonale festivalen lastes opp hit.
+{% elseif FlickrAuthURL is defined %}
+    Ingen tilkobling etablert.
+    <a href="{{ FlickrAuthURL}}" target="_blank">Logg inn med flickr</a>
+{% elseif FlickrConstants is defined %}
+    En eller flere konstanter mangler i UKMconfig
+    <br/>
+    <small>
+        {% for constant in FlickrConstants %}
+            <code>{{ constant }}</code>
+        {% endfor %}
+    </small>
+{% else %}
+    En ukjent feil har oppstått.
+{% endif %}

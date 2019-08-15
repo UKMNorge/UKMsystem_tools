@@ -1,5 +1,16 @@
 <div class="container-fluid">
     <div class="row">
+        <div class="col-xs-12">
+            {% include "wp_modul.flashbag.html.twig" %}
+        </div>
+    </div>
+    <div class="row">
+
+        {% if CFauthenticated %}
+            <div class="col-xs-4">
+                {% include "cloudflare/actions.html.twig" %}
+            </div>
+        {% endif %}
         <div class="col-xs-4">
             <table class="table table-dashboard">
                 <thead>
@@ -15,47 +26,24 @@
                             <small>Brukes bl.a. for UKMdigark</small>
                         </td>
                         <td>
-                            {% if DBauthenticated %}
-                                Dropbox er koblet til
-                                    {{ DBclient.getDisplayName() }}
-                                    sin dropbox, og filene vil arkiveres i UKMdigark
-                            {% elseif DBauthURL is defined %}
-                                    Ingen tilkobling etablert.
-                                    <a href="{{ DBauthURL }}" target="_blank">Logg inn med dropbox</a>
-
-                            {% else %}
-                                En eller flere konstanter mangler i UKMconfig 
-                                <br />
-                                <small>
-                                    {% for constant in DBconstants %}
-                                        <code>{{ constant }}</code>
-                                    {% endfor %}
-                                </small>
-                            {% endif %}
+                            {% include "dropbox/dashboard.html.twig" %}
                         </td>
                     </tr>
                     <tr>
                         <td>Flickr</td>
                         <td>
-                        {% if authenticated %}
-                                TILKOBLET (TROR VI)
-                            {% elseif DBauthURL is defined %}
-                                    Ingen tilkobling etablert.
-                                    <a href="{{ DBauthURL }}" target="_blank">Logg inn med dropbox</a>
-
-                            {% else %}
-                                En eller flere konstanter mangler i UKMconfig 
-                                <br />
-                                <small>
-                                    {% for constant in FlickrConstants %}
-                                        <code>{{ constant }}</code>
-                                    {% endfor %}
-                                </small>
-                            {% endif %}</td>
+                            {% include "flickr/dashboard.html.twig" %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Cloudflare</td>
+                        <td>
+                            {% include "cloudflare/dashboard.html.twig" %}
+                        </td>
                     </tr>
                     <tr>
                         <td>Mailchimp</td>
-                        <td>N/A</td>
+                        <td>Integrering er ikke gjort</td>
                     </tr>
                 </tbody>
             </table>

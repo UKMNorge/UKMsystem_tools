@@ -1,0 +1,46 @@
+<table class="table table-dashboard">
+    <thead>
+        <tr>
+            <th>Cloudflare cache</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr>
+            <td>
+                <p>
+                <label>Fjern cache for lenke</label>
+                <br />
+                Lim inn én lenke per boks og trykk slett cache.
+                </p>
+                <p class="text-muted small"><b>OBS:</b> Bruk full URL. F.eks https://grafikk.ukm.no/stilskjema.css?v=2</span>
+                <form action="admin.php?page={{ GET('page') }}&cloudflare=delete" method="POST">
+                    <div class="form-group" id="CFfileContainer" style="margin-bottom: 0px;">
+                        <input class="form-control" name="CFfiles[]" required type="url" placeholder="https://ukm.no...." />
+                    </div>
+                    <div class="form-group" style="margin-top: 0px; float:right;">
+                        <button type="button" class="btn btn-outline btn-primary btn-xs" id="CFaddMoreFiles">Legg til flere filer</button>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-outline btn-primary">Slett filer fra cache</button>
+                    </div>
+                </form>
+            </td>
+        </tr>
+        <tr>
+            <td align="right" style="text-align:right;">
+                <a class="btn btn-outline btn-danger btn-xs" href="admin.php?page={{ GET('page') }}&cloudflare=purge">Tøm hele cachen</a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<script>
+    $(document).on('click', '#CFaddMoreFiles', () => {
+        var input = $('<input class="form-control" name="CFfiles[]" required type="url" placeholder="https://ukm.no...." />');
+        $('#CFfileContainer').append(
+            input
+        );
+        input.focus();
+    });
+</script>

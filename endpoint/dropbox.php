@@ -4,7 +4,6 @@
 require_once('UKMconfig.inc.php');
 require_once('UKM/inc/twig-admin.inc.php');
 
-
 try {
     require_once('UKM/inc/dropbox.inc.php');
 
@@ -26,7 +25,7 @@ try {
         [
             'data' => $data
         ],
-        __DIR__
+        dirname(__DIR__)
     );
     die();
 
@@ -36,7 +35,7 @@ try {
         [
             'error' => $e->getMessage()
         ],
-        __DIR__
+        dirname(__DIR__)
     );
     die();
 }

@@ -1,0 +1,17 @@
+{% if DBauthenticated %}
+    Dropbox er koblet til
+    {{ DBclient.getDisplayName() }}
+    sin dropbox, og filene vil arkiveres i UKMdigark
+{% elseif DBauthURL is defined %}
+    Ingen tilkobling etablert.
+    <a href="{{ DBauthURL }}" target="_blank">Logg inn med dropbox</a>
+
+{% else %}
+    En eller flere konstanter mangler i UKMconfig
+    <br/>
+    <small>
+        {% for constant in DBconstants %}
+            <code>{{ constant }}</code>
+        {% endfor %}
+    </small>
+{% endif %}
