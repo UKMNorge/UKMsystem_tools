@@ -10,7 +10,7 @@ UKMsys_tools.GUI = function ($) {
                 success: '#username_available',
                 error: '#username_exists',
                 fatalError: '#fatalErrorContainer',
-                content: '#formContainer'
+                main: '#formContainer'
             }
         }
         */

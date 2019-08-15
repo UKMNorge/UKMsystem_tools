@@ -8,7 +8,7 @@ UKMsys_tools.administratorer = function ($) {
                 success: '#username_available',
                 error: '#username_exists',
                 fatalError: '#fatalErrorContainer',
-                content: '#formContainer'
+                main: '#formContainer'
             },
             handleSuccess: (response) => {
                 $('#doAddUserAsAdmin').removeAttr('disabled');

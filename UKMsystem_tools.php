@@ -87,7 +87,7 @@ class UKMsystem_tools extends UKMWPmodul
             'Administratorer',
             'superadmin',
             'UKMsystem_tools_admins',
-            'UKMsystem_tools_admins'
+            ['UKMsystem_tools', 'renderAdministratorer']
         );
         add_action(
             'admin_print_styles-' . $meny_administratorer,
@@ -135,6 +135,18 @@ class UKMsystem_tools extends UKMWPmodul
             'UKMsystem_tools_admins',
             plugin_dir_url(__FILE__) . 'js/nettverket/administratorer.js'  
         );
+    }
+
+    public static function renderAdministratorer() {
+        
+        if (isset($_GET['action'])) {
+            $_GET['action'] = 'administratorer-'. basename($_GET['action']);
+        } else {
+            $_GET['action'] = 'administratorer';
+        }
+    
+        static::setAction('nettverk/'. $_GET['action']);
+        static::renderAdmin();
     }
 }
 
