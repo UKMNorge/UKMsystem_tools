@@ -3,7 +3,13 @@
 require_once('UKM/fylker.class.php');
 $TWIGdata['fylke'] = fylker::getById( $_GET['fylke'] );
 
-if( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
+// DEBUG
+if( true || $_SERVER['REQUEST_METHOD'] == 'POST' ) {
+    // DEBUG
+    #$_POST['email'] = 'testbruker@ukm.dev';
+    $_POST['email'] = 'mariusmandal@gmail.com';
+    $_POST['email'] = 'testkommune@gmail.com';
+
 	$user = get_user_by('email',$_POST['email']);
 
 	if( isset( $_POST['user_id'] ) ) {
