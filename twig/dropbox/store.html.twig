@@ -1,0 +1,12 @@
+{% extends "fatalError.html.twig" %}
+
+{% block content %}
+    <h1>Lagre access-token i UKM-config</h1>
+    <p class="lead">Alt du trenger å gjøre nå er å legge til linjen under i UKMconfig, og oppdatere denne siden.</p>
+
+    <code>
+        define('DROPBOX_AUTH_ACCESS_TOKEN', '{{ data }}');
+    </code>
+
+    <p>Ha en fin dag!</p>
+{% endblock %}

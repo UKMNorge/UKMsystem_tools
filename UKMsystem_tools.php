@@ -4,20 +4,160 @@ Plugin Name: UKM System Tools
 Plugin URI: http://www.ukm-norge.no
 Description: Network admin system-verktøy for import av postnummer, ssb-tall osv
 Author: UKM Norge / M Mandal 
-Version: 0.1 
+Version: 2.0
 Author URI: http://mariusmandal.no
 */
 
+
+require_once('UKM/wp_modul.class.php');
+
+class UKMsystem_tools extends UKMWPmodul
+{
+    public static $action = 'dashboard';
+    public static $path_plugin = null;
+
+    /**
+     * Register hooks
+     */
+    public static function hook()
+    {
+        add_action(
+            'wp_ajax_UKMsystem_tools_ajax',
+            ['UKMsystem_tools', 'ajax']
+        );
+
+        add_action(
+            'network_admin_menu',
+            ['UKMsystem_tools', 'meny'],
+            200
+        );
+    }
+
+    /**
+     * Add menu
+     */
+    public static function meny()
+    {
+        /**
+         * Menyvalget SYSTEM
+         */
+        $scripts = [
+            add_menu_page(
+                'UKM Norge Systemverktøy',
+                'System',
+                'superadmin',
+                'UKMsystem_tools',
+                ['UKMsystem_tools', 'renderAdmin'],
+                'dashicons-admin-generic', #//ico.ukm.no/system-16.png',
+                22
+            )
+        ];
+
+        $scripts[] = add_submenu_page(
+            'UKMsystem_tools',
+            'Cloudflare-cache',
+            'Cloudflare-cache',
+            'superadministrator',
+            'UKMcloudflare_cache',
+            'UKMcloudflare_cache'
+        );
+        $scripts[] = add_submenu_page(
+            'UKMsystem_tools',
+            'Oppdater kortadresser',
+            'Oppdater kortadresser',
+            'superadministrator',
+            'UKMsystemtools_modrewrite',
+            'UKMsystemtools_modrewrite'
+        );
+        $scripts[] = add_submenu_page(
+            'UKMsystem_tools',
+            'Test påmelding',
+            'Test påmelding',
+            'superadministrator',
+            'UKMsystemtools_deltaTest',
+            'UKMsystemtools_deltaTest'
+        );
+        $scripts[] = add_submenu_page(
+            'UKMsystem_tools',
+            'Importer SSB-data',
+            'Importer SSB-data',
+            'superadministrator',
+            'UKMsystemtools_ssb_import',
+            'UKMsystemtools_ssb_import'
+        );
+
+        /**
+         * Menyvalget NETTVERKET
+         */
+        $meny_administratorer = add_submenu_page(
+            'index.php',
+            'Administratorer',
+            'Administratorer',
+            'superadmin',
+            'UKMsystem_tools_admins',
+            'UKMsystem_tools_admins'
+        );
+        add_action(
+            'admin_print_styles-' . $meny_administratorer,
+            ['UKMsystem_tools', 'administratorer_scripts_and_styles'],
+            10000
+        );
+        $scripts[] = $meny_administratorer;
+
+
+        foreach ($scripts as $page) {
+            add_action(
+                'admin_print_styles-' . $page,
+                ['UKMsystem_tools', 'scripts_and_styles']
+            );
+        }
+    }
+
+    /**
+     * Scripts og stylesheets som skal være med i alle
+     * system tools-sider
+     *
+     * @return void
+     */
+    public static function scripts_and_styles()
+    {
+        wp_enqueue_style('UKMwp_dash_css');
+        wp_enqueue_script('WPbootstrap3_js');
+        wp_enqueue_style('WPbootstrap3_css');
+
+        wp_enqueue_script(
+            'UKMsystem_tools',
+            plugin_dir_url(__FILE__) . 'js/UKMsys_tools.js'
+        );
+    }
+
+    /**
+     * Scripts og stylesheets som skal være med i alle
+     * system tools-sider
+     *
+     * @return void
+     */
+    public static function administratorer_scripts_and_styles()
+    {
+        wp_enqueue_script(
+            'UKMsystem_tools_admins',
+            plugin_dir_url(__FILE__) . 'js/nettverket/administratorer.js'  
+        );
+    }
+}
+
+UKMsystem_tools::init(__DIR__);
+UKMsystem_tools::hook();
+
+/*
 if (is_admin()) {
-    add_action('network_admin_menu', 'UKMST_menu');
     add_filter('UKMWPNETWDASH_messages', 'UKMsystemtools_check_postnumber_updates');
     add_filter('UKMWPNETWDASH_messages', 'UKMsystemtools_newSeason');
     add_filter('UKMWPNETWDASH_messages', 'UKMsystemtools_ssb_warning');
-
-    add_action('wp_ajax_UKMsystem_tools_ajax', 'UKMsystem_tools_ajax');
+   add_action('wp_ajax_UKMsystem_tools_ajax', 'UKMsystem_tools_ajax');
 }
 
-function UKMsystem_tools_ajax()
+function ajax()
 {
     header('Content-Type: application/json');
 
@@ -55,61 +195,7 @@ function UKMsystem_tools_ajax()
     die();
 }
 
-function UKMST_menu()
-{
-    $page = add_menu_page(
-        'UKM Norge Systemverktøy',
-        'System',
-        'superadmin',
-        'UKMsystemtools',
-        'UKMsystemtools',
-        'dashicons-admin-generic', #//ico.ukm.no/system-16.png',
-        22
-    );
 
-    $subpage1 = add_submenu_page('UKMsystemtools', 'TONO-rapport', 'TONO-rapport', 'superadministrator', 'UKMsystemtools_TONO', 'UKMsystemtools_TONO');
-    $subpage2 = add_submenu_page('UKMsystemtools', 'Kontakteksport', 'Kontakteksport', 'superadministrator', 'UKMkontakteksport', 'UKMkontakteksport');
-    $subpage3 = add_submenu_page('UKMsystemtools', 'Cloudflare-cache', 'Cloudflare-cache', 'superadministrator', 'UKMcloudflare_cache', 'UKMcloudflare_cache');
-    $subpage4 = add_submenu_page('UKMsystemtools', 'Dropbox', 'Dropbox', 'superadministrator', 'UKMdropbox', 'UKMdropbox');
-    $subpage4 = add_submenu_page('UKMsystemtools', 'Flickr', 'Flickr', 'superadministrator', 'UKMflickr', 'UKMflickr');
-    $subpage5 = add_submenu_page('UKMsystemtools', 'Synkroniser passord', 'Synkroniser passord', 'superadministrator', 'UKMsystemtools_passwordsync', 'UKMsystemtools_passwordsync');
-    $subpage6 = add_submenu_page('UKMsystemtools', 'Oppdater kortadresser', 'Oppdater kortadresser', 'superadministrator', 'UKMsystemtools_modrewrite', 'UKMsystemtools_modrewrite');
-    $subpage7 = add_submenu_page('UKMsystemtools', 'Test påmelding', 'Test påmelding', 'superadministrator', 'UKMsystemtools_deltaTest', 'UKMsystemtools_deltaTest');
-    $subpage8 = add_submenu_page('UKMsystemtools', 'Importer SSB-data', 'Importer SSB-data', 'superadministrator', 'UKMsystemtools_ssb_import', 'UKMsystemtools_ssb_import');
-
-
-    add_action('admin_print_styles-' . $page, 'UKMsystemtools_scripts_and_styles');
-    for ($i = 1; $i <= 8; $i++) {
-        $var = 'subpage' . $i;
-        add_action('admin_print_styles-' . $$var, 'UKMsystemtools_scripts_and_styles');
-    }
-
-
-    $admins = add_submenu_page(
-        'index.php',
-        'Administratorer',
-        'Administratorer',
-        'superadmin',
-        'UKMsystem_tools_admins',
-        'UKMsystem_tools_admins'
-    );
-
-    add_action(
-        'admin_print_styles-' . $admins,
-        'UKMsystemtools_scripts_and_styles'
-    );
-    add_action(
-        'admin_print_styles-' . $admins,
-        'UKMsystemtools_scripts_and_styles_admins'
-    );
-}
-
-function UKMsystemtools_scripts_and_styles_admins() {
-    wp_enqueue_script(
-        'UKMsystem_tools_admins',
-        plugin_dir_url(__FILE__) . 'js/nettverket/administratorer.js'  
-    );
-}
 function UKMsystem_tools_admins()
 {
 
@@ -132,13 +218,6 @@ function UKMsystem_tools_admins()
     echo TWIG('nettverket/' . $VIEW . '.html.twig', $TWIGdata, __DIR__);
 }
 
-function UKMsystemtools_TONO()
-{
-    $TWIGdata = [];
-    require_once('controller/tono.controller.php');
-
-    echo TWIG('tono.twig.html', $TWIGdata, dirname(__FILE__), true);
-}
 
 function UKMcloudflare_cache()
 {
@@ -176,14 +255,7 @@ function UKMflickr()
 
 function UKMsystemtools_scripts_and_styles()
 {
-    wp_enqueue_style('UKMwp_dashboard_css');
-    wp_enqueue_script('WPbootstrap3_js');
-    wp_enqueue_style('WPbootstrap3_css');
-
-    wp_enqueue_script(
-        'UKMsystem_tools',
-        plugin_dir_url(__FILE__) . 'js/UKMsys_tools.js'  
-    );
+    
 }
 function UKMsystemtools_newSeason($messages)
 {
@@ -227,19 +299,7 @@ function UKMsystemtools_check_postnumber_updates($messages)
     return $messages;
 }
 
-function UKMkontakteksport()
-{
-    $TWIGdata = array();
-    $VIEW = 'kontakter';
-    require_once('controller/kontakter.controller.php');
-    echo TWIG($VIEW . '.twig.html', $TWIGdata, dirname(__FILE__), true);
-}
 
-function UKMsystemtools_passwordsync()
-{
-    $TWIGdata = [];
-    require_once('controller/passwordsync.controller.php');
-}
 function UKMsystemtools_modrewrite()
 {
     require_once('controller/modrewrite.controller.php');
@@ -280,3 +340,4 @@ function UKMsystemtools_ssb_warning($MESSAGES)
     }
     return $MESSAGES;
 }
+*/

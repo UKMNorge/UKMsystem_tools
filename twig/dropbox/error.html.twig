@@ -1,0 +1,10 @@
+{% extends "fatalError.html.twig" %}
+
+{% block content %}
+    <h1>Au, her gikk det galt</h1>
+    <p class="lead">Noe gikk galt med dropbox-tilkoblingen, og alt har stoppa helt opp. Beklager. Prøv igjen</p>
+
+    <code style="margin-top: 2em;">
+        {{ error }}
+    </code>
+{% endblock %}

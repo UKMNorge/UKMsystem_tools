@@ -1,0 +1,64 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-4">
+            <table class="table table-dashboard">
+                <thead>
+                    <tr>
+                        <th colspan="2">API-koblinger</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td>Dropbox
+                            <br/>
+                            <small>Brukes bl.a. for UKMdigark</small>
+                        </td>
+                        <td>
+                            {% if DBauthenticated %}
+                                Dropbox er koblet til
+                                    {{ DBclient.getDisplayName() }}
+                                    sin dropbox, og filene vil arkiveres i UKMdigark
+                            {% elseif DBauthURL is defined %}
+                                    Ingen tilkobling etablert.
+                                    <a href="{{ DBauthURL }}" target="_blank">Logg inn med dropbox</a>
+
+                            {% else %}
+                                En eller flere konstanter mangler i UKMconfig 
+                                <br />
+                                <small>
+                                    {% for constant in DBconstants %}
+                                        <code>{{ constant }}</code>
+                                    {% endfor %}
+                                </small>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Flickr</td>
+                        <td>
+                        {% if authenticated %}
+                                TILKOBLET (TROR VI)
+                            {% elseif DBauthURL is defined %}
+                                    Ingen tilkobling etablert.
+                                    <a href="{{ DBauthURL }}" target="_blank">Logg inn med dropbox</a>
+
+                            {% else %}
+                                En eller flere konstanter mangler i UKMconfig 
+                                <br />
+                                <small>
+                                    {% for constant in FlickrConstants %}
+                                        <code>{{ constant }}</code>
+                                    {% endfor %}
+                                </small>
+                            {% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Mailchimp</td>
+                        <td>N/A</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
