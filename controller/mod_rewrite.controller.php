@@ -1,9 +1,4 @@
 <?php
-if( !isset($_GET['start'] ) ) {
-	echo TWIG('modrewrite.html.twig', array(), dirname(dirname(__FILE__)), true);
-	die();
-}
-
 echo '<div class="clearfix"></div>';
 $limit = 150;
 
@@ -22,7 +17,7 @@ foreach ( $sites as $site ) {
 		echo '<h2>Oppdaterer</h2>';
 	}
 	if($i==$start+$limit)
-		die('<a href="?page='.$_GET['page'].'&start='.($start+$limit).'">Neste '.$limit.'</a>');
+		die('<a href="?page='.$_GET['page'].'&action='.$_GET['action'] .'&start='.($start+$limit).'">Neste '.$limit.'</a>');
 	if($i < $start){
 		echo ''. $i .', ';
 		continue;
@@ -36,3 +31,4 @@ foreach ( $sites as $site ) {
 }	
 
 echo '<strong>Totalt oppdatert '. $i .' sites</strong>';
+die('<a href="?page='.$_GET['page'].'">Tilbake</a>');

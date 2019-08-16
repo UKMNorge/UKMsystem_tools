@@ -136,29 +136,8 @@ class UKMsystem_tools extends UKMWPmodul
      */
     public static function filterMessages($messages)
     {
-        $messages = static::filterMessagesDeltaTest($messages);
         $messages = static::filterMessagesPostal($messages);
         $messages = static::filterMessagesSSB($messages);
-        return $messages;
-    }
-
-    /**
-     * Påminnelse om at påmeldingssystemet må testes hver sesong
-     *
-     * @param Array $messages
-     * @return Array $messages
-     */
-    public static function filterMessagesDeltaTest($messages)
-    {
-        // Påmeldingssystemet må testes hver sesong!
-        if (get_site_option('delta_is_tested') != get_site_option('season')) {
-            $messages[] = array(
-                'level'     => 'alert-danger',
-                'module'    => 'System',
-                'header'    => 'Påmeldingssystemet må testes!',
-                'link'        => 'admin.php?page=UKMsystemtools_deltaTest'
-            );
-        }
         return $messages;
     }
 
@@ -271,11 +250,4 @@ function ajax()
     require_once($controller);
     die();
 }
-
-
-function UKMsystemtools_modrewrite()
-{
-    require_once('controller/modrewrite.controller.php');
-}
-
 */
