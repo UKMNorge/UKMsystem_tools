@@ -4,7 +4,7 @@
 <div style="width: 98%">
     <div class="card text-danger" id="fatalErrorContainer" style="display: none;"></div>
     <form
-        action="?page={{ GET('page') }}&action=add&fylke={{ GET('fylke') }}" id="formContainer" method="POST">
+        action="?page={{ GET('page') }}" id="formContainer" method="POST">
 
         {# SKJEMA FOR BRUKER-OPPRETTING / OPPDATERING #}
         {% if doAdd is defined %}
@@ -12,30 +12,32 @@
             {% if user.ID == 'new' %}
                 <p class="lead">
                     Vi har ingen registrerte brukere med den e-postadressen. 
-                                        Fyll ut skjemaet, så oppretter vi bruker for deg.
+                    Fyll ut skjemaet, så oppretter vi bruker for deg.
                 </p>
             {% endif %}
 
-            <input type="hidden" name="user_id" value="{{ user.ID }}"/>
+            <input type="hidden" name="user_id" value="{{ user.getId() }}"/>
+            <input type="hidden" name="fylke_id" value="{{ GET('fylke') }}"/>
+
             <div class="form-group">
                 <label for="first_name">Fornavn</label>
-                <input class="form-control" id="first_name" type="text" name="first_name" required value="{{ user.first_name }}"/>
+                <input class="form-control" id="first_name" type="text" name="first_name" required value="{{ user.getFirstName() }}"/>
             </div>
 
             <div class="form-group">
                 <label for="last_name">Etternavn</label>
-                <input class="form-control" id="last_name" type="text" name="last_name" required value="{{ user.last_name }}"/>
+                <input class="form-control" id="last_name" type="text" name="last_name" required value="{{ user.getLastName() }}"/>
             </div>
 
 
             <div class="form-group">
                 <label for="phone">Mobil</label>
-                <input class="form-control" id="phone" type="tel" name="phone" required value="{{ user.phone }}"/>
+                <input class="form-control" id="phone" type="tel" name="phone" required value="{{ user.getPhone() }}"/>
             </div>
 
             <div class="form-group" style="margin-bottom: -.2em;">
                 <label for="username">Brukernavn</label>
-                <input class="form-control" id="username" type="text" name="username" value="{{ user.username }}" {{ not username_taken ? 'readonly' }}/>
+                <input class="form-control" id="username" type="text" name="username" value="{{ user.getUsername() }}" readonly/>
             </div>
             {% if user.ID == 'new' %}
                 <div id="username_status" style="margin-bottom: 1em;">
@@ -64,7 +66,7 @@
 
             <div class="form-group">
                 <label for="email">E-postadresse</label>
-                <input class="form-control" id="email" type="email" name="email" value="{{ user.email }}" readonly/>
+                <input class="form-control" id="email" type="email" name="email" value="{{ user.getEmail() }}" readonly/>
             </div>
 
             <div class="form-group">
