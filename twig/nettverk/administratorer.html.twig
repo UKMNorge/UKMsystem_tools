@@ -1,10 +1,10 @@
 <style>
-.mt-1 {
-	margin-top: 0.25em;
-}
-.mb-0 {
-	margin-bottom: 0;
-}
+    .mt-1 {
+        margin-top: 0.25em;
+    }
+    .mb-0 {
+        margin-bottom: 0;
+    }
 </style>
 <h2>Administratorer</h2>
 
@@ -17,16 +17,25 @@
                 {{ fylke.getNavn() }}
             </h4>
             <ol class="list-group">
-                {% for bruker in administratorer[ fylke.getId() ] %}
-                    {% else %}
-                        <li class="list-group-item">
-                            Ingen administratorer er lagt til enda.
-                        </li>
+                {% for admin in fylke.getAdministratorer().getAll() %}
+                    <li class="list-group-item">
+                        <div class="float-right pull-right">
+                            <a href="?page={{ GET('page') }}&removeAdmin={{ admin.getId() }}&fylke={{ fylke.getId() }}">
+                                <span class="dashicons dashicons-trash"></span>
+                            </a>
+                        </div>
+                        <b>{{ admin.getUser().getNavn() }}</b>
+                        {{ admin.getUser().getPhone() }}
+                    </li>
+                {% else %}
+                    <li class="list-group-item">
+                        Ingen administratorer er lagt til enda.
+                    </li>
                 {% endfor %}
-				<p class="mt-1">
-					<a href="?page={{ GET('page') }}&action=add&fylke={{ fylke.getId() }}">
-                    	Legg til administrator
-					</a>
+                <p class="mt-1">
+                    <a href="?page={{ GET('page') }}&action=add&fylke={{ fylke.getId() }}">
+                        Legg til administrator
+                    </a>
                 </p>
             </ol>
 
