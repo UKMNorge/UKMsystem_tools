@@ -45,20 +45,22 @@ class UKMsystem_tools extends UKMWPmodul
     public static function meny() {
         require_once('UKM/Nettverk/Administrator.class.php');
         $current_admin = new Administrator( get_current_user_id() );
-
+        
+        $scripts = [];
+        
         // Hvis vedkommende er admin for ett eller flere fylker
         if( $current_admin->erAdmin('fylke') ) {
             $meny = ($current_admin->getAntallOmrader('fylke') == 1 ) ? 
                 $current_admin->getOmrade('fylke')->getNavn() : 
-                'Ditt fylke';
+                'Dine fylker';
             $scripts = [
                 add_menu_page(
                     'GEO',
                     $meny,
-                    'editor',
+                    'subscriber',
                     'UKMsystem_tools_fylke',
                     ['UKMsystem_tools', 'renderFylke'],
-                    'dashicons-admin-generic', #//ico.ukm.no/system-16.png',
+                    'dashicons-location-alt', #//ico.ukm.no/system-16.png',
                     22
                 )
             ];
@@ -68,18 +70,30 @@ class UKMsystem_tools extends UKMWPmodul
         if( $current_admin->erAdmin('kommune') ) {
             $meny = ($current_admin->getAntallOmrader('kommune') == 1 ) ? 
                 $current_admin->getOmrade('kommune')->getNavn() : 
-                'Din kommune';
+                'Dine kommuner';
             $scripts = [
                 add_menu_page(
                     'GEO',
                     $meny,
-                    'editor',
+                    'subscriber',
                     'UKMsystem_tools_kommune',
                     ['UKMsystem_tools', 'renderKommune'],
-                    'dashicons-admin-generic', #//ico.ukm.no/system-16.png',
-                    22
+                    'dashicons-location', #//ico.ukm.no/system-16.png',
+                    23
                 )
             ];
+        }
+
+        foreach ($scripts as $page) {    
+            add_action(
+                'admin_print_styles-' . $page,
+                ['UKMsystem_tools', 'administratorer_scripts_and_styles'],
+                11000
+            );
+            add_action(
+                'admin_print_styles-' . $page,
+                ['UKMsystem_tools', 'scripts_and_styles']
+            );
         }
     }
 
@@ -161,7 +175,11 @@ class UKMsystem_tools extends UKMWPmodul
         );
     }
 
-    public static function renderAdministratorer()
+    public static function renderFylke() {
+        self::renderAdministratorer('fylke');
+    }
+
+    public static function renderAdministratorer( $SELECTION=false )
     {
 
         if (isset($_GET['action'])) {

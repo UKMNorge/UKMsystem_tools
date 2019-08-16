@@ -4,7 +4,7 @@
 <div style="width: 98%">
     <div class="card text-danger" id="fatalErrorContainer" style="display: none;"></div>
     <form
-        action="?page={{ GET('page') }}{{ doAdd is not defined ? '&action=add&fylke='~ GET('fylke') }}" id="formContainer" method="POST">
+        action="?page={{ GET('page') }}{{ doAdd is not defined ? '&action=add&omrade='~ GET('omrade') ~'&type='~ GET('type') }}" id="formContainer" method="POST">
 
         {# SKJEMA FOR BRUKER-OPPRETTING / OPPDATERING #}
         {% if doAdd is defined %}
@@ -17,7 +17,8 @@
             {% endif %}
 
             <input type="hidden" name="user_id" value="{{ user.getId() }}"/>
-            <input type="hidden" name="fylke_id" value="{{ GET('fylke') }}"/>
+            <input type="hidden" name="omrade_id" value="{{ GET('omrade') }}"/>
+            <input type="hidden" name="omrade_type" value="{{ GET('type') }}"/>
 
             <div class="form-group">
                 <label for="first_name">Fornavn</label>

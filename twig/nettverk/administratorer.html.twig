@@ -11,16 +11,16 @@
 {% include "wp_modul.flashBag.html.twig" %}
 
 <div class="container-fluid">
-    {% for fylke in fylker %}
+    {% for omrade in omrader %}
         <div class="row">
             <h4 class="mb-0" style="text-transform: uppercase">
-                {{ fylke.getNavn() }}
+                {{ omrade.getNavn() }}
             </h4>
             <ol class="list-group">
-                {% for admin in fylke.getAdministratorer().getAll() %}
+                {% for admin in omrade.getAdministratorer().getAll() %}
                     <li class="list-group-item">
                         <div class="float-right pull-right">
-                            <a href="?page={{ GET('page') }}&removeAdmin={{ admin.getId() }}&fylke={{ fylke.getId() }}">
+                            <a href="?page={{ GET('page') }}&removeAdmin={{ admin.getId() }}&omrade={{ omrade.getForeignId() }}&type={{ omrade.getType() }}">
                                 <span class="dashicons dashicons-trash"></span>
                             </a>
                         </div>
@@ -33,7 +33,7 @@
                     </li>
                 {% endfor %}
                 <p class="mt-1">
-                    <a href="?page={{ GET('page') }}&action=add&fylke={{ fylke.getId() }}">
+                    <a href="?page={{ GET('page') }}&action=add&omrade={{ omrade.getForeignId() }}&type={{ omrade.getType() }}">
                         Legg til administrator
                     </a>
                 </p>
@@ -42,7 +42,7 @@
         </div>
     {% else %}
         <div class="alert alert-danger">
-            En system-feil har oppstått. Fant ikke fylker
+            En system-feil har oppstått. Fant ingen områder du er administrator for
         </div>
     {% endfor %}
 </div>
