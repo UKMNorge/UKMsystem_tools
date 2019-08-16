@@ -1,52 +1,26 @@
-<div class="container-fluid">
+<div class="container-fluid" style="margin-right: 2em;">
     <div class="row">
         <div class="col-xs-12">
             {% include "wp_modul.flashbag.html.twig" %}
         </div>
     </div>
     <div class="row">
-
         {% if CFauthenticated %}
-            <div class="col-xs-4">
+            <div class="col-xs-12 col-sm-6 col-lg-4">
                 {% include "cloudflare/actions.html.twig" %}
             </div>
         {% endif %}
-        <div class="col-xs-4">
-            <table class="table table-dashboard">
-                <thead>
-                    <tr>
-                        <th colspan="2">API-koblinger</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    <tr>
-                        <td>Dropbox
-                            <br/>
-                            <small>Brukes bl.a. for UKMdigark</small>
-                        </td>
-                        <td>
-                            {% include "dropbox/dashboard.html.twig" %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Flickr</td>
-                        <td>
-                            {% include "flickr/dashboard.html.twig" %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Cloudflare</td>
-                        <td>
-                            {% include "cloudflare/dashboard.html.twig" %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Mailchimp</td>
-                        <td>Integrering er ikke gjort</td>
-                    </tr>
-                </tbody>
-            </table>
+        
+        <div class="col-xs-12 col-sm-6 col-lg-4">
+            {% include "dashboard/api.html.twig" %}
+        </div>
+        <div class="col-xs-12 col-sm-6 col-lg-4">
+            {% include "dashboard/import.html.twig" %}
+        </div>        
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-lg-4">
+            {% include "dashboard/modrewrite.html.twig" %}
         </div>
     </div>
 </div>

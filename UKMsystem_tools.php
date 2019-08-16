@@ -31,6 +31,8 @@ class UKMsystem_tools extends UKMWPmodul
             ['UKMsystem_tools', 'meny'],
             200
         );
+
+        add_filter('UKMWPNETWDASH_messages', ['UKMsystem_tools', 'filterMessages']);
     }
 
     /**
@@ -52,31 +54,6 @@ class UKMsystem_tools extends UKMWPmodul
                 22
             )
         ];
-
-        $scripts[] = add_submenu_page(
-            'UKMsystem_tools',
-            'Oppdater kortadresser',
-            'Oppdater kortadresser',
-            'superadministrator',
-            'UKMsystemtools_modrewrite',
-            'UKMsystemtools_modrewrite'
-        );
-        $scripts[] = add_submenu_page(
-            'UKMsystem_tools',
-            'Test påmelding',
-            'Test påmelding',
-            'superadministrator',
-            'UKMsystemtools_deltaTest',
-            'UKMsystemtools_deltaTest'
-        );
-        $scripts[] = add_submenu_page(
-            'UKMsystem_tools',
-            'Importer SSB-data',
-            'Importer SSB-data',
-            'superadministrator',
-            'UKMsystemtools_ssb_import',
-            'UKMsystemtools_ssb_import'
-        );
 
         /**
          * Menyvalget NETTVERKET
@@ -133,20 +110,121 @@ class UKMsystem_tools extends UKMWPmodul
     {
         wp_enqueue_script(
             'UKMsystem_tools_admins',
-            plugin_dir_url(__FILE__) . 'js/nettverket/administratorer.js'  
+            plugin_dir_url(__FILE__) . 'js/nettverket/administratorer.js'
         );
     }
 
-    public static function renderAdministratorer() {
-        
+    public static function renderAdministratorer()
+    {
+
         if (isset($_GET['action'])) {
-            $_GET['action'] = 'administratorer-'. basename($_GET['action']);
+            $_GET['action'] = 'administratorer-' . basename($_GET['action']);
         } else {
             $_GET['action'] = 'administratorer';
         }
-    
-        static::setAction('nettverk/'. $_GET['action']);
+
+        static::setAction('nettverk/' . $_GET['action']);
         static::renderAdmin();
+    }
+
+
+    /**
+     * Filtrer meldinger i network admin, og varsle sys-admin ved bevov
+     *
+     * @param Array $messages
+     * @return Array $messages
+     */
+    public static function filterMessages($messages)
+    {
+        $messages = static::filterMessagesDeltaTest($messages);
+        $messages = static::filterMessagesPostal($messages);
+        $messages = static::filterMessagesSSB($messages);
+        return $messages;
+    }
+
+    /**
+     * Påminnelse om at påmeldingssystemet må testes hver sesong
+     *
+     * @param Array $messages
+     * @return Array $messages
+     */
+    public static function filterMessagesDeltaTest($messages)
+    {
+        // Påmeldingssystemet må testes hver sesong!
+        if (get_site_option('delta_is_tested') != get_site_option('season')) {
+            $messages[] = array(
+                'level'     => 'alert-danger',
+                'module'    => 'System',
+                'header'    => 'Påmeldingssystemet må testes!',
+                'link'        => 'admin.php?page=UKMsystemtools_deltaTest'
+            );
+        }
+        return $messages;
+    }
+
+    /**
+     * Varsle admin hvis postnummer-tabellen ikke er oppdatert 
+     * innenfor intervallet (hver sesong)
+     *
+     * @param Array $messages
+     * @return Array $messages
+     */
+    public static function filterMessagesPostal($messages)
+    {
+        $last_postnumber_timestamp = get_site_option('ukm_systemtools_last_postnumber_update', false);
+        if ($last_postnumber_timestamp && is_numeric($last_postnumber_timestamp)) {
+            $last_year = intval(date("Y", intval($last_postnumber_timestamp, 10)));
+            $current_year = intval(date("Y"));
+
+            if ($last_year < $current_year) {
+                $messages[] = array(
+                    'level'     => 'alert-warning',
+                    'module'    => 'System',
+                    'header'    => 'Postnummer må oppdateres, sist oppdatert ' . date("d.m.Y", $last_postnumber_timestamp),
+                    'body'      => 'Rett problemet under system-verktøy',
+                    'link'      => 'admin.php?page=UKMsystemtools'
+                );
+            }
+        } else if ($last_postnumber_timestamp == false) {
+            $messages[] = array(
+                'level'     => 'alert-error',
+                'module'    => 'System',
+                'header'    => 'Postnummer må oppdateres',
+                'body'      => 'Rett problemet under system-verktøy',
+                'link'      => 'admin.php?page=UKMsystemtools'
+            );
+        }
+
+        return $messages;
+    }
+
+    /**
+     * Varsle admin hvis tall for levendefødte ikke er importert
+     * Det haster jo ikke, da det tar noen år før nyfødte deltar på UKM,
+     * men det er greit å gjøre regelmessig likevel-
+     * 
+     * Beregningen kjøres kun i september, da dette påvirker page-load
+     *
+     * @param Array $messages
+     * @return Array $messages
+     */
+    public static function filterMessagesSSB($messages)
+    {
+        if (date("m") != 9) {
+            return $messages;
+        }
+        require_once('controller/SSB/levendefodte.controller.php');
+        $last = get_latest_year_updated();
+        if ($last < date("Y") - 1) {
+            $messages[] = array(
+                'level'     => 'alert-warning',
+                'module'    => 'System',
+                'header'    => 'SSB-statistikk må importeres. Nyeste data er for ' . $last,
+                'body'      => 'Dette er ikke krise, da det går noen år fra barn er født til de deltar på UKM :)',
+                'link'      => 'admin.php?page=UKMsystemtools_ssb_import'
+            );
+        }
+        return $messages;
     }
 }
 
@@ -154,12 +232,7 @@ UKMsystem_tools::init(__DIR__);
 UKMsystem_tools::hook();
 
 /*
-if (is_admin()) {
-    add_filter('UKMWPNETWDASH_messages', 'UKMsystemtools_check_postnumber_updates');
-    add_filter('UKMWPNETWDASH_messages', 'UKMsystemtools_newSeason');
-    add_filter('UKMWPNETWDASH_messages', 'UKMsystemtools_ssb_warning');
    add_action('wp_ajax_UKMsystem_tools_ajax', 'UKMsystem_tools_ajax');
-}
 
 function ajax()
 {
@@ -200,148 +273,9 @@ function ajax()
 }
 
 
-function UKMsystem_tools_admins()
-{
-
-    if (isset($_GET['action'])) {
-        $_GET['action'] = basename($_GET['action']);
-    } else {
-        $_GET['action'] = 'list';
-    }
-
-    switch ($_GET['action']) {
-        case 'add':
-            $VIEW = 'admins-add';
-            break;
-
-        default:
-            $VIEW = 'admins';
-            break;
-    }
-    require_once('controller/nettverket/' . $VIEW . '.controller.php');
-    echo TWIG('nettverket/' . $VIEW . '.html.twig', $TWIGdata, __DIR__);
-}
-
-
-function UKMcloudflare_cache()
-{
-    $view_data = [];
-    wp_enqueue_script('UKMsystem_tools_addMore_js', plugin_dir_url(__FILE__) . 'js/addMore.js');
-    require_once('controller/cloudflare.controller.php');
-
-    echo TWIG('cloudflare.twig.html', $view_data, dirname(__FILE__), true);
-}
-
-function UKMsystemtools()
-{
-    $TWIGdata = [];
-    $action = isset($_GET['action']) ? $_GET['action'] : 'home';
-
-    require_once('controller/' . $action . '.controller.php');
-    $VIEW = $action;
-
-    echo TWIG($VIEW . '.twig.html', $TWIGdata, dirname(__FILE__), true);
-}
-
-function UKMdropbox()
-{
-    $TWIGdata = [];
-    require_once('controller/dropbox.controller.php');
-    $VIEW = 'dropbox';
-
-    echo TWIG($VIEW . '.html.twig', $TWIGdata, dirname(__FILE__), true);
-}
-function UKMflickr()
-{
-    require_once('controller/flickr.controller.php');
-}
-
-
-function UKMsystemtools_scripts_and_styles()
-{
-    
-}
-function UKMsystemtools_newSeason($messages)
-{
-    // Påmeldingssystemet må testes hver sesong!
-    if (get_site_option('delta_is_tested') != get_site_option('season')) {
-        $messages[] = array(
-            'level'     => 'alert-danger',
-            'module'    => 'System',
-            'header'    => 'Påmeldingssystemet må testes!',
-            'link'        => 'admin.php?page=UKMsystemtools_deltaTest'
-        );
-    }
-    return $messages;
-}
-function UKMsystemtools_check_postnumber_updates($messages)
-{
-    $last_postnumber_timestamp = get_site_option('ukm_systemtools_last_postnumber_update', false);
-    if ($last_postnumber_timestamp && is_numeric($last_postnumber_timestamp)) {
-        $last_year = intval(date("Y", intval($last_postnumber_timestamp, 10)));
-        $current_year = intval(date("Y"));
-
-        if ($last_year < $current_year) {
-            $messages[] = array(
-                'level'     => 'alert-warning',
-                'module'    => __('System', 'UKM'),
-                'header'    => sprintf(__('Postnummer må oppdateres, sist oppdatert %s', 'UKM'), date("d.m.Y", $last_postnumber_timestamp)),
-                'body'         => __('Rett problemet under system-verktøy', 'UKM'),
-                'link'        => 'admin.php?page=UKMsystemtools'
-            );
-        }
-    } else if ($last_postnumber_timestamp == false) {
-        $messages[] = array(
-            'level'     => 'alert-error',
-            'module'    => __('System', 'UKM'),
-            'header'    => __('Postnummer må oppdateres', 'UKM'),
-            'body'         => __('Rett problemet under system-verktøy', 'UKM'),
-            'link'        => 'admin.php?page=UKMsystemtools'
-        );
-    }
-
-    return $messages;
-}
-
-
 function UKMsystemtools_modrewrite()
 {
     require_once('controller/modrewrite.controller.php');
 }
-function UKMsystemtools_deltaTest()
-{
-    $TWIGdata = array();
-    require_once('controller/testdelta.controller.php');
-    echo TWIG('testdelta.html.twig', $TWIGdata, dirname(__FILE__), true);
-}
 
-function UKMsystemtools_ssb_import()
-{
-    $TWIGdata = array();
-    require_once('controller/ssb_import.controller.php');
-    echo TWIG('ssb_import.html.twig', $TWIGdata, dirname(__FILE__), true);
-}
-
-function UKMsystemtools_ssb_warning($MESSAGES)
-{
-    // Kun gjør beregningen og vis advarselen i september
-    // Prøver å gjøre minst mulig i disse funksjonene fordi de inkluderes hver page load.
-    $m = date("m");
-    if ($m == 9) {
-        #if(true) {
-        require_once('controller/SSB/levendefodte.controller.php');
-        $last = get_latest_year_updated();
-        if ($last < date("Y") - 1) {
-            #if (true) {
-            $MESSAGES[] = array(
-                'level'     => 'alert-warning',
-                'module'    => __('System', 'UKM'),
-                'header'     => 'SSB-statistikk må importeres. Nyeste data er for ' . $last,
-                'body'         => 'Dette er ikke krise, da det går noen år fra barn er født til de deltar på UKM :)',
-                'link'        => 'admin.php?page=UKMsystemtools_ssb_import'
-            );
-        }
-    }
-    return $MESSAGES;
-}
 */

@@ -1,0 +1,17 @@
+<ol style="margin-left: 1em;">
+    <li>
+    Last ned
+        <b>
+            <a href="//www.bring.no/hele-bring/produkter-og-tjenester/brev-og-postreklame/andre-tjenester/postnummertabeller" target="_blank">postnummer</a>
+        </b>
+        som excel-data fra Posten
+    </li>
+    <li>
+        Last opp excel-filen her
+        <form action="?page={{ GET('page') }}" enctype="multipart/form-data" method="post">
+            <input id="postnummer" name="postnummer" type="file"/>
+            <input name="import_postnummer" type="hidden" value="true" />
+            <button class="btn btn-primary btn-outline btn-xs" type="submit">Start import</button>
+        </form>
+    </li>
+</ol>
