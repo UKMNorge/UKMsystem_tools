@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         WriteAdministrator::leggTilIOmrade( $administrator, $fylke->getAdministratorer());
 
         UKMsystem_tools::getFlash()->add(
-            'info',
+            'success',
             ($created ? 
                 'Bruker er oppprettet for '. $user->getName() .' og '
                 : $user->getName() . ' er ') .
