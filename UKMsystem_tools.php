@@ -8,6 +8,7 @@ Version: 2.0
 Author URI: http://mariusmandal.no
 */
 
+use UKMNorge\Nettverk\Administrator;
 
 require_once('UKM/wp_modul.class.php');
 
@@ -28,6 +29,12 @@ class UKMsystem_tools extends UKMWPmodul
 
         add_action(
             'network_admin_menu',
+            ['UKMsystem_tools', 'nettverkMeny'],
+            200
+        );
+        
+        add_action(
+            'user_admin_menu',
             ['UKMsystem_tools', 'meny'],
             200
         );
@@ -35,10 +42,51 @@ class UKMsystem_tools extends UKMWPmodul
         add_filter('UKMWPNETWDASH_messages', ['UKMsystem_tools', 'filterMessages']);
     }
 
+    public static function meny() {
+        require_once('UKM/Nettverk/Administrator.class.php');
+        $current_admin = new Administrator( get_current_user_id() );
+
+        // Hvis vedkommende er admin for ett eller flere fylker
+        if( $current_admin->erAdmin('fylke') ) {
+            $meny = ($current_admin->getAntallOmrader('fylke') == 1 ) ? 
+                $current_admin->getOmrade('fylke')->getNavn() : 
+                'Ditt fylke';
+            $scripts = [
+                add_menu_page(
+                    'GEO',
+                    $meny,
+                    'editor',
+                    'UKMsystem_tools_fylke',
+                    ['UKMsystem_tools', 'renderFylke'],
+                    'dashicons-admin-generic', #//ico.ukm.no/system-16.png',
+                    22
+                )
+            ];
+        }
+
+        // Hvis vedkommende er admin for en eller flere kommuner
+        if( $current_admin->erAdmin('kommune') ) {
+            $meny = ($current_admin->getAntallOmrader('kommune') == 1 ) ? 
+                $current_admin->getOmrade('kommune')->getNavn() : 
+                'Din kommune';
+            $scripts = [
+                add_menu_page(
+                    'GEO',
+                    $meny,
+                    'editor',
+                    'UKMsystem_tools_kommune',
+                    ['UKMsystem_tools', 'renderKommune'],
+                    'dashicons-admin-generic', #//ico.ukm.no/system-16.png',
+                    22
+                )
+            ];
+        }
+    }
+
     /**
      * Add menu
      */
-    public static function meny()
+    public static function nettverkMeny()
     {
         /**
          * Menyvalget SYSTEM
@@ -72,7 +120,6 @@ class UKMsystem_tools extends UKMWPmodul
             10000
         );
         $scripts[] = $meny_administratorer;
-
 
         foreach ($scripts as $page) {
             add_action(
