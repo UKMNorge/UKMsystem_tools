@@ -23,18 +23,7 @@ class UKMsystem_tools extends UKMWPmodul
     public static function hook()
     {
         add_action(
-            'wp_ajax_UKMsystem_tools_ajax',
-            ['UKMsystem_tools', 'ajax']
-        );
-
-        add_action(
             'network_admin_menu',
-            ['UKMsystem_tools', 'nettverkMeny'],
-            200
-        );
-        
-        add_action(
-            'user_admin_menu',
             ['UKMsystem_tools', 'meny'],
             200
         );
@@ -42,65 +31,10 @@ class UKMsystem_tools extends UKMWPmodul
         add_filter('UKMWPNETWDASH_messages', ['UKMsystem_tools', 'filterMessages']);
     }
 
-    public static function meny() {
-        require_once('UKM/Nettverk/Administrator.class.php');
-        $current_admin = new Administrator( get_current_user_id() );
-        
-        $scripts = [];
-        
-        // Hvis vedkommende er admin for ett eller flere fylker
-        if( $current_admin->erAdmin('fylke') ) {
-            $meny = ($current_admin->getAntallOmrader('fylke') == 1 ) ? 
-                $current_admin->getOmrade('fylke')->getNavn() : 
-                'Dine fylker';
-            $scripts = [
-                add_menu_page(
-                    'GEO',
-                    $meny,
-                    'subscriber',
-                    'UKMsystem_tools_fylke',
-                    ['UKMsystem_tools', 'renderFylke'],
-                    'dashicons-location-alt', #//ico.ukm.no/system-16.png',
-                    22
-                )
-            ];
-        }
-
-        // Hvis vedkommende er admin for en eller flere kommuner
-        if( $current_admin->erAdmin('kommune') ) {
-            $meny = ($current_admin->getAntallOmrader('kommune') == 1 ) ? 
-                $current_admin->getOmrade('kommune')->getNavn() : 
-                'Dine kommuner';
-            $scripts = [
-                add_menu_page(
-                    'GEO',
-                    $meny,
-                    'subscriber',
-                    'UKMsystem_tools_kommune',
-                    ['UKMsystem_tools', 'renderKommune'],
-                    'dashicons-location', #//ico.ukm.no/system-16.png',
-                    23
-                )
-            ];
-        }
-
-        foreach ($scripts as $page) {    
-            add_action(
-                'admin_print_styles-' . $page,
-                ['UKMsystem_tools', 'administratorer_scripts_and_styles'],
-                11000
-            );
-            add_action(
-                'admin_print_styles-' . $page,
-                ['UKMsystem_tools', 'scripts_and_styles']
-            );
-        }
-    }
-
     /**
      * Add menu
      */
-    public static function nettverkMeny()
+    public static function meny()
     {
         /**
          * Menyvalget SYSTEM
@@ -116,24 +50,6 @@ class UKMsystem_tools extends UKMWPmodul
                 22
             )
         ];
-
-        /**
-         * Menyvalget NETTVERKET
-         */
-        $meny_administratorer = add_submenu_page(
-            'index.php',
-            'Administratorer',
-            'Administratorer',
-            'superadmin',
-            'UKMsystem_tools_admins',
-            ['UKMsystem_tools', 'renderAdministratorer']
-        );
-        add_action(
-            'admin_print_styles-' . $meny_administratorer,
-            ['UKMsystem_tools', 'administratorer_scripts_and_styles'],
-            10000
-        );
-        $scripts[] = $meny_administratorer;
 
         foreach ($scripts as $page) {
             add_action(
@@ -154,44 +70,7 @@ class UKMsystem_tools extends UKMWPmodul
         wp_enqueue_style('UKMwp_dash_css');
         wp_enqueue_script('WPbootstrap3_js');
         wp_enqueue_style('WPbootstrap3_css');
-
-        wp_enqueue_script(
-            'UKMsystem_tools',
-            plugin_dir_url(__FILE__) . 'js/UKMsys_tools.js'
-        );
     }
-
-    /**
-     * Scripts og stylesheets som skal være med i alle
-     * system tools-sider
-     *
-     * @return void
-     */
-    public static function administratorer_scripts_and_styles()
-    {
-        wp_enqueue_script(
-            'UKMsystem_tools_admins',
-            plugin_dir_url(__FILE__) . 'js/nettverket/administratorer.js'
-        );
-    }
-
-    public static function renderFylke() {
-        self::renderAdministratorer('fylke');
-    }
-
-    public static function renderAdministratorer( $SELECTION=false )
-    {
-
-        if (isset($_GET['action'])) {
-            $_GET['action'] = 'administratorer-' . basename($_GET['action']);
-        } else {
-            $_GET['action'] = 'administratorer';
-        }
-
-        static::setAction('nettverk/' . $_GET['action']);
-        static::renderAdmin();
-    }
-
 
     /**
      * Filtrer meldinger i network admin, og varsle sys-admin ved bevov
