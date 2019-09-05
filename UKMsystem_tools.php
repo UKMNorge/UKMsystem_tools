@@ -159,7 +159,7 @@ function UKMsystemtools_ssb_warning($MESSAGES) {
 	if($m == 9) {
 	#if(true) {
 		require_once('controller/SSB/levendefodte.controller.php');
-		$last = getlatestyearupdated();
+		$last = get_latest_year_updated();
 		if ($last < date("Y")-1) {
 		#if (true) {
 			$MESSAGES[] = array( 'level' 	=> 'alert-warning',
