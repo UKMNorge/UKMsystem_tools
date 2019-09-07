@@ -1,0 +1,94 @@
+<div class="col-xs-12">
+	<h1>Opprett {{ season_new }}-sesongen</h1>
+	<p class="lead">
+        Fra denne siden kan du sette opp den nye sesongen.
+        Pass på at du gjør alt i riktig rekkefølge!
+    </p>
+	<div class="clearfix"></div>
+
+	<h2>Forberedelser</h2>
+	<ol class="list">
+		<li>
+			Lag HTMl-kopi av nettsiden <a href="https://www.httrack.com/" target="_blank">HTTracker software</a> 
+			<br />
+			<small>
+				(obs: denne kan ødelegge e-postlenker. I 2016 prøvd å ikke krysse av for "build mail index")
+			</small>
+		</li>
+		<li>
+			Opprett en ny konto på cPanel <code>{{ season_active }}.ukm.no</code>, og last opp HTML-kopien dit
+		</li>
+		<li>
+			Kopier index.php fra <code>{{ season_active - 1 }}.ukm.no</code> til <code>{{ season_active }}.ukm.no</code>. 
+            <br />
+            <small>Dette sørger for for videresending fra forside til derdubor</small>
+		</li>
+        <li>
+			Kopier wp-login (.php?) fra <code>{{ season_active - 1 }}.ukm.no</code> til <code>{{ season_active }}.ukm.no</code>. 
+            <br />
+            <small>Dette sørger for for videresending for de som prøver å logge inn</small>
+		</li>
+				<li>
+			Oppdater siden 
+			"<a href="/tidligere-ar/" target="_blank">UKM.no/tidligere-ar</a>"
+			med lenker fra {{ season_active }}-sesongen
+		</li>
+		<li>
+			Oppdater siden 
+			"<a href="/din_monstring/" target="_blank">der du bor</a>", 
+			med informasjon om at vi setter opp ny sesong, 
+			og at man finner {{ season_active }}-sidene på 
+			<a href="/tidligere-ar/" target="_blank">UKM.no/tidligere-ar</a>
+		</li>
+	</ol>
+	
+	<h2>Backup og opprydding</h2>
+	<ol>
+		<li>
+			Kopier databasen <code>ukmno_ss3</code> til <code>ukmno_ss3_bu{{ season_active }}</code>
+		</li>
+		<li>
+			Kopier databasen <code>ukmno_wp2012</code> til <code>ukmno_wp2012_bu{{ season_active }}</code>
+		</li>
+	</ol>
+
+	<h2>Ny sesong</h2>
+	<div class="row">
+		<p class="alert alert-warning col-xs-12 col-sm-8">
+			Nå begynner det du kun kan gjøre én gang, og disse må gjøres etter hverandre i samme arbeidsøkt
+		</p>
+	</div>
+	<ol>
+        <li>
+            <a href="?page={{ GET('page') }}&action=website_clean">Gjør klar nettsiden</a>
+        </li>
+		<li>
+            <a href="?page={{ GET('page') }}&action=website_create">Opprett sider for alle kommuner og fylker</a>
+        </li>
+		<li>
+			Initier ny sesong 
+			<a href="?page={{ GET('page') }}&action=ukmdb">[klikk her for å starte]</a>
+		</li>
+		<li>
+			Oppdater wordpress 
+			<a href="?page={{ GET('page') }}&action=wp_setup">[klikk her for å starte]</a>
+		</li>
+		<li>
+			Oppdater fylkesbrukernes passord 
+			<a href="?page={{ GET('page') }}&action=wp_users">[klikk her for å starte]</a>
+		</li>
+		<li>
+			Opprett nye mønstringssider 
+			<a href="?page={{ GET('page') }}&action=wp_blogs">[klikk her for å starte]</a>
+		</li>
+		<li>
+			Oppdater URL-adresser 
+			<a href="#" data-old="/wp-admin/network/admin.php?page=UKMsystemtools_modrewrite">[klikk her for å re-generere adresser]</a>
+		</li>
+		<li>
+			Fiks bruker for Lærdal og Lardal 
+			<a href="#" data-old="//github.com/UKMNorge/UKMnetwork_admin/issues/4" target="_blank">[les mer]</a>
+		</li>
+	</ol>
+</div>
+<div class="clearfix"></div>

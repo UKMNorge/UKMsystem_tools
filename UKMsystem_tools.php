@@ -23,6 +23,11 @@ class UKMsystem_tools extends UKMWPmodul
     public static function hook()
     {
         add_action(
+            'wp_ajax_UKMsystem_tools_ajax',
+            ['UKMsystem_tools', 'ajax']
+        );
+
+        add_action(
             'network_admin_menu',
             ['UKMsystem_tools', 'meny'],
             200
@@ -39,7 +44,7 @@ class UKMsystem_tools extends UKMWPmodul
         /**
          * Menyvalget SYSTEM
          */
-        $scripts = [
+        $scripts[] =
             add_menu_page(
                 'UKM Norge Systemverktøy',
                 'System',
@@ -49,7 +54,23 @@ class UKMsystem_tools extends UKMWPmodul
                 'dashicons-admin-generic', #//ico.ukm.no/system-16.png',
                 22
             )
-        ];
+        ;
+
+        $season =
+            add_submenu_page(
+                'UKMsystem_tools',
+                'Ny sesong',
+                'Ny sesong',
+                'superadmin',
+                'UKMsystem_tools_season',
+                ['UKMsystem_tools', 'renderSeason']
+            )
+        ;
+        $scripts[] = $season;
+        add_action(
+            'admin_print_styles-' . $season,
+            ['UKMsystem_tools', 'scripts_and_styles_season']
+        );
 
         foreach ($scripts as $page) {
             add_action(
@@ -72,6 +93,22 @@ class UKMsystem_tools extends UKMWPmodul
         wp_enqueue_style('WPbootstrap3_css');
     }
 
+    public static function scripts_and_styles_season() {
+        wp_enqueue_script('TwigJS');
+
+        if( $_GET['action'] == 'website_clean' ) {
+            wp_enqueue_script(
+                'UKMsystem_tools_websiteClean',
+                plugin_dir_url(__FILE__) . 'js/website_clean.js'
+            );
+        }
+        if( $_GET['action'] == 'website_create' ) {
+            wp_enqueue_script(
+                'UKMsystem_tools_websiteCreate',
+                plugin_dir_url(__FILE__) . 'js/website_create.js'
+            );
+        }
+    }
     /**
      * Filtrer meldinger i network admin, og varsle sys-admin ved bevov
      *
@@ -136,8 +173,12 @@ class UKMsystem_tools extends UKMWPmodul
         if (date("m") != 9) {
             return $messages;
         }
-        require_once('controller/SSB/levendefodte.controller.php');
-        $last = get_latest_year_updated();
+        /** SSB: Levendefødte-API må eksponeres for view */
+        require_once('UKM/API/SSB/levendefodte.class.php');
+        $levendefodte = new Levendefodte();
+
+        require_once('controller/api/SSB/levendefodte.controller.php');
+        $last = $levendefodte->getLatestYearUpdated();
         if ($last < date("Y") - 1) {
             $messages[] = array(
                 'level'     => 'alert-warning',
@@ -148,6 +189,22 @@ class UKMsystem_tools extends UKMWPmodul
             );
         }
         return $messages;
+    }
+
+
+    /**
+     * Ny sesong-admin
+     *
+     * @return void
+     */
+    public static function renderSeason() {
+        if( isset( $_GET['action'] ) ) {
+            $action = 'season/'. basename( $_GET['action'] );
+        } else {
+            $action = 'season/home';
+        }
+        static::setAction( $action );
+        static::renderAdmin();
     }
 }
 
