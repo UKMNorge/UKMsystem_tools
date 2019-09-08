@@ -119,6 +119,7 @@ class UKMsystem_tools extends UKMWPmodul
     {
         $messages = static::filterMessagesPostal($messages);
         $messages = static::filterMessagesSSB($messages);
+        $messages = static::filterMessagesSeason($messages);
         return $messages;
     }
 
@@ -188,6 +189,26 @@ class UKMsystem_tools extends UKMWPmodul
                 'link'      => 'admin.php?page=UKMsystemtools_ssb_import'
             );
         }
+        return $messages;
+    }
+
+    /**
+     * Varsle admin hvis det er på tide å sette opp ny sesong
+     *
+     * @param Array $messages
+     * @return Array $messages
+     */
+    public static function filterMessagesSeason($messages) {
+        // Etter juli må ny sesong settes opp
+        if( 7 < (int)date('m') && get_site_option('season') == date('Y') ) {
+            $messages[] = array(
+                'level' 	=> 'alert-danger',
+                'module'	=> 'System',
+                'header'	=> 'NY SESONG MÅ SETTES OPP!',
+                'link'		=> 'admin.php?page=UKMsystem_tools_season'
+            );
+        }
+        
         return $messages;
     }
 
