@@ -1,0 +1,32 @@
+<div class="col-xs-12">
+
+    {% if GET('do') is not empty %}
+        <h1>Wordpress er nå oppdatert</h1>
+
+        <p class="lead">Både nettverk og hovedsiden er nå oppdatert med aktiv sesong ({{ season }})</p>
+
+        <p>
+            For å hente ut aktiv sesong, kan du bruke
+            <code>get_site_option('season')</code>
+        </p>
+    {% else %}
+        <h1>Oppdater wordpress med aktiv sesong</h1>
+
+        <p class="lead">
+            Når du oppdaterer innstillinger, 
+            vil aktiv sesong for nettverket settes til {{season}}.
+        <p>
+
+        <p>
+            <code>get_site_option('season')</code> vil etter oppdateringen gi <code>{{ season }}</code> som resultat.
+            <br />
+            På hovedsiden (ukm.no/) vil også <code>get_option('season')</code> gi samme resultat.
+        </p>
+
+        <p>
+            <a href="?page={{ GET('page') }}&action={{ GET('action') }}&do=true" class="btn btn-warning">
+                Oppdater innstilling
+            </a>
+        </p>
+    {% endif %}
+</div>
