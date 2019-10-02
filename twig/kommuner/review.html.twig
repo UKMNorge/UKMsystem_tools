@@ -1,0 +1,61 @@
+<form action="?page={{GET('page')}}&action={{GET('action')}}" method="POST">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12">
+                <h2>Kommuner i Norge</h2>
+
+                {% for fylke in fylker %}
+                    <h3>{{ fylke.getNavn() }}</h3>
+
+                    <table class="table table-striped">
+                        {% for kommune in kommuner[ fylke.getId() ] %}
+                            <tr class="kommune">
+                                <td width="60">{{ kommune.getId() }}</td>
+                                <td>{{ kommune.getNavn() }}</td>
+                                <td width="400">
+                                    {% if kommune.lignende|length %}
+                                        <ol class="list-unstyled">
+                                            {% for lignende in kommune.lignende %}
+                                                <li class="lignende">
+                                                    {{ lignende.getId() }}
+                                                    {{ lignende.getNavn() }}
+                                                    
+                                                    <a href="#" class="btn btn-xs btn-{{ lignende.erAktiv() ? 'success' : 'warning' }} overtatt" data-nummer="{{lignende.getId()}}">{{ kommune.getId() }}
+                                                        har overtatt
+                                                        {{lignende.getId()}}</a>
+                                                </li>
+                                            {% endfor %}
+                                        </ol>
+                                    {% endif %}
+                                </td>
+                                <td width="400">
+                                    Overtar for
+                                    <input name="tidligere[{{kommune.getId()}}]" type="text" class="tidligere" value="{% for tidl in kommune.getTidligere() %}{{tidl.getId()}},{% endfor %}"/>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12 col-sm-12">
+                <button type="submit" class="btn btn-success">Lagre</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+
+<script>
+    $(document).on('click', '.overtatt', (e) => {
+        e.preventDefault();
+        var clicked = $(e.target);
+        var kommune = clicked.parents('.kommune');
+
+        kommune.find('.tidligere').val(kommune.find('.tidligere').val() + clicked.attr('data-nummer') + ',');
+        clicked.parents('.lignende').fadeOut();
+    });
+</script>

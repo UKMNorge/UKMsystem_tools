@@ -1,0 +1,36 @@
+<h4>Følgende
+    {{ kommuner|length}}
+    kommuner
+    {{ not preview ? 'er' : 'blir'}}
+    deaktivert
+    {{ kommuner|length > 0 ? 'da de er overtatt av andre kommuner' }}
+</h4>
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-12 col-sm-6">
+            <ol class="list-group">
+                {% for kommune in kommuner %}
+                    <li class="list-group-item">
+                        {{ kommune.getId() }}:
+                        {{ kommune.getNavn() }}
+                        {% if not kommune.erAktiv() %}
+                            <small class="label label-warning">er allerede utdatert</small>
+                        {% endif %}
+                    </li>
+                {% else %}
+                    <li class="list-group-item">Ingen kommuner som skal deaktiveres</li>
+                {% endfor %}
+            </ol>
+
+            {% if preview %}
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12">
+                        <a href="?page={{ GET('page') }}&action={{GET('action')}}&do=true" class="btn btn-warning">Deaktiver disse</a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>

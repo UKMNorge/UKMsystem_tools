@@ -1,0 +1,63 @@
+<h4>Endringer i norske kommuner fra
+    {{ startDato|dato('j. M Y') }}
+    til
+    {{ sluttDato|dato('j. M Y') }}</h4>
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-12 col-sm-6">
+            <b>Følgende kommuner
+                {{ preview ? 'blir' : 'er'}}
+                importert</b>
+            <br/>
+            <ol class="list-group">
+                {% for kommuner in endringer  %}
+                    {% for kommune in kommuner if kommune.action == 'insert' %}
+                        <li class="list-group-item">
+                            {{ kommune.newCode }}:
+                            {{ kommune.newName }}
+                            <small class="text-muted">Tidl:
+                                {{ kommune.oldCode }}
+                                -
+                                {{ kommune.oldName }}</small>
+                        </li>
+                    {% endfor %}
+                {% else %}
+                    <li class="list-group-item">Ingen endringer i kommunestrukturen</li>
+                {% endfor %}
+            </ol>
+        </div>
+
+
+        <div class="col-xs-12 col-sm-6">
+            <b>Følgende kommuner
+                {{ preview ? 'blir' : 'er'}}
+                oppdatert</b>
+            <br/>
+            <ol class="list-group">
+                {% for kommuner in endringer  %}
+                    {% for kommune in kommuner if kommune.action == 'update' %}
+                        <li class="list-group-item">
+                            {{ kommune.newCode }}:
+                            {{ kommune.newName }}
+                            <br/>
+                            <small>Tidligere:
+                                {{ kommune.oldName }}</small>
+                        </li>
+                    {% endfor %}
+                {% else %}
+                    <li class="list-group-item">Ingen endringer i kommunestrukturen</li>
+                {% endfor %}
+            </ol>
+        </div>
+    </div>
+
+    {% if preview %}
+        <div class="row">
+            <div class="col-xs-12 col-sm-12">
+                <a href="?page={{ GET('page') }}&action={{GET('action')}}&do=true" class="btn btn-warning">Utfør import</a>
+            </div>
+        </div>
+    {% endif %}
+</div>

@@ -1,0 +1,38 @@
+<h4>Endringer i norske kommuner fra
+    {{ startDato|dato('j. M Y') }}
+    til
+    {{ sluttDato|dato('j. M Y') }}</h4>
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-12 col-sm-6">
+            <b>Følgende {{ kommuner|length}} kommuner
+                {{ preview ? 'blir' : 'er'}}
+                importert
+                </b>
+            <br/>
+            <ol class="list-group">
+                {% for kommune in kommuner %}
+                    <li class="list-group-item">
+                        {{ kommune.code }}: {{ kommune.name }}
+                        {% if not kommune.aktiv %}
+                            <small class="label label-warning">forsvant {{ kommune.validToInRequestedRange|dato( 'j. M Y')}} </small>
+                        {% endif %}
+                        {% if GET('debug') %}<br /><code>{{ kommune.query }}</code>{% endif %}
+                    </li>
+                {% else %}
+                    <li class="list-group-item">Ingen endringer i kommunestrukturen</li>
+                {% endfor %}
+            </ol>
+        </div>
+    </div>
+
+    {% if preview %}
+        <div class="row">
+            <div class="col-xs-12 col-sm-12">
+                <a href="?page={{ GET('page') }}&action={{GET('action')}}&do=true" class="btn btn-warning">Utfør import</a>
+            </div>
+        </div>
+    {% endif %}
+</div>
