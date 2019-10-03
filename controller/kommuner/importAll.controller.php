@@ -5,10 +5,7 @@ use UKMNorge\Database\SQL\Insert;
 use UKMNorge\Database\SQL\Query;
 use UKMNorge\Twig\Twig as TwigAdmin;
 
-require_once('UKM/fylker.class.php');
-require_once('UKM/API/SSB/Klass.php');
-require_once('UKM/Twig/Twig.php');
-require_once('UKM/Database/SQL/select.class.php');
+require_once('UKM/Autoloader.php');
 TwigAdmin::enableDebugMode();
 
 $dataset = new Klass();

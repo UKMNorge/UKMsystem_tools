@@ -9,7 +9,7 @@ Author URI: http://mariusmandal.no
 */
 
 use UKMNorge\Nettverk\Administrator;
-
+require_once('UKM/Autoloader.php');
 require_once('UKM/wp_modul.class.php');
 
 class UKMsystem_tools extends UKMWPmodul
@@ -175,7 +175,6 @@ class UKMsystem_tools extends UKMWPmodul
             return $messages;
         }
         /** SSB: Levendefødte-API må eksponeres for view */
-        require_once('UKM/API/SSB/levendefodte.class.php');
         $levendefodte = new Levendefodte();
 
         require_once('controller/api/SSB/levendefodte.controller.php');

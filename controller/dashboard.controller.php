@@ -1,18 +1,19 @@
 <?php
 
 
-use GuzzleHttp\Exception\ClientException;
+use UKMNorge\API\SSB\Levendefodte;
+use UKMNorge\API\SSB\KommuneAreal;
 
 @session_start();
 
 /** SSB-SETUP  **/
 /** SSB: Levendefødte-API må eksponeres for view */
-require_once('UKM/API/SSB/levendefodte.class.php');
+require_once('UKM/Autoloader.php');
+
 $levendefodte = new Levendefodte();
 UKMsystem_tools::addViewData('SSB_levendefodte', $levendefodte);
 
 /** SSB: Kommuneareal-API må eksponeres for view */
-require_once('UKM/API/SSB/kommuneAreal.class.php');
 $kommuneareal = new KommuneAreal();
 UKMsystem_tools::addViewData('SSB_kommuneareal', $kommuneareal);
 
