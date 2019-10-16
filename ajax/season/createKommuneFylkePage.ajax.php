@@ -1,18 +1,17 @@
 <?php
 
+use UKMNorge\Geografi\Fylker;
+use UKMNorge\Geografi\Kommune;
 use UKMNorge\Wordpress\Blog;
 
-require_once('UKM/Wordpress/Blog.php');
-
-require_once('UKM/fylker.class.php');
-require_once('UKM/kommune.class.php');
+require_once('UKM/Autoloader.php');
 
 $selector = $_POST['type'] . '_' . $_POST['id'];
 $success = true;
 
 switch ($_POST['type']) {
     case 'fylke':
-        $fylke = fylker::getById($_POST['id']);
+        $fylke = Fylker::getById($_POST['id']);
         $navn = $fylke->getNavn();
 
         $path = '/' . Blog::sanitizePath($fylke->getNavn()) .'/';
@@ -37,7 +36,7 @@ switch ($_POST['type']) {
     // OPPRETT FIKS KOMMUNE
     case 'kommune':
         try {
-            $kommune = new kommune($_POST['id']);
+            $kommune = new Kommune($_POST['id']);
             $color = 'primary';
             $action = 'create_kommune';
             $navn = $kommune->getNavn();
