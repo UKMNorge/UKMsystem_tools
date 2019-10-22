@@ -9,7 +9,7 @@ require_once('UKM/Autoloader.php');
 TwigAdmin::enableDebugMode();
 
 $dataset = new Klass();
-$dataset->setPageSize(1000);
+#$dataset->setPageSize(1000);
 // 131 er "Standard for kommuneinndeling"
 $dataset->setClassificationId("131");
 $startDato = new DateTime("1900-01-01");
