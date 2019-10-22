@@ -6,6 +6,8 @@ use UKMNorge\API\SSB\KommuneAreal;
 
 @session_start();
 
+require_once('UKMconfig.inc.php');
+
 /** SSB-SETUP  **/
 /** SSB: Levendefødte-API må eksponeres for view */
 require_once('UKM/Autoloader.php');
