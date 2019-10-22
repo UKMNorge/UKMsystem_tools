@@ -2,7 +2,7 @@
 
 $blogs = get_sites(
     [
-        'number' => 1500
+        'number' => 5000
     ]
 );
 
