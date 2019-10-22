@@ -41,12 +41,7 @@ switch ($_POST['type']) {
             $action = 'create_kommune';
             $navn = $kommune->getNavn();
 
-            $path = '/' . Blog::sanitizePath(
-                explode(
-                    '(', 
-                    $kommune->getNavn()
-                )[0]
-            ) .'/';
+            $path = $kommune->getPath();
 
             if (Blog::isAvailablePath($path)) {
                 $action = 'opprett lokalside';
