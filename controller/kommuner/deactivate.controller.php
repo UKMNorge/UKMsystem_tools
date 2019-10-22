@@ -3,11 +3,9 @@
 use UKMNorge\Database\SQL\Insert;
 use UKMNorge\Database\SQL\Query;
 use UKMNorge\Database\SQL\Write;
+use UKMNorge\Geografi\Kommune;
 
-require_once('UKM/Database/SQL/insert.class.php');
-require_once('UKM/Database/SQL/select.class.php');
-require_once('UKM/Database/SQL/write.class.php');
-require_once('UKM/kommune.class.php');
+require_once('UKM/Autoloader.php');
 
 // superseed skal aldri være tom string.
 $fixNull = new Insert(
@@ -41,7 +39,7 @@ $old = new Query(
 $res = $old->run();
 
 while( $row = Query::fetch( $res ) ) {
-    $kommuner[] = new kommune( $row );
+    $kommuner[] = new Kommune( $row );
 }
 
 if( isset($_GET['do'] ) ) {
