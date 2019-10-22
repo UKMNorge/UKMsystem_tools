@@ -29,6 +29,8 @@ switch ($_POST['type']) {
             }
         } else {
             $action = 'fylkesside eksisterer';
+            $blog_id = Blog::getIdByPath($path);
+            Blog::oppdaterFraFylke( $blog_id, $fylke );
             $color = 'info';
         }
         break;
@@ -40,8 +42,8 @@ switch ($_POST['type']) {
             $color = 'primary';
             $action = 'create_kommune';
             $navn = $kommune->getNavn();
-
-            if (Blog::isAvailablePath($kommune->getPath())) {
+            $path = $kommune->getPath();
+            if (Blog::isAvailablePath($path)) {
                 $action = 'opprett lokalside';
                 try {
                     $blog_id = Blog::opprettForKommune( $kommune );
@@ -52,6 +54,8 @@ switch ($_POST['type']) {
                     $color = 'danger';
                 }
             } else {
+                $blog_id = Blog::getIdByPath($path);
+                Blog::oppdaterFraKommune( $blog_id, $kommune );
                 $action = 'lokalside eksisterer';
             }
         } catch (Exception $e) {
