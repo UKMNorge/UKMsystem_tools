@@ -1,0 +1,12 @@
+{% if CFauthenticated %}
+    Cloudflare er konfigurert.<br />
+    <small>Tilkoblingen har ikke blitt testet for å vise denne siden</small>
+{% else %}
+    En eller flere konstanter mangler i UKMconfig
+    <br/>
+    <small>
+        {% for constant in CFconstants %}
+            <code>{{ constant }}</code>
+        {% endfor %}
+    </small>
+{% endif %}

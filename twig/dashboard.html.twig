@@ -1,0 +1,26 @@
+<div class="container-fluid" style="margin-right: 2em;">
+    <div class="row">
+        <div class="col-xs-12">
+            {% include "wp_modul.flashbag.html.twig" %}
+        </div>
+    </div>
+    <div class="row">
+        {% if CFauthenticated %}
+            <div class="col-xs-12 col-sm-6 col-lg-4">
+                {% include "cloudflare/actions.html.twig" %}
+            </div>
+        {% endif %}
+        
+        <div class="col-xs-12 col-sm-6 col-lg-4">
+            {% include "dashboard/api.html.twig" %}
+        </div>
+        <div class="col-xs-12 col-sm-6 col-lg-4">
+            {% include "dashboard/import.html.twig" %}
+        </div>        
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-lg-4">
+            {% include "dashboard/modrewrite.html.twig" %}
+        </div>
+    </div>
+</div>

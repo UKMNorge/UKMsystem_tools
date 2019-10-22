@@ -1,0 +1,12 @@
+{% extends "fatalError.html.twig" %}
+
+{% block content %}
+    <h1>Lagre auth-info i UKMconfig</h1>
+    <p class="lead">Dette gikk bra! Legg til linjene nedenfor i UKMconfig, så er alt på plass</p>    
+
+    <code>
+        define('FLICKR_AUTH_USER', '{{ OAUTH_USER }}');<br />
+        define('FLICKR_AUTH_TOKEN', '{{ OAUTH_TOKEN }}');<br />
+        define('FLICKR_AUTH_SECRET', '{{ OAUTH_SECRET }}');<br />
+    </code>
+{% endblock %}

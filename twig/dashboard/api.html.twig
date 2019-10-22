@@ -1,0 +1,30 @@
+<table class="table table-dashboard">
+    <thead>
+        <tr>
+            <th colspan="2">API-koblinger</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr>
+            <td>
+                Dropbox
+                <br/>
+                <small>Brukes bl.a. for UKMdigark</small>
+            </td>
+            <td>{% include "dropbox/dashboard.html.twig" %}</td>
+        </tr>
+        <tr>
+            <td>Flickr</td>
+            <td>{% include "flickr/dashboard.html.twig" %}</td>
+        </tr>
+        <tr>
+            <td>Cloudflare</td>
+            <td>{% include "cloudflare/dashboard.html.twig" %}</td>
+        </tr>
+        <tr>
+            <td>Mailchimp</td>
+            <td>Integrering er ikke gjort</td>
+        </tr>
+    </tbody>
+</table>

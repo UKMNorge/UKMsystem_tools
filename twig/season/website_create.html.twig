@@ -1,0 +1,53 @@
+<div class="col-xs-12">
+
+    {% if GET('do') is not empty %}
+        <h1>Opprett sider for alle kommuner og fylker på UKM.no</h1>
+
+        <p class="lead">
+            Ikke forlat siden før du får beskjed om at alle sider er gjennomgått.
+        </p>
+
+        <div class="alert alert-info" id="status" style="display: none;"></div>
+
+        <div id="workList">
+            <div id="toClean">
+                <h3>Kommuner og fylker som skal behandles</h3>
+                <ol class="list-group" id="cleanList">
+                    {% for fylke in fylker %}
+                        <li class="list-group-item" id="fylke_{{fylke.getId()}}" data-id="{{ fylke.getId() }}" data-type="fylke">
+                            <span class="loading">
+                            <img src="/wp-admin/images/wpspin_light.gif"/></span>
+                            {{ fylke.getNavn() }}
+                        </li>
+
+                        {% for kommune in fylke.getKommuner() %}
+                            <li class="list-group-item" id="kommune_{{kommune.getId()}}" data-id="{{ kommune.getId() }}" data-type="kommune">
+                                <span class="loading">
+                                <img src="/wp-admin/images/wpspin_light.gif"/></span>
+                                {{ kommune.getNavn() }}
+                            </li>
+                        {% endfor %}
+                    {% endfor %}
+                </ol>
+            </div>
+
+
+            <h3>Kommuner og fylker som er gjennomgått</h3>
+            <ol class="list-group" id="cleanedList"></ol>
+        </div>
+
+    {% else %}
+        <h1>Opprett kommune- og fylkessider på UKM.no</h1>
+
+        <p class="lead">
+            Alle kommuner og fylker har sin egen side, selv om de ikke har arrangementer.
+            Denne siden sørger for å informere eller videresende brukeren til riktig sted.
+        </p>
+
+        <p>
+            <a href="?page={{ GET('page') }}&action={{ GET('action') }}&do=true" class="btn btn-warning">
+                Start oppretting
+            </a>
+        </p>
+    {% endif %}
+</div>
