@@ -12,7 +12,12 @@ if( isset($_GET['do'] ) ) {
     if ($results) {
         foreach ($results as $data) {
 
-            $user = User::loadByEmail( $data->user_email );
+            try {
+                $user = User::loadByEmail( $data->user_email );
+            } catch( Exception $e ) {
+                var_dump( $data );
+                throw $e;
+            }
 
             // UKM Norge-brukeren får overleve
             if( $user->getId() != 1 ) {
