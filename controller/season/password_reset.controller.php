@@ -8,7 +8,7 @@ require_once('UKM/Autoloader.php');
 if( isset($_GET['do'] ) ) {
     global $wpdb;
 
-    $results = $wpdb->get_results('SELECT `user_email` FROM `' . $wpdb->prefix . 'users`');
+    $results = $wpdb->get_results('SELECT `ID` FROM `' . $wpdb->prefix . 'users`');
     if ($results) {
         foreach ($results as $data) {
 
