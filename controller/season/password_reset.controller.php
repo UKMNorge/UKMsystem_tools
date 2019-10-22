@@ -13,9 +13,8 @@ if( isset($_GET['do'] ) ) {
         foreach ($results as $data) {
 
             try {
-                $user = User::loadById( $data->user_email );
+                $user = User::loadById( $data->ID );
             } catch( Exception $e ) {
-                var_dump( $data );
                 throw $e;
             }
 
