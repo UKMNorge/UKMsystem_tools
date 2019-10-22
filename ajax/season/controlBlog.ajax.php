@@ -9,24 +9,40 @@ $blog_id = $_POST['blog_id'];
 
 $blog = get_site( $blog_id );
 $blog_info = get_blog_details( $blog_id );
+$pl_eier_type = get_blog_option( $blog_id, 'pl_eier_type');
 $site_type = get_blog_option( $blog_id, 'site_type');
 
 switch( $site_type ) {
+    // Fylkessidene skal aldri ha pl_id lenger, men clean for sikkerhets skyld
     case 'fylke':
-    case 'land':
+        $action = 'clean';
+        break;
+    // Arrangementssider skal slettes
+    case 'arrangement':
+        $action = 'delete';
+        break;
+    // Fra 2019 skal ikke en kommuneside kunne ha fellesmønstringer,
+    // kun singel-mønstringer, og derav cleanes
     case 'kommune':
         $pl_id = get_blog_option( $blog_id, 'pl_id');
-        try {
-            $arrangment = new Arrangement( $pl_id );
-            if( $arrangment->erFellesmonstring() ) {
-                $action = 'delete';
-            } else {
-                $action = 'clean';
+        if( date('Y') == 2019 ) {
+            try {
+                $arrangment = new Arrangement( $pl_id );
+                if( $arrangment->erFellesmonstring() ) {
+                    $action = 'delete';
+                } else {
+                    $action = 'clean';
+                }
+            } catch( Exception $e ) {
+                $action = 'cleaned';
             }
-        } catch( Exception $e ) {
-            $action = 'cleaned';
+        } else {
+            $action = 'clean';
         }
-    break;
+        break;
+    // De nasjonale sidene kan vi opprette manuelt, 
+    // så har vi kontroll på publiseringstidspunkt
+    case 'land':
     default:
         $action = 'skip';
     break;
@@ -60,7 +76,7 @@ UKMsystem_tools::addResponseData(
         'color' => $color,
         'blog_name' => $blog_info->blogname,
         'path' => $blog_info->path,
-        'site_type' => $site_type,
+        'site_type' => $pl_eier_type,
         'success' => true
     ]
 );
