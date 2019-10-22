@@ -1,6 +1,13 @@
 <?php
 
 use UKMNorge\Database\SQL\Insert;
+use UKMNorge\Database\SQL\Query;
+use UKMNorge\Database\SQL\Update;
+use UKMNorge\Geografi\Fylker;
+use UKMNorge\Geografi\Kommune;
+
+require_once('UKM/Autoloader.php');
+
 
 if( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
     foreach( $_POST['tidligere'] as $kommune_id => $tidligere ) {
@@ -8,9 +15,11 @@ if( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
             continue;
         }
 
-        // TODO WHAAAT?! Hvorfor lagrer den tomme felt?
+        if( strlen( $tidligere ) == 4 && strpos($tidligere,',') === false ) {
+            $tidligere .= ',';
+        }
 
-        $update = new Insert(
+        $update = new Update(
             'smartukm_kommune',
             [
                 'id' => $kommune_id
@@ -25,6 +34,19 @@ if( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
         if( $affected_rows > 1 ) {
             echo 'OPPDATERTE '. $affected_rows .' RADER: <code>'. $update->debug() .'</code>';
         }
+
+        // Deaktiver kommunene som har blitt overtatt
+        $array_tidligere = explode(',', $tidligere );
+        foreach( $array_tidligere as $id_tidligere ) {
+            $sql = new Update(
+                'smartukm_kommune',
+                [
+                    'id' => $id_tidligere
+                ]
+            );
+            $sql->add('active',false);
+            $sql->run();
+        }
     }
     UKMsystem_tools::getFlashbag()->add(
         'success',
@@ -38,7 +60,7 @@ if( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
 }
 
 
-$fylker = fylker::getAll();
+$fylker = Fylker::getAll();
 $alle_kommuner = [];
 
 foreach( $fylker as $fylke ) {
@@ -46,7 +68,7 @@ foreach( $fylker as $fylke ) {
 
     foreach( $kommuner as $kommune ) {
         if( $kommune->harTidligere() ) {
-            $flyttet = new SQL(
+            $flyttet = new Query(
                 "SELECT *
                 FROM `smartukm_kommune`
                 WHERE `name` = '#name'
@@ -59,7 +81,7 @@ foreach( $fylker as $fylke ) {
                 ]
             );
         } else {
-            $flyttet = new SQL(
+            $flyttet = new Query(
                 "SELECT *
                 FROM `smartukm_kommune`
                 WHERE `name` = '#name'
@@ -72,8 +94,8 @@ foreach( $fylker as $fylke ) {
         }
 
         $flyttet = $flyttet->run();
-        while( $row = SQL::fetch($flyttet) ) {
-            $kommune->lignende[] = new kommune( $row );
+        while( $row = Query::fetch($flyttet) ) {
+            $kommune->lignende[] = new Kommune( $row );
         }
         $alle_kommuner[ $fylke->getId() ][] = $kommune;
     }

@@ -4,6 +4,11 @@
             <div class="col-xs-12 col-sm-12">
                 <h2>Kommuner i Norge</h2>
 
+                <p class="lead">
+                    Hvis du trenger å sjekke hva som faktisk er riktig kommunenummer, og hvem som har overtatt for hvem, 
+                    <a href="https://no.wikipedia.org/wiki/Liste_over_norske_kommunenummer" target="_blank">finner du Wikipedia-oversikten her</a>
+                </p>
+
                 {% for fylke in fylker %}
                     <h3>{{ fylke.getNavn() }}</h3>
 
@@ -30,7 +35,7 @@
                                 </td>
                                 <td width="400">
                                     Overtar for
-                                    <input name="tidligere[{{kommune.getId()}}]" type="text" class="tidligere" value="{% for tidl in kommune.getTidligere() %}{{tidl.getId()}},{% endfor %}"/>
+                                    <input name="tidligere[{{kommune.getId()}}]" type="text" class="tidligere" value="{{kommune.getTidligereIdList()}}"/>
                                 </td>
                             </tr>
                         {% endfor %}
