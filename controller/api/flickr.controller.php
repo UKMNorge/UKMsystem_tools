@@ -42,7 +42,6 @@ try {
             UKMsystem_tools::addViewData('FlickrAuth', false);
         }
     } else {
-        echo 'YUP';
         UKMsystem_tools::addViewData('FlickrAuthURL', FLICKR_ENDPOINT);
         Exception::handle('Brukeren er ikke logget inn');
     }
