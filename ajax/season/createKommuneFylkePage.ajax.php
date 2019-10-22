@@ -41,9 +41,7 @@ switch ($_POST['type']) {
             $action = 'create_kommune';
             $navn = $kommune->getNavn();
 
-            $path = $kommune->getPath();
-
-            if (Blog::isAvailablePath($path)) {
+            if (Blog::isAvailablePath($kommune->getPath())) {
                 $action = 'opprett lokalside';
                 try {
                     $blog_id = Blog::opprettForKommune( $kommune );
