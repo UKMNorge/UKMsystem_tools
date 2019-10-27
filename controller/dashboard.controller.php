@@ -2,7 +2,6 @@
 
 
 use UKMNorge\API\SSB\Levendefodte;
-use UKMNorge\API\SSB\KommuneAreal;
 
 @session_start();
 
@@ -14,11 +13,6 @@ require_once('UKM/Autoloader.php');
 
 $levendefodte = new Levendefodte();
 UKMsystem_tools::addViewData('SSB_levendefodte', $levendefodte);
-
-/** SSB: Kommuneareal-API må eksponeres for view */
-$kommuneareal = new KommuneAreal();
-UKMsystem_tools::addViewData('SSB_kommuneareal', $kommuneareal);
-
 
 /** API-TJENESTER **/
 /** DROPBOX */
@@ -40,9 +34,5 @@ if( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
     /* IMPORT FRA SSB : LEVENDEFØDTE */
     if( isset( $_POST['levendefodte_year'] ) ) {
         require_once('api/SSB/levendefodte.controller.php');
-    }
-    /* IMPORT FRA SSB : KOMMUNEAREAL*/
-    if( isset( $_POST['areal_year'] ) ) {
-        require_once('api/SSB/areal.controller.php');
     }
 }
