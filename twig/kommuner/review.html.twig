@@ -55,7 +55,7 @@
 
 
 <script>
-    $(document).on('click', '.overtatt', (e) => {
+    $(document).on('click', '.overtatt', function(e) {
         e.preventDefault();
         var clicked = $(e.target);
         var kommune = clicked.parents('.kommune');

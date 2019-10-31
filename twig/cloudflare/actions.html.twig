@@ -36,7 +36,7 @@
 </table>
 
 <script>
-    $(document).on('click', '#CFaddMoreFiles', () => {
+    $(document).on('click', '#CFaddMoreFiles', function() {
         var input = $('<input class="form-control" name="CFfiles[]" required type="url" placeholder="https://ukm.no...." />');
         $('#CFfileContainer').append(
             input
