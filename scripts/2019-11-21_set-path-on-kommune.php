@@ -19,7 +19,13 @@ $fetch = new Query(
 $result = $fetch->run();
 
 while( $row = Query::fetch( $result ) ) {
-    $kommune = new Kommune($row);
+    try {
+        $kommune = new Kommune($row);
+    } catch( Exception $e ) {
+        // I tilfelle "falske fylker" i gammel tabell, 
+        // hopp over de
+        continue;
+    }
     $update = new Update(
         'smartukm_kommune',
         [
