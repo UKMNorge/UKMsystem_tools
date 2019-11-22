@@ -35,3 +35,4 @@ while( $row = Query::fetch( $result ) ) {
     $update->add('path', $kommune->getPath());
     $update->run();
 }
+echo 'done';
