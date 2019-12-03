@@ -13,7 +13,7 @@
             <br/>
             <ol class="list-group">
                 {% for kommuner in endringer  %}
-                    {% for kommune in kommuner if kommune.action == 'insert' %}
+                    {% for kommune in kommuner|filter( kommune => kommune.action == 'insert') %}
                         <li class="list-group-item">
                             {{ kommune.newCode }}:
                             {{ kommune.newName }}
@@ -37,7 +37,7 @@
             <br/>
             <ol class="list-group">
                 {% for kommuner in endringer  %}
-                    {% for kommune in kommuner if kommune.action == 'update' %}
+                    {% for kommune in kommuner|filter(kommune => kommune.action == 'update') %}
                         <li class="list-group-item">
                             {{ kommune.newCode }}:
                             {{ kommune.newName }}
