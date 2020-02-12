@@ -1,22 +1,12 @@
-<table class="table table-dashboard {{ deltaStatus }}">
-    <thead>
-        <tr>
-            <th colspan="2">Bugfix</th>
-        </tr>
-    </thead>
-
-    <tbody>
-        <tr>
-            <td>Mod rewrite (404)</td>
-            <td>
-                <p>
-                    Når wordpress ødelegger egne kortadresser for enkelte sites, 
-                    kan denne brukes for å fjerne 404-error på sider som finnes.
-                </p>
-                <p>
-                    <a class="btn btn-primary btn-xs" href="?page={{ GET('page') }}&action=mod_rewrite&start=0">Start re-generering</a>
-                </p>
-            </td>
-        </tr>
-    </tbody>
-</table>
+<tr>
+	<td>Mod rewrite (404)</td>
+	<td>
+		<p>
+			Når wordpress ødelegger egne kortadresser for enkelte sites, 
+					                    kan denne brukes for å fjerne 404-error på sider som finnes.
+		</p>
+		<p>
+			<a class="btn btn-primary btn-xs" href="?page={{ GET('page') }}&action=mod_rewrite&start=0">Start re-generering</a>
+		</p>
+	</td>
+</tr>
