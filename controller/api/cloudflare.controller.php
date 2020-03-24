@@ -1,5 +1,8 @@
 <?php
-require_once('UKM/cloudflare.class.php');
+
+use UKMNorge\API\Cloudflare\Cloudflare;
+
+require_once('UKM/Autoloader.php');
 
 try {
     $required_constants = ['UKM_CLOUDFLARE_URL', 'UKM_CLOUDFLARE_UKMNO_ZONE', 'UKM_CLOUDFLARE_AUTH_KEY', 'UKM_CLOUDFLARE_EMAIL'];
@@ -24,7 +27,7 @@ try {
     if (isset($_GET['cloudflare'])) {
         switch ($_GET['cloudflare']) {
             case 'purge':
-                $cf = new cloudflare();
+                $cf = new Cloudflare();
                 $res = $cf->purgeAll();
                 if ($res == true) {
                     UKMsystem_tools::getFlash()->add(
@@ -40,7 +43,7 @@ try {
                 break;
             case 'delete':
                 if( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
-                    $cf = new cloudflare();
+                    $cf = new Cloudflare();
                     $res = $cf->purge($_POST['CFfiles']);
                     if ($res == true) {
                         UKMsystem_tools::getFlash()->add(

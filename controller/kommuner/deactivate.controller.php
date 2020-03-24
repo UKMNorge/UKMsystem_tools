@@ -1,14 +1,14 @@
 <?php
 
-use UKMNorge\Database\SQL\Insert;
 use UKMNorge\Database\SQL\Query;
+use UKMNorge\Database\SQL\Update;
 use UKMNorge\Database\SQL\Write;
 use UKMNorge\Geografi\Kommune;
 
 require_once('UKM/Autoloader.php');
 
 // superseed skal aldri være tom string.
-$fixNull = new Insert(
+$fixNull = new Update(
     'smartukm_kommune',
     ['superseed' => '']
 );

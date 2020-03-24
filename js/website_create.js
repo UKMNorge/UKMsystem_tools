@@ -1,11 +1,10 @@
-$(document).ready(() => {
+jQuery(document).ready(() => {
     var workList = new UKMresources.workQueue(
-        'cleanList',
-        {
-            filterCountData: function( data ) {
+        'cleanList', {
+            filterCountData: function(data) {
                 return data.action;
             },
-            elementHandler: function (id) {
+            elementHandler: function(id) {
                 var emitter = new UKMresources.emitter(id);
 
                 UKMresources.Request({
@@ -23,12 +22,10 @@ $(document).ready(() => {
                     handleError: (error, response) => {
                         emitter.emit('error', [error, response]);
                     }
-                }).do(
-                    {
-                        type: $('#'+ id).attr('data-type'),
-                        id: $('#'+ id).attr('data-id')
-                    }
-                );
+                }).do({
+                    type: jQuery('#' + id).attr('data-type'),
+                    id: jQuery('#' + id).attr('data-id')
+                });
 
                 return emitter;
             }
@@ -36,8 +33,8 @@ $(document).ready(() => {
     );
 
     workList.on('success', (data) => {
-        $('#'+ data.selector)
-            .addClass('alert-'+ data.color)
+        jQuery('#' + data.selector)
+            .addClass('alert-' + data.color)
             .html(
                 twigJS_seasoncreateblog.render(data)
             )
@@ -45,7 +42,7 @@ $(document).ready(() => {
     });
 
     workList.on('error', (data) => {
-        $('#'+ data.selector)
+        jQuery('#' + data.selector)
             .addClass('alert-danger')
             .html(
                 twigJS_seasoncreateblog.render(data)
@@ -53,26 +50,26 @@ $(document).ready(() => {
     });
 
     workList.on('status_update', (statuses, index) => {
-        $('#status').html(
-            '<p id="total_status">Gjennomgår kommune/fylke '+ index +' av '+ workList.length +'</p>'
+        jQuery('#status').html(
+            '<p id="total_status">Gjennomgår kommune/fylke ' + index + ' av ' + workList.length + '</p>'
         );
-        statuses.forEach( (count, id) => {
-            $('#status').append( id +': '+ count +' <br />');
+        statuses.forEach((count, id) => {
+            jQuery('#status').append(id + ': ' + count + ' <br />');
         });
     });
 
-    workList.on('done', (index,total) => {
-        $('#status').removeClass('alert-info').addClass('alert-success');
-            $('#total_status').html(
-                'Ferdig! Har nå gjennomgått '+ index +' av '+ total +' kommuner, fylker og bydeler (i Oslo)'
-            );
-            $('#toClean').hide();
+    workList.on('done', (index, total) => {
+        jQuery('#status').removeClass('alert-info').addClass('alert-success');
+        jQuery('#total_status').html(
+            'Ferdig! Har nå gjennomgått ' + index + ' av ' + total + ' kommuner, fylker og bydeler (i Oslo)'
+        );
+        jQuery('#toClean').hide();
     });
 
-    $('#cleanList li').each((index, site) => {
-        workList.push($(site).attr('id'));
+    jQuery('#cleanList li').each((index, site) => {
+        workList.push(jQuery(site).attr('id'));
     });
-    $('#status').html(workList.length + ' kommuner og fylker skal gjennomgås').slideDown();
+    jQuery('#status').html(workList.length + ' kommuner og fylker skal gjennomgås').slideDown();
 
     workList.start();
 });
