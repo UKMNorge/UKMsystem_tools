@@ -1,5 +1,5 @@
 <?php
 
-require_once('UKM/fylker.class.php');
+use UKMNorge\Geografi\Fylker;
 
-UKMsystem_tools::addViewData('fylker', fylker::getAll());
+UKMsystem_tools::addViewData('fylker', Fylker::getAll());

@@ -8,11 +8,11 @@ Version: 2.0
 Author URI: http://mariusmandal.no
 */
 
-use UKMNorge\Nettverk\Administrator;
-require_once('UKM/Autoloader.php');
-require_once('UKM/wp_modul.class.php');
+use UKMNorge\Wordpress\Modul;
 
-class UKMsystem_tools extends UKMWPmodul
+require_once('UKM/Autoloader.php');
+
+class UKMsystem_tools extends Modul
 {
     public static $action = 'dashboard';
     public static $path_plugin = null;

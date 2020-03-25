@@ -3,6 +3,7 @@
 use UKMNorge\API\SSB\Klass;
 use UKMNorge\Database\SQL\Insert;
 use UKMNorge\Database\SQL\Query;
+use UKMNorge\Database\SQL\Update;
 use UKMNorge\Twig\Twig as TwigAdmin;
 
 require_once('UKM/Autoloader.php');
@@ -26,7 +27,7 @@ foreach($dataEndringer as $dataEndring) {
 	foreach($dataEndring as $endring) {        
 
         if( $endring->oldCode == $endring->newCode ) {
-            $sql = new Insert(
+            $sql = new Update(
                 'smartukm_kommune',
                 ['id' => $endring->newCode]
             );

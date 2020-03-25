@@ -1,4 +1,9 @@
 <?php
+
+use UKMNorge\Database\SQL\Insert;
+use UKMNorge\Database\SQL\Update;
+
+require_once('UKM/Autoloader.php');
 define('PHPEXCEL_ROOT', '');
 /** PHPExcel_IOFactory */
 require_once('UKM/inc/excel.inc.php');
@@ -25,7 +30,7 @@ if( $index_kommune == $index_poststed && $index_poststed == $index_postnummer ) 
         $poststed = mb_convert_case($sheetData[$row][$index_poststed], MB_CASE_TITLE);
         $kommune = $sheetData[$row][$index_kommune];
 
-        $insert = new SQLins('smartukm_postalplace');
+        $insert = new Insert('smartukm_postalplace');
         $insert->add('postalcode', $postnummer);
         $insert->add('postalplace', $poststed);
         $insert->add('k_id', $kommune);
@@ -39,7 +44,7 @@ if( $index_kommune == $index_poststed && $index_poststed == $index_postnummer ) 
         } catch (Exception $e) {
             // Hvis feilet fordi den finnes - oppdater
             if ($e->getCode() == 901001) {
-                $update = new SQLins('smartukm_postalplace', array('postalcode' => $postnummer));
+                $update = new Update('smartukm_postalplace', array('postalcode' => $postnummer));
                 $update->add('k_id', $kommune);
                 $update->run();
             }
