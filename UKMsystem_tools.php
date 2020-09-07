@@ -8,6 +8,7 @@ Version: 2.0
 Author URI: http://mariusmandal.no
 */
 
+use UKMNorge\API\SSB\Levendefodte;
 use UKMNorge\Wordpress\Modul;
 
 require_once('UKM/Autoloader.php');
@@ -30,7 +31,7 @@ class UKMsystem_tools extends Modul
         add_action(
             'network_admin_menu',
             ['UKMsystem_tools', 'meny'],
-            200
+            -10
         );
 
         add_filter('UKMWPNETWDASH_messages', ['UKMsystem_tools', 'filterMessages']);
