@@ -30,43 +30,41 @@ class UKMsystem_tools extends Modul
 
         add_action(
             'network_admin_menu',
-            ['UKMsystem_tools', 'meny', 'sjekk_mapper'],
+            ['UKMsystem_tools', 'meny'],
             -10
         );
 
+        add_action(
+            'network_admin_menu',
+            ['UKMsystem_tools', 'sjekk_mapper']
+        );
+
         add_filter('UKMWPNETWDASH_messages', ['UKMsystem_tools', 'filterMessages']);
-        
-        // IMPORTANT: dette må kalles network_admin_meny action!
-        static::sjekk_mapper();
     }
 
     /**
      * Sjekker om mappene er opprettet for dette året.
      */
-    public static function sjekk_mapper() {
-
-        // Opening a directory 
-        $downloadMappe = "../../../../var/www/download/"; // word og excel mapper
-        
-        // TEST FUNKJSONALITET: Øk den med + 1 
+    public static function sjekk_mapper() {        
+        // TEST FUNKJSONALITET: Øk den med + 1
         $aarNaa = (int) date('Y');
         $oldAar = get_site_option('UKM_download_folder_last_created');
-        
-        // get_site_option finnes ikke, legg til 0.
-        $oldAar = empty($oldAar) ? 0 : $oldAar;
+
+        // get_site_option finnes ikke, legg til forrige år.
+        $oldAar = empty($oldAar) ? $aarNaa-1 : $oldAar;
 
         // Hvis år er større enn lagret site_option år, så må opprettes nye mapper, de gamle mappene må slettes og site_option må oppdateres
         if($aarNaa > $oldAar) {
             // Oppdater update_site_option, sett $arrNaa
             update_site_option('UKM_download_folder_last_created', ((int) date('Y')) );
 
-            foreach(array('word', 'excel', 'zip') as &$mappe) {
+            foreach(array(DOWNLOAD_PATH_EXCEL, DOWNLOAD_PATH_WORD, DOWNLOAD_PATH_ZIP) as &$mappe) {
                 // Slette alle gamle mapper og filer
-                static::delete_all_inside_directory($downloadMappe . $mappe);
+                static::delete_all_inside_directory($mappe . $oldAar);
 
                 // Legg til mapper med navn $aarNaa i $mappe
                 try{
-                    mkdir($downloadMappe . $mappe .'/' . $aarNaa, 0777);
+                    mkdir($mappe .'/' . $aarNaa, 0777);
                 } catch(Exception $e) {
                     throw new Exception('Mappe ' . $mappe . ' ble ikke opprettet!');
                 }
@@ -75,19 +73,13 @@ class UKMsystem_tools extends Modul
     }
 
     /**
-     * Slett alle filler og sub-mapper i mappe
-     * Denne metoden bruker rekursjon
+     * Slett alle filler i en mappe
      * PGA sikkerhetsmessige årsaker må alle filene i mappen slettes før man kan slette mappen selv
      *
      * @param string $dirname
      * @return bool
      */
-    private static function delete_all_inside_directory($dirname, $startDirname = null) {
-        // Lagre hovedmappe når funksjonen starter
-        if($startDirname == null) {
-            $startDirname = $dirname;
-        }
-        
+    private static function delete_all_inside_directory($dirname) {
         // Om det er mappe så åpen det
         if (is_dir($dirname)) {
             $dir_handle = opendir($dirname);
@@ -95,25 +87,22 @@ class UKMsystem_tools extends Modul
         if (!$dir_handle) {
             return false;
         }
-        // For hver fil som er ikke selv filen eller tilbake, slett det.
+
+        // For hver fil i mappen
         while($file = readdir($dir_handle)) {
+            // Hvis filen er ikke selv mappe eller tilbake peker.
             if ($file != "." && $file != "..") {
-                if (!is_dir($dirname."/".$file)) {
-                    unlink($dirname."/".$file);
-                }
-                else {
-                    // Kall rekursivt
-                    static::delete_all_inside_directory($dirname.'/'.$file, $startDirname);
-                }
+                // Sletter filen
+                unlink($dirname."/".$file);
             }
         }
         // Lukk mappen
         closedir($dir_handle);
-        // Ikke slet hovedmappe
-        if($dirname != $startDirname) {
-            rmdir($dirname);
-        }
-        // Returner true til slutt
+        
+        // Slett hovedmappe
+        rmdir($dirname);
+    
+        // Returner true
         return true;
     }
 
