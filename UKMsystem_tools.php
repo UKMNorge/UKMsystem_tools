@@ -45,7 +45,7 @@ class UKMsystem_tools extends Modul
     /**
      * Sjekker om mappene er opprettet for dette året.
      */
-    public static function sjekk_mapper() {        
+    public static function sjekk_mapper() {
         // TEST FUNKJSONALITET: Øk den med + 1
         $aarNaa = (int) date('Y');
         $oldAar = get_site_option('UKM_download_folder_last_created');
@@ -55,10 +55,10 @@ class UKMsystem_tools extends Modul
 
         // Hvis år er større enn lagret site_option år, så må opprettes nye mapper, de gamle mappene må slettes og site_option må oppdateres
         if($aarNaa > $oldAar) {
-            // Oppdater update_site_option, sett $arrNaa
+            // Oppdater update_site_option, legg til dette året
             update_site_option('UKM_download_folder_last_created', ((int) date('Y')) );
 
-            foreach(array(DOWNLOAD_PATH_EXCEL, DOWNLOAD_PATH_WORD, DOWNLOAD_PATH_ZIP) as &$mappe) {
+            foreach(array(DOWNLOAD_PATH_EXCEL, DOWNLOAD_PATH_WORD, DOWNLOAD_PATH_ZIP) as $mappe) {
                 // Slette alle gamle mapper og filer
                 static::delete_all_inside_directory($mappe . $oldAar);
 
@@ -79,7 +79,13 @@ class UKMsystem_tools extends Modul
      * @param string $dirname
      * @return bool
      */
-    private static function delete_all_inside_directory($dirname) {
+    private static function delete_all_inside_directory($dirname) : bool {
+        $dirname = realpath($dirname);
+
+        if( !strpos($dirname, DOWNLOAD_PATH) === 0) {
+            throw new Exception('Feil mappe! Sletting av filer kan ikke utføres');
+        }
+        
         // Om det er mappe så åpen det
         if (is_dir($dirname)) {
             $dir_handle = opendir($dirname);
@@ -99,10 +105,8 @@ class UKMsystem_tools extends Modul
         // Lukk mappen
         closedir($dir_handle);
         
-        // Slett hovedmappe
         rmdir($dirname);
     
-        // Returner true
         return true;
     }
 
