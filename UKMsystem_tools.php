@@ -34,42 +34,66 @@ class UKMsystem_tools extends Modul
             -10
         );
 
-        add_action(
-            'network_admin_menu',
-            ['UKMsystem_tools', 'sjekk_mapper']
-        );
-
         add_filter('UKMWPNETWDASH_messages', ['UKMsystem_tools', 'filterMessages']);
     }
 
     /**
      * Sjekker om mappene er opprettet for dette året.
      */
-    public static function sjekk_mapper() {
+    public static function sjekkMapperMessage($messages) {
         // TEST FUNKJSONALITET: Øk den med + 1
         $aarNaa = (int) date('Y');
         $oldAar = get_site_option('UKM_download_folder_last_created');
 
         // get_site_option finnes ikke, legg til forrige år.
-        $oldAar = empty($oldAar) ? $aarNaa-1 : $oldAar;
+        
+        if(empty($oldAar)) {
+            $oldAar = $aarNaa-1;
+            $messages[] = array(
+                'level'     => 'alert-warning',
+                'module'    => 'System',
+                'header'    => 'Forrige år er tomt. Dette skjer når det ikke finnes data på get_site_option',
+                'body'      => 'Dette kan skje når koden kjøres for første gang. Systemet skal bruke: dette året - 1 (altså i fjor)',
+                'link'      => 'admin.php?page=UKMsystemtools'
+            );
+        }
+
 
         // Hvis år er større enn lagret site_option år, så må opprettes nye mapper, de gamle mappene må slettes og site_option må oppdateres
         if($aarNaa > $oldAar) {
-            // Oppdater update_site_option, legg til dette året
-            update_site_option('UKM_download_folder_last_created', ((int) date('Y')) );
-
             foreach(array(DOWNLOAD_PATH_EXCEL, DOWNLOAD_PATH_WORD, DOWNLOAD_PATH_ZIP) as $mappe) {
                 // Slette alle gamle mapper og filer
-                static::delete_all_inside_directory($mappe . $oldAar);
+                try {
+                    static::delete_all_inside_directory($mappe . $oldAar);
+                } catch (Exception $e) {
+                    $messages[] = array(
+                        'level'     => 'alert-warning',
+                        'module'    => 'System',
+                        'header'    => 'Sletting av mapper gikk feil: ' . $e->getMessage(),
+                        'body'      => 'Vanligvis er skriverettigheter eller bruk av metoden på feil sted som er årsaken. Selv om mappe eksisterer fortsatt, skal dette være ikke farlig',
+                        'link'      => 'admin.php?page=UKMsystemtools'
+                    );
+                }
 
                 // Legg til mapper med navn $aarNaa i $mappe
                 try{
                     mkdir($mappe .'/' . $aarNaa, 0777);
                 } catch(Exception $e) {
-                    throw new Exception('Mappe ' . $mappe . ' ble ikke opprettet!');
+                    $messages[] = array(
+                        'level'     => 'alert-error',
+                        'module'    => 'System',
+                        'header'    => 'Mappe ble ikke opprettet og feilmeldingen er: ' . $e->getMessage(),
+                        'body'      => 'Dette kan være en krise fordi mappen eksiterer ikke, derfor lagring i mappe ' . $mappe . ' er umulig',
+                        'link'      => 'admin.php?page=UKMsystemtools'
+                    );
                 }
-            }            
+            }
+
+            // Oppdater update_site_option, legg til dette året
+            update_site_option('UKM_download_folder_last_created', ((int) date('Y')) );
         }
+
+        return $messages;
     }
 
     /**
@@ -194,6 +218,7 @@ class UKMsystem_tools extends Modul
         $messages = static::filterMessagesPostal($messages);
         $messages = static::filterMessagesSSB($messages);
         $messages = static::filterMessagesSeason($messages);
+        $messages = static::sjekkMapperMessage($messages);
         return $messages;
     }
 
