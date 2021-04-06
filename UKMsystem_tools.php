@@ -100,13 +100,13 @@ class UKMsystem_tools extends Modul
         if( $_GET['action'] == 'website_clean' ) {
             wp_enqueue_script(
                 'UKMsystem_tools_websiteClean',
-                plugin_dir_url(__FILE__) . 'js/website_clean.js'
+                static::getPluginUrl() . 'js/website_clean.js'
             );
         }
         if( $_GET['action'] == 'website_create' ) {
             wp_enqueue_script(
                 'UKMsystem_tools_websiteCreate',
-                plugin_dir_url(__FILE__) . 'js/website_create.js'
+                static::getPluginUrl() . 'js/website_create.js'
             );
         }
     }
