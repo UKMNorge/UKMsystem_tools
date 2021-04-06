@@ -6,7 +6,7 @@ use UKMNorge\Database\SQL\Query;
 require_once('UKM/Autoloader.php');
 
 $FIRST_YEAR = 1985;
-$LAST_YEAR  = 2012;
+$LAST_YEAR  = (int) date('Y');
 
 $infos	= new Query("SELECT * FROM `ukm_befolkning_ssb`");
 $res	= $infos->run();
