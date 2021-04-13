@@ -44,20 +44,10 @@ class UKMsystem_tools extends Modul
         // TEST FUNKJSONALITET: Øk den med + 1
         $aarNaa = (int) date('Y');
         $oldAar = get_site_option('UKM_download_folder_last_created');
-
-        // get_site_option finnes ikke, legg til forrige år.
         
         if(empty($oldAar)) {
             $oldAar = $aarNaa-1;
-            $messages[] = array(
-                'level'     => 'alert-warning',
-                'module'    => 'System',
-                'header'    => 'Forrige år er tomt. Dette skjer når det ikke finnes data på get_site_option',
-                'body'      => 'Dette kan skje når koden kjøres for første gang. Systemet skal bruke: dette året - 1 (altså i fjor)',
-                'link'      => 'admin.php?page=UKMsystemtools'
-            );
         }
-
 
         // Hvis år er større enn lagret site_option år, så må opprettes nye mapper, de gamle mappene må slettes og site_option må oppdateres
         if($aarNaa > $oldAar) {
@@ -69,8 +59,8 @@ class UKMsystem_tools extends Modul
                     $messages[] = array(
                         'level'     => 'alert-warning',
                         'module'    => 'System',
-                        'header'    => 'Sletting av mapper gikk feil: ' . $e->getMessage(),
-                        'body'      => 'Vanligvis er skriverettigheter eller bruk av metoden på feil sted som er årsaken. Selv om mappe eksisterer fortsatt, skal dette være ikke farlig',
+                        'header'    => 'Sletting av gamle rapporter feilet',
+                        'body'      => 'Dette er ikke krise, men av GDPR- og diskårsaker bør disse slettes så fort som mulig.',
                         'link'      => 'admin.php?page=UKMsystemtools'
                     );
                 }
@@ -82,8 +72,8 @@ class UKMsystem_tools extends Modul
                     $messages[] = array(
                         'level'     => 'alert-error',
                         'module'    => 'System',
-                        'header'    => 'Mappe ble ikke opprettet og feilmeldingen er: ' . $e->getMessage(),
-                        'body'      => 'Dette kan være en krise fordi mappen eksiterer ikke, derfor lagring i mappe ' . $mappe . ' er umulig',
+                        'header'    => 'Nedlasting av rapporter ikke mulig!',
+                        'body'      => 'Systemet prøvde å opprette nye mapper for rapporter, men dette gikk ikke. Systemadministrator må sørge for at php har skriverettigheter for $mappe',
                         'link'      => 'admin.php?page=UKMsystemtools'
                     );
                 }
