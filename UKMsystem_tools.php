@@ -71,7 +71,7 @@ class UKMsystem_tools extends Modul
                 try{
                     mkdir($mappe .'/' . $aarNaa, 0777);
                 } catch(Exception $e) {
-                    $failed = true:
+                    $failed = true;
                     $messages[] = array(
                         'level'     => 'alert-error',
                         'module'    => 'System',
