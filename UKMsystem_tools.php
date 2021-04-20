@@ -51,11 +51,13 @@ class UKMsystem_tools extends Modul
 
         // Hvis år er større enn lagret site_option år, så må opprettes nye mapper, de gamle mappene må slettes og site_option må oppdateres
         if($aarNaa > $oldAar) {
+            $failed = false;
             foreach(array(DOWNLOAD_PATH_EXCEL, DOWNLOAD_PATH_WORD, DOWNLOAD_PATH_ZIP) as $mappe) {
                 // Slette alle gamle mapper og filer
                 try {
                     static::delete_all_inside_directory($mappe . $oldAar);
                 } catch (Exception $e) {
+                    $failed = true;
                     $messages[] = array(
                         'level'     => 'alert-warning',
                         'module'    => 'System',
@@ -69,6 +71,7 @@ class UKMsystem_tools extends Modul
                 try{
                     mkdir($mappe .'/' . $aarNaa, 0777);
                 } catch(Exception $e) {
+                    $failed = true:
                     $messages[] = array(
                         'level'     => 'alert-error',
                         'module'    => 'System',
@@ -78,9 +81,11 @@ class UKMsystem_tools extends Modul
                     );
                 }
             }
-
-            // Oppdater update_site_option, legg til dette året
-            update_site_option('UKM_download_folder_last_created', ((int) date('Y')) );
+            
+            if( !$failed ) {
+                // Oppdater update_site_option, legg til dette året
+                update_site_option('UKM_download_folder_last_created', ((int) date('Y')) );
+            }
         }
 
         return $messages;
