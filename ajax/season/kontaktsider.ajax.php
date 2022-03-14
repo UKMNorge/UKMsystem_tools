@@ -13,14 +13,14 @@ $fylkeEllerKommune = null;
 
 foreach(Fylker::getAll() as $fylke) {
     $link = '/' . $fylke->getLink() . '/';
-    $blogId = get_blog_id_from_url( "ukm.dev", $link );
+    $blogId = get_blog_id_from_url( "ukm.no", $link );
 
     // Legg til kontaktisde for fylke
     leggTilKontaktside($blogId, $fylke->getNavn());
     
     foreach($fylke->getKommuner()->getAll() as $kommune) {
         $kommuneLink = $kommune->getPath();
-        $kommuneBlogId = get_blog_id_from_url( "ukm.dev", $kommuneLink );
+        $kommuneBlogId = get_blog_id_from_url( "ukm.no", $kommuneLink );
 
         // Legg til kontaktisde for kommune
         leggTilKontaktside($kommuneBlogId, $kommune->getNavn());
