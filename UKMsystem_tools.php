@@ -201,6 +201,14 @@ class UKMsystem_tools extends Modul
                 static::getPluginUrl() . 'js/website_create.js'
             );
         }
+        if( $_GET['action'] == 'kontaksider_create' ) {
+            wp_enqueue_script(
+                'UKMsystem_tools_kontaktsiderCreate',
+                static::getPluginUrl() . 'js/lokalside_create.js'
+            );
+        }
+
+        
     }
     /**
      * Filtrer meldinger i network admin, og varsle sys-admin ved bevov
