@@ -9,7 +9,7 @@ jQuery(document).ready(() => {
 
                 UKMresources.Request({
                     action: 'UKMsystem_tools_ajax',
-                    controller: 'kontaktsider',
+                    controller: 'createKommuneFylkePage',
                     module: 'season',
                     containers: {
                         loading: '#' + id + ' .loading',

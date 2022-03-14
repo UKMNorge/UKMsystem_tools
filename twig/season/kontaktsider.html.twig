@@ -1,0 +1,18 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Navn</th>
+      <th scope="col">Success</th>
+      <th scope="col">Melding</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for res in resultater %}
+    <tr>
+      <td>{{ res.navn }}</td>
+      <td>{{ res.success ? 'ok' : 'feil' }}</td>
+      <td>{{ res.msg }}</td>
+    </tr>
+{% endfor %}
+  </tbody>
+</table>
