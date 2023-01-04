@@ -1,0 +1,10 @@
+<h1>helloooo</h1>
+
+{% if GET('tel') %}
+    <p>{{ GET('tel') }}
+    <h3>Funnet brukere</h3>
+
+{% else %}
+    <input>
+    <button onclick="searchDeltaBruker('{{ GET('page') }}')" class="search-delta-bruker">Søk</button>
+{% endif %}

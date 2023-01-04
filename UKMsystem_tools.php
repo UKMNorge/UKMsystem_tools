@@ -159,6 +159,24 @@ class UKMsystem_tools extends Modul
                 ['UKMsystem_tools', 'renderSeason']
             )
         ;
+
+        $delta_brukere =
+            add_submenu_page(
+                'UKMsystem_tools',
+                'Delta brukere',
+                'Delta brukere',
+                'superadmin',
+                'UKMsystem_tools_delta_brukere',
+                ['UKMsystem_tools', 'renderDeltaBrukere']
+            )
+        ;
+        
+        $scripts[] = $delta_brukere;
+        add_action(
+            'admin_print_styles-' . $delta_brukere,
+            ['UKMsystem_tools', 'scripts_and_styles_delta_brukere']
+        );
+        
         $scripts[] = $season;
         add_action(
             'admin_print_styles-' . $season,
@@ -186,8 +204,19 @@ class UKMsystem_tools extends Modul
         wp_enqueue_style('WPbootstrap3_css');
     }
 
+    public static function scripts_and_styles_delta_brukere() {
+        wp_enqueue_script('TwigJS');
+        
+        wp_enqueue_script(
+            'UKMsystem_tools_deltaBrukere',
+            static::getPluginUrl() . 'js/delta_brukere.js'
+        );
+
+    }
+
     public static function scripts_and_styles_season() {
         wp_enqueue_script('TwigJS');
+
 
         if( $_GET['action'] == 'website_clean' ) {
             wp_enqueue_script(
@@ -316,6 +345,21 @@ class UKMsystem_tools extends Modul
             $action = 'season/'. basename( $_GET['action'] );
         } else {
             $action = 'season/home';
+        }
+        static::setAction( $action );
+        static::renderAdmin();
+    }
+
+    /**
+     * Render delta brukere
+     *
+     * @return void
+     */
+    public static function renderDeltaBrukere() {
+        if( isset( $_GET['action'] ) ) {
+            $action = 'delta_brukere/'. basename( $_GET['action'] );
+        } else {
+            $action = 'delta_brukere/home';
         }
         static::setAction( $action );
         static::renderAdmin();
