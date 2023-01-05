@@ -1,10 +1,43 @@
-<h1>helloooo</h1>
-
-{% if GET('tel') %}
-    <p>{{ GET('tel') }}
-    <h3>Funnet brukere</h3>
+{% if tel != null %}
+<div>
+    {% if deltaBrukere|length > 0 %}
+        <h3>Funnet brukere</h3>
+    {% endif %}
+    
+    {% for bruker in deltaBrukere %}
+        <div class="deltaBruker">
+            <p>
+                <span>{{ bruker.first_name }}</span> 
+                <span>{{ bruker.last_name }}</span>
+                <span>{{ bruker.phone }}</span>
+                <button class="btn btn-ukm btn-sm btn-danger">Slett</button>
+            </p>
+        </div>
+    {% else %}
+        <h3>Fant 0 brukere</h3>    
+    {% endfor %}
+</div>
 
 {% else %}
-    <input>
-    <button onclick="searchDeltaBruker('{{ GET('page') }}')" class="search-delta-bruker">Søk</button>
+<div class="col-xs-12 search-brukere">
+    <form action="" method="post">
+        <p>Her kan du søke brukere fra Delta - påmeldingssystemet</p>
+        <input name="tel" type="text">
+        <input class="btn btn-ukm btn-sm btn-success" type="submit" name="Søk" >
+    </form>
+</div>
 {% endif %}
+
+
+<style>
+    .deltaBruker {
+        border-bottom: solid 1px #bebebe;
+        padding: 15px 0;
+    }
+    .deltaBruker p {
+        margin: 0;
+    }
+    .search-brukere {
+        margin-top: 40px;
+    }
+</style>
