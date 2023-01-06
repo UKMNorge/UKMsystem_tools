@@ -24,7 +24,6 @@ if($tel) {
     }
 }
 else if($slettId) {
-    var_dump('Slett bruker med id ' . $slettId);
     slettDeltaBruker($slettId);
 }
 
@@ -72,8 +71,12 @@ function slettDeltaBruker($id) {
 
 
         $res = $update->run();
-        var_dump($res);
-        echo '<br><h1>Brukeren er slettet!</h1>';
+        if($res) {
+            echo '<br><h1>Brukeren er slettet!</h1>';
+        }
+        else {
+            echo '<br><h1>Det var en feil og brukeren er ikke slettet!</h1>';
+        }
 
     }
     else {
