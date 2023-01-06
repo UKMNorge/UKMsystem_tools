@@ -36,6 +36,7 @@ UKMsystem_tools::addViewData(
 );
 
 
+// Slett bruker med id hvis passord er riktig
 function slettDeltaBruker($id) {
     $passord = $_POST['password'] ? $_POST['password'] : null;
 
