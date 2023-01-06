@@ -163,8 +163,8 @@ class UKMsystem_tools extends Modul
         $delta_brukere =
             add_submenu_page(
                 'UKMsystem_tools',
-                'Delta brukere',
-                'Delta brukere',
+                'Slett delta brukere',
+                'Slett delta brukere',
                 'superadmin',
                 'UKMsystem_tools_delta_brukere',
                 ['UKMsystem_tools', 'renderDeltaBrukere']

@@ -1,17 +1,30 @@
 {% if tel != null %}
 <div>
+    <h1>Du er i ferd med å slette en bruker i påmeldingssystemet</h1>
+    <h5>I tillegg må du bruke et passord for å fullføre prosessen</h5>
     {% if deltaBrukere|length > 0 %}
         <h3>Funnet brukere</h3>
     {% endif %}
     
     {% for bruker in deltaBrukere %}
         <div class="deltaBruker">
-            <p>
-                <span>{{ bruker.first_name }}</span> 
-                <span>{{ bruker.last_name }}</span>
-                <span>{{ bruker.phone }}</span>
-                <button class="btn btn-ukm btn-sm btn-danger">Slett</button>
-            </p>
+            <form action="" method="post">
+                <p>
+					<input type="hidden" name="slettId" value="{{ bruker.id }}"/>
+                    <span>{{ bruker.first_name }}</span> 
+                    <span>{{ bruker.last_name }}</span>
+                    <span>{{ bruker.phone }}</span>
+                    <button class="slett-delta-bruker-collapse btn btn-primary collapsed" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                        Slett
+                    </button>
+                </p>
+                <div class="collapse" id="collapseExample">
+                    <br>
+                    <p class="danger">Er du sikker at du vil slette denne brukeren. <b style="color: #dc3545">Denne prosessen er irreversibel</b>.</p>
+                    <input name="password" type="password" placeholder="passord">
+                    <input class="btn btn-ukm btn-sm btn-danger" type="submit" value="Slett">
+                </div>
+            </form>
         </div>
     {% else %}
         <h3>Fant 0 brukere</h3>    
@@ -21,9 +34,10 @@
 {% else %}
 <div class="col-xs-12 search-brukere">
     <form action="" method="post">
+        <h1>VIKTIG: Dette er ment til å bli brukt av super admin brukere</h1>
         <p>Her kan du søke brukere fra Delta - påmeldingssystemet</p>
-        <input name="tel" type="text">
-        <input class="btn btn-ukm btn-sm btn-success" type="submit" name="Søk" >
+        <input name="tel" type="text" placeholder="mobil">
+        <input class="btn btn-ukm btn-sm btn-success" type="submit" value="Søk" >
     </form>
 </div>
 {% endif %}
@@ -31,8 +45,10 @@
 
 <style>
     .deltaBruker {
+        border-top: solid 1px #bebebe;
         border-bottom: solid 1px #bebebe;
-        padding: 15px 0;
+        padding: 0;
+        padding-top: 18px;
     }
     .deltaBruker p {
         margin: 0;
@@ -40,4 +56,15 @@
     .search-brukere {
         margin-top: 40px;
     }
+    .slett-delta-bruker-collapse {
+        display: none;
+    }
+    .slett-delta-bruker-collapse.collapsed {
+        display: inline;
+    }
+    .deltaBruker p span {
+        margin-right: 10px;
+        font-weight: bold;
+    }
+
 </style>
