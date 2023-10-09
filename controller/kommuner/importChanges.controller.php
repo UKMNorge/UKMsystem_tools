@@ -15,11 +15,19 @@ $dataset->setClassificationId("131");
 $startDato = new DateTime(date('Y')."-01-01");
 $sluttDato = new DateTime(date('Y')."-12-31");
 
-$startDato = new DateTime("2009-01-01");
-$sluttDato = new DateTime("2020-01-01");
+$startDato = new DateTime("2020-01-01");
+$sluttDato = new DateTime("2024-01-02");
 
 $dataset->setRange($startDato, $sluttDato);
+$dataset->includeFutureChanges(true);
+
+// echo '<pre>';
+// var_dump($dataset->getCodes());
+// echo '</pre>';
+
+
 $dataEndringer = $dataset->getChanges();
+
 
 // Sorter og grupper
 $endringer = [];

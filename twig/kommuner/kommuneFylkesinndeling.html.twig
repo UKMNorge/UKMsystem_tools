@@ -1,0 +1,19 @@
+<h2>Meldinger:</h2>
+
+<div>
+{% for key, kommune in log_meldinger %}
+    <div class="card">
+    <h4>{{ alle_kommuner[key].getNavn() }} {{ alle_kommuner[key].getId() }}</h4>
+    {% for melding in kommune %}
+        <p>{{ melding }}</p>
+    {% endfor %}
+    
+    {% for err_melding in log_errors[key] %}
+        <p style="border: solid 1px red">{{ err_melding }}</p>
+    {% endfor %}
+    </div>
+{% endfor %}
+</div>
+
+
+<hr>
