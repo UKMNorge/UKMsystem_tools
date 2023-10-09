@@ -9,11 +9,23 @@
     {% endfor %}
     
     {% for err_melding in log_errors[key] %}
-        <p style="border: solid 1px red">{{ err_melding }}</p>
+        <p style="padding: 2px; border: solid 1px orange">{{ err_melding }}</p>
+    {% endfor %}
+
+    {% for err_melding in log_criticals[key] %}
+        <p style="padding: 2px; background: red; color: #fff">ERROR: {{ err_melding }}</p>
     {% endfor %}
     </div>
 {% endfor %}
 </div>
 
+<h2>Kritiske feil</h2>
+<div>
+{% for key, kommune in log_meldinger %}
+    {% for err_melding in log_criticals[key] %}
+        <p style="padding: 2px; background: red; color: #fff">{{ err_melding }}</p>
+    {% endfor %}
+{% endfor %}
+</div>
 
 <hr>

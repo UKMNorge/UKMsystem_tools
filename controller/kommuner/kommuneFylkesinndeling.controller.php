@@ -11,15 +11,9 @@ use UKMNorge\Log\Logger;
 
 global $log_meldinger;
 global $log_errors;
+global $log_criticals;
 $alle_kommuner = [];
 
-echo 'Venter for det.';
-return;
-$fylke = Fylker::getById(30);
-// $kommune = new Kommune(5441);
-echo '<pre>';
-var_dump($fylke);
-echo '</pre>';
 die;
 
 $dataset = new Klass();
@@ -49,9 +43,13 @@ foreach($dataEndringer as $dataEndring) {
 }
 
 foreach($dataEndringer as $dataEndring) {
-	foreach($dataEndring as $endring) {  
-        $old_kommune = new Kommune($endring->oldCode);
-        $new_kommune = new Kommune($endring->newCode);
+	foreach($dataEndring as $endring) {
+        try {
+            $old_kommune = new Kommune($endring->oldCode);
+            $new_kommune = new Kommune($endring->newCode);
+        } catch(Exception $e) {
+            $log_errors[$old_kommune->getId()][] = "ERROR code 0: " . $e->getMessage();
+        }
 
         // Do not continue if the oldCode == newCode
         if($endring->oldCode == $endring->newCode) {
@@ -62,7 +60,13 @@ foreach($dataEndringer as $dataEndring) {
         $alle_kommuner[$old_kommune->getId()] = $old_kommune;
         
         if($new_kommune->getNavn() == 'ukjent') {
-            $log_errors[$old_kommune->getId()][] = $endring->newName . ' finnes ikke i systemet. Har du hentet endringer på forhånd? Sjekk denne lenken: http://ukm.dev/wp-admin/network/admin.php?page=UKMsystem_tools&action=kommuner%2FimportChanges';
+            $log_criticals[$old_kommune->getId()][] = $endring->newName . '(' . $endring->newCode . ') finnes ikke i systemet. Har du hentet endringer på forhånd? Sjekk denne lenken: http://ukm.dev/wp-admin/network/admin.php?page=UKMsystem_tools&action=kommuner%2FimportChanges';
+                continue;
+            }
+            
+        if($old_kommune->getNavn() == 'ukjent') {
+            $log_criticals[$old_kommune->getId()][] = 'Kommune med navn: ' . $endring->newName . ' ' . $endring->newCode . ' finnes ikke i systemet';
+            continue;
         }
 
         if($endring->oldCode != $endring->newCode) {
@@ -194,18 +198,23 @@ foreach($dataEndringer as $dataEndring) {
                 }
             }
         } catch(Exception $e) {
-            $log_errors[$old_kommune->getId()][] = 'CRITICAL ERROR at generalKommuneUpdate(): ' . $e->getMessage();
+            $log_criticals[$old_kommune->getId()][] = 'CRITICAL ERROR at generalKommuneUpdate(): ' . $e->getMessage();
         }
 
     }
 
-    // 12. Check if the blog is available for each new kommune (because of the name change)
+    // 12. Check if the blog is available for each new kommune (because of the name change) and check if kommune is active
     foreach($dataEndringer as $dataEndring) {
         foreach($dataEndring as $endring) {
             try {
                 $old_kommune = new Kommune($endring->oldCode);
                 $new_kommune = new Kommune($endring->newCode);
                 $blogID = Blog::getIdByPath($new_kommune->getPath());
+                
+                if(!$new_kommune->erAktiv()) {
+                    $log_criticals[$old_kommune->getId()][] = 'Kommune: ' . $new_kommune->getNavn() . ' er ikke aktiv!';
+                }
+
                 if($endring->oldCode == $endring->newCode) {
                     $log_meldinger[$old_kommune->getId()][] = "Blog id for old kommune: " . $blogID;
                 }
@@ -213,7 +222,7 @@ foreach($dataEndringer as $dataEndring) {
                     $log_meldinger[$old_kommune->getId()][] = "Blog id for new kommune: " . $blogID;
                 }
             } catch(Exception $e) {
-                $log_errors[$old_kommune->getId()][] = 'CRITICAL ERROR: ' . $e->getMessage();
+                $log_criticals[$old_kommune->getId()][] =  $e->getMessage();
             }
         }
     }
@@ -299,6 +308,7 @@ function deaktiverKommune(Kommune $kommune) {
 
 UKMsystem_tools::addViewData('log_meldinger', $log_meldinger);
 UKMsystem_tools::addViewData('log_errors', $log_errors);
+UKMsystem_tools::addViewData('log_criticals', $log_criticals);
 UKMsystem_tools::addViewData('alle_kommuner', $alle_kommuner);
 
 ?>
