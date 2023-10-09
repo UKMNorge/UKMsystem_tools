@@ -12,6 +12,7 @@ use UKMNorge\Log\Logger;
 global $log_meldinger;
 global $log_errors;
 global $log_criticals;
+global $log_blogs;
 $alle_kommuner = [];
 
 die;
@@ -226,6 +227,9 @@ foreach($dataEndringer as $dataEndring) {
             }
         }
     }
+
+    // Check all blogs
+    checkAllBlogs();
 }
 
 
@@ -304,6 +308,32 @@ function deaktiverKommune(Kommune $kommune) {
     $res = $query->run();
 
     return $res;
+}
+
+function checkAllBlogs() {
+    $resultater = [];
+    foreach(Fylker::getAll() as $fylke) {
+        $link = '/' . $fylke->getLink() . '/';
+        $blogId = get_blog_id_from_url( UKM_HOSTNAME, $link );
+        
+        // Fylke
+        if($blogId == 0) {
+            $resultater[] = ['navn' => 'Fylke: ' . $fylke->getNavn(), 'success' => false, 'msg' => 'Blogg finnes ikke'];
+        }
+        
+        foreach($fylke->getKommuner()->getAll() as $kommune) {
+            $kommuneLink = $kommune->getPath();
+            $kommuneBlogId = get_blog_id_from_url( UKM_HOSTNAME, $kommuneLink );
+            
+            // Kommune
+            if($kommuneBlogId == 0) {
+                $resultater[] = ['navn' => 'Kommune: ' . $kommune->getNavn(), 'success' => false, 'msg' => 'Blogg finnes ikke'];
+            }
+        }
+    }
+
+    UKMsystem_tools::addViewData('log_blogs', $resultater);
+
 }
 
 UKMsystem_tools::addViewData('log_meldinger', $log_meldinger);

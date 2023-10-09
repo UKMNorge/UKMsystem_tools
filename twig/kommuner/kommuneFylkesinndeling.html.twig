@@ -29,3 +29,22 @@
 </div>
 
 <hr>
+<h2>Blogs på alle kommuner og fylker</h2>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Navn</th>
+      <th scope="col">Success</th>
+      <th scope="col">Melding</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for res in log_blogs %}
+    <tr>
+      <td>{{ res.navn }}</td>
+      <td>{{ res.success ? 'ok' : 'feil' }}</td>
+      <td>{{ res.msg }}</td>
+    </tr>
+{% endfor %}
+  </tbody>
+</table>
