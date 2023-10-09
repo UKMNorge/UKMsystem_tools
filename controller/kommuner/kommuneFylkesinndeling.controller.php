@@ -13,6 +13,8 @@ global $log_meldinger;
 global $log_errors;
 $alle_kommuner = [];
 
+echo 'Venter for det.';
+return;
 $fylke = Fylker::getById(30);
 // $kommune = new Kommune(5441);
 echo '<pre>';
