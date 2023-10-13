@@ -4,6 +4,7 @@ use UKMNorge\API\SSB\Klass;
 use UKMNorge\Database\SQL\Insert;
 use UKMNorge\Database\SQL\Query;
 use UKMNorge\Database\SQL\Update;
+use UKMNorge\Geografi\Kommune;
 use UKMNorge\Twig\Twig as TwigAdmin;
 
 require_once('UKM/Autoloader.php');
@@ -50,6 +51,12 @@ foreach($dataEndringer as $dataEndring) {
         $sql->add('alternate_name', $endring->newName);
         $sql->add('ssb_name', $endring->newName);
         $sql->add('active', true);
+        
+        $old_kommune = new Kommune($endring->oldCode);
+        if($old_kommune->getId() != false) {
+            $sql->add('path', $old_kommune->getPath());
+        }
+        
 
         // Hent tidligere info, og legg til, heller enn å overskrive
         $superseed = new Query(
