@@ -185,6 +185,7 @@ foreach($dataEndringer as $dataEndring) {
             'ukm_befolkning' => 'k_id',
             'ukmno_wp_related' => 'b_kommune',
             'venteliste' => 'k_id',
+            'ukm_kommune_path' => 'kommune_id'
         ];
 
         try {
