@@ -15,7 +15,7 @@ global $log_criticals;
 global $log_blogs;
 $alle_kommuner = [];
 
-die;
+// die;
 
 $dataset = new Klass();
 // 131 er "Standard for kommuneinndeling"
