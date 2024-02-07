@@ -4,6 +4,8 @@ use UKMNorge\Geografi\Fylker;
 use UKMNorge\Geografi\Kommune;
 use UKMNorge\Wordpress\Blog;
 
+die('Die er aktivert, deaktiver det i koden på linje 5 i ' . __FILE__);
+
 require_once('UKM/Autoloader.php');
 $resultater = [];
 foreach(Fylker::getAll() as $fylke) {
