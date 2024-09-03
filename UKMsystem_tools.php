@@ -300,7 +300,8 @@ class UKMsystem_tools extends Modul
         /** SSB: Levendefødte-API må eksponeres for view */
         $levendefodte = new Levendefodte();
 
-        require_once('controller/api/SSB/levendefodte.controller.php');
+        // Kommenterer dette fordi det fungerer ikke fra cirka 1. september 2024
+        // require_once('controller/api/SSB/levendefodte.controller.php');
         $last = $levendefodte->getLatestYearUpdated();
         if ($last < date("Y") - 1) {
             $messages[] = array(
